@@ -38,6 +38,7 @@ export const ProjectCard = memo(function ProjectCard({
   const visitCtaClass = isHero || isMiddle
     ? "rounded-full bg-brand px-4 py-1.5 text-xs font-extrabold uppercase tracking-wide text-white transition hover:bg-sky-500"
     : "rounded-full bg-brand px-3 py-1 text-[10px] font-extrabold uppercase tracking-wide text-white transition hover:bg-sky-500";
+  const shownCategories = (isHero || isMiddle ? categories.slice(0, 2) : categories.slice(0, 1)) as Category[];
 
   return (
     <article
@@ -60,9 +61,9 @@ export const ProjectCard = memo(function ProjectCard({
           </h3>
         </div>
 
-        <div className="mt-1.5 flex flex-wrap items-center gap-2">
-          <div className="flex min-w-0 flex-wrap items-center gap-2 text-xs font-semibold text-secondary">
-            {categories.slice(0, 2).map((category: Category) => (
+        <div className="mt-1.5 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
+          <div className="flex min-w-0 items-center gap-2 overflow-hidden text-xs font-semibold text-secondary">
+            {shownCategories.map((category: Category) => (
               <button
                 key={category}
                 type="button"
@@ -71,15 +72,15 @@ export const ProjectCard = memo(function ProjectCard({
                   event.stopPropagation();
                   onTagClick(category);
                 }}
-                className={`rounded-full px-2 py-0.5 text-[11px] font-extrabold uppercase ${categoryBadgeClasses[category]}`}
+                className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-extrabold uppercase ${categoryBadgeClasses[category]}`}
               >
                 {category}
               </button>
             ))}
-            <span className="whitespace-nowrap">{formatUpdatedAt(project.updatedAt)}</span>
+            <span className="truncate">{formatUpdatedAt(project.updatedAt)}</span>
           </div>
 
-          <div className="ml-auto flex shrink-0 flex-nowrap items-center gap-1">
+          <div className="flex shrink-0 flex-nowrap items-center gap-1">
             {project.website && (
               <a
                 href={project.website}

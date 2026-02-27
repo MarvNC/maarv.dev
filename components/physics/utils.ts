@@ -104,7 +104,11 @@ export function formatUpdatedAt(value: string): string {
 
 export function getCardSize(project: ProjectWithStats) {
   const nameLength = project.name.length;
-  const widthBonus = nameLength > 18 ? Math.min(180, (nameLength - 18) * 6) : 0;
+  const nameBonus = nameLength > 18 ? Math.min(160, (nameLength - 18) * 5) : 0;
+  const categoryLength = (project.categories ?? []).slice(0, 2).join("").length;
+  const categoryBonus = categoryLength > 14 ? Math.min(72, (categoryLength - 14) * 2.4) : 0;
+  const actionBonus = project.website ? 58 : 26;
+  const widthBonus = Math.round(nameBonus + categoryBonus + actionBonus);
 
   if (project.size === "hero") {
     return { width: 388 + Math.round(widthBonus * 0.7), height: 176, mass: 1.46 };
@@ -118,6 +122,7 @@ export function getCardSize(project: ProjectWithStats) {
 export function buildInitialBodies(projects: ProjectWithStats[], width: number, height: number): Body[] {
   const random = rng(hashSeed(`${width}-${height}-${projects.length}`));
   const bodies: Body[] = [];
+  const velocityScale = width < 860 ? 0.34 : width < 1100 ? 0.62 : 1;
 
   for (const project of projects) {
     const size = getCardSize(project);
@@ -149,8 +154,8 @@ export function buildInitialBodies(projects: ProjectWithStats[], width: number, 
       repo: project.repo,
       x,
       y,
-      vx: (random() - 0.5) * 16,
-      vy: (random() - 0.5) * 16,
+      vx: (random() - 0.5) * 16 * velocityScale,
+      vy: (random() - 0.5) * 16 * velocityScale,
       width: size.width,
       height: size.height,
       mass: size.mass,

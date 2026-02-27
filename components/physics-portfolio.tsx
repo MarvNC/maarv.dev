@@ -81,6 +81,7 @@ function PhysicsCard({
 export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfolioProps) {
   const [zoom, setZoom] = useState(1);
   const {
+    renderProjects,
     containerRef,
     bodyMap,
     hoveredRepo,
@@ -113,7 +114,7 @@ export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfol
       onPointerCancel={onSurfacePointerCancel}
       onPointerLeave={onSurfacePointerLeave}
     >
-      {projects.map((project: ProjectWithStats) => {
+      {renderProjects.map((project: ProjectWithStats) => {
         const body = bodyMap.get(project.repo);
         if (!body) return null;
 
