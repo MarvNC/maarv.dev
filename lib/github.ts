@@ -71,6 +71,7 @@ async function fetchRepoStatsGraphQL(): Promise<Map<string, ProjectLiveStats> | 
   } as RequestInit);
 
   if (!response.ok) {
+    await response.body?.cancel();
     return null;
   }
 
@@ -96,33 +97,32 @@ async function fetchRepoStatsGraphQL(): Promise<Map<string, ProjectLiveStats> | 
 async function fetchRepoStatsRest(): Promise<Map<string, ProjectLiveStats> | null> {
   const token = await getGithubToken();
 
-  const stats = await Promise.all(
-    projects.map(async (project: Project) => {
-      const response = await fetch(`https://api.github.com/repos/${project.owner}/${project.repo}`, {
-        headers: {
-          Accept: "application/vnd.github+json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {})
-        },
-        next: { revalidate: 3600 }
-      } as RequestInit);
+  const entries: Array<readonly [string, ProjectLiveStats]> = [];
 
-      if (!response.ok) {
-        return null;
+  for (const project of projects) {
+    const response = await fetch(`https://api.github.com/repos/${project.owner}/${project.repo}`, {
+      headers: {
+        Accept: "application/vnd.github+json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {})
+      },
+      next: { revalidate: 3600 }
+    } as RequestInit);
+
+    if (!response.ok) {
+      await response.body?.cancel();
+      continue;
+    }
+
+    const payload = (await response.json()) as RestRepoPayload;
+
+    entries.push([
+      project.repo,
+      {
+        stars: payload.stargazers_count ?? 0,
+        updatedAt: payload.pushed_at ?? ""
       }
-
-      const payload = (await response.json()) as RestRepoPayload;
-
-      return [
-        project.repo,
-        {
-          stars: payload.stargazers_count ?? 0,
-          updatedAt: payload.pushed_at ?? ""
-        }
-      ] as const;
-    })
-  );
-
-  const entries = stats.filter((entry) => entry !== null);
+    ]);
+  }
 
   if (entries.length === 0) {
     return null;
