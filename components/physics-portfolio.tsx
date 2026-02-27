@@ -61,6 +61,10 @@ function rng(seed: number): () => number {
   };
 }
 
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
+}
+
 function formatUpdatedAt(value: string): string {
   if (!value) return "unknown";
   const then = new Date(value).getTime();
@@ -378,27 +382,54 @@ export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfol
           const isDragging = drag.repo === body.repo;
           const isHero = heroSet.has(body.repo);
 
+          const minX = EDGE_PADDING + body.width / 2;
+          const maxX = viewport.width - EDGE_PADDING - body.width / 2;
+          const minY = TOP_PADDING + body.height / 2;
+          const maxY = viewport.height - EDGE_PADDING - body.height / 2;
+
           if (isDragging) {
-            const targetX = drag.x - drag.offsetX;
-            const targetY = drag.y - drag.offsetY;
-            body.vx += (targetX - body.x) * 18 * dt;
-            body.vy += (targetY - body.y) * 18 * dt;
+            const targetX = clamp(drag.x - drag.offsetX, minX, maxX);
+            const targetY = clamp(drag.y - drag.offsetY, minY, maxY);
+            body.x = targetX;
+            body.y = targetY;
+            body.vx = drag.vx * 0.72;
+            body.vy = drag.vy * 0.72;
+            continue;
           }
 
-          if (mouse.active && !isHovered && !isDragging && mouseSpeed > 14) {
+          if (mouse.active && !isHovered && mouseSpeed > 10) {
             const dx = mouse.x - body.x;
             const dy = mouse.y - body.y;
             const dist = Math.max(1, Math.hypot(dx, dy));
-            const influence = 230;
+            const influence = 280;
 
             if (dist < influence) {
               const nX = dx / dist;
               const nY = dy / dist;
-              const power = ((influence - dist) / influence) ** 1.6;
-              body.vx += nX * power * dt * 110;
-              body.vy += nY * power * dt * 110;
-              body.vx += mouse.vx * power * dt * 0.08;
-              body.vy += mouse.vy * power * dt * 0.08;
+              const tangentX = -nY;
+              const tangentY = nX;
+              const power = ((influence - dist) / influence) ** 1.55;
+              const speedBoost = Math.min(2, mouseSpeed / 720);
+              const spinSign = Math.sign(mouse.vx * nY - mouse.vy * nX) || 1;
+
+              const pullStrength = 60 + speedBoost * 160;
+              const swirlStrength = 110 + speedBoost * 260;
+
+              body.vx += (nX * pullStrength + tangentX * swirlStrength * spinSign) * power * dt;
+              body.vy += (nY * pullStrength + tangentY * swirlStrength * spinSign) * power * dt;
+
+              if (mouseSpeed > 35) {
+                const dirX = mouse.vx / mouseSpeed;
+                const dirY = mouse.vy / mouseSpeed;
+                const ahead = dx * dirX + dy * dirY;
+                const side = Math.abs(dx * -dirY + dy * dirX);
+
+                if (ahead > -90 && ahead < 180 && side < 130) {
+                  const wake = (1 - side / 130) * (1 - clamp(ahead, 0, 180) / 180);
+                  body.vx += dirX * wake * speedBoost * 180 * dt;
+                  body.vy += dirY * wake * speedBoost * 180 * dt;
+                }
+              }
             }
           }
 
@@ -431,17 +462,12 @@ export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfol
             }
           }
 
-          const damping = isDragging ? 0.86 : isHovered ? 0.92 : isHero ? 0.988 : isSearching ? 0.985 : 0.989;
+          const damping = isHovered ? 0.94 : isHero ? 0.989 : isSearching ? 0.985 : 0.989;
           body.vx *= damping;
           body.vy *= damping;
 
           body.x += body.vx * dt;
           body.y += body.vy * dt;
-
-          const minX = EDGE_PADDING + body.width / 2;
-          const maxX = viewport.width - EDGE_PADDING - body.width / 2;
-          const minY = TOP_PADDING + body.height / 2;
-          const maxY = viewport.height - EDGE_PADDING - body.height / 2;
 
           if (body.x < minX) {
             body.x = minX;
@@ -473,7 +499,7 @@ export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfol
   return (
     <section
       ref={containerRef}
-      className="relative h-[100dvh] w-full select-none overflow-hidden"
+      className="relative h-[100dvh] w-full select-none overflow-hidden touch-none"
       onPointerMove={(event) => {
         const rect = event.currentTarget.getBoundingClientRect();
         const x = event.clientX - rect.left;
@@ -512,8 +538,8 @@ export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfol
               if (body.repo !== drag.repo) return body;
               return {
                 ...body,
-                vx: body.vx + drag.vx * 0.04,
-                vy: body.vy + drag.vy * 0.04
+                vx: drag.vx * 0.72,
+                vy: drag.vy * 0.72
               };
             })
           );

@@ -55,7 +55,7 @@ export function CommandPalette({ value, onChange }: CommandPaletteProps) {
         <input
           ref={inputRef}
           aria-label="Search projects"
-          placeholder="Type to magnetize projects..."
+          placeholder="Type to search..."
           value={value}
           onChange={(event) => onChange(event.target.value)}
           className="w-full rounded-full border border-sky-100 bg-white/85 px-6 py-4 text-lg font-bold tracking-wide text-primary shadow-float backdrop-blur-xl outline-none transition focus:border-brand focus:shadow-glow"
