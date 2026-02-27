@@ -1,22 +1,37 @@
 # EReaders-for-Language-Learning
 - GitHub: https://github.com/MarvNC/EReaders-for-Language-Learning
-- Status: active
+- Status: active (archived: false)
+- Created: 2026-01-10T00:22:12Z
 - Last pushed: 2026-01-10T01:26:00Z
 - Last updated: 2026-01-14T01:13:55Z
 - Homepage: https://ereaders.maarv.dev/
-- Role: owner
-- Repo type: website
-- Primary language: Markdown
-- Language breakdown: none reported by GitHub API (`{}`); repository appears docs-heavy (Markdown/YAML/JSON plus media assets)
-- Suggested tags: ereader, language-learning, mkdocs, documentation, android, anki, yomitan
-- Tier suggestion: feature
+- Primary language: none reported by GitHub API (`language: null`)
+- Topics: none set (`[]`)
+- Stars: 2
+- Forks: 0
+- Open issues: 1
+- Default branch: main
+- License: none
 
 ## One-liner
-An MkDocs-powered documentation website for using Android e-readers in language learning workflows (dictionary lookups, Anki mining, and device reviews). It is content-first rather than application code.
+A documentation-first MkDocs site for practical language-learning workflows on Android e-readers, including setup guides, tool integration, and device-focused reference content.
 
-## Evidence
-- `gh api repos/MarvNC/EReaders-for-Language-Learning` shows `archived: false`, homepage `https://ereaders.maarv.dev/`, `pushed_at` 2026-01-10T01:26:00Z, and `updated_at` 2026-01-14T01:13:55Z.
-- `readme.md` explicitly states: "This repository hosts the documentation for E-Readers for Language Learning, built with MkDocs."
-- `mkdocs.yml` defines `site_name`, `site_url`, Material theme settings, and docs navigation, confirming static-site/docs usage.
-- Tree data from `gh api .../git/trees/HEAD?recursive=1` is centered on `docs/`, review markdown pages, and large media assets (`docs/assets/*.mp4`, images), with no backend/app source layout.
-- `gh api .../languages` returned `{}`, consistent with a documentation/media repository where GitHub language detection is not meaningful.
+## What It Does
+- Publishes structured docs for using e-readers as language-learning tools, centered on real study workflows.
+- Covers implementation-oriented topics such as dictionary lookup setup and flashcard mining pipelines.
+- Organizes device and usage guidance into browsable Markdown content intended for self-serve learning.
+- Serves a live public documentation site at `https://ereaders.maarv.dev/`.
+- Prioritizes clarity and maintainability of knowledge over shipping app/backend source code.
+
+## Stack And Delivery
+- Built with MkDocs (Python toolchain) and managed through `requirements.txt` for local docs development.
+- Uses Bun-managed Node tooling for Prettier formatting across Markdown, YAML, and JSON content.
+- Supports local authoring via `mkdocs serve` with live reload for rapid documentation iteration.
+- Enforces formatting quality with `bun run format:check` and automated GitHub Actions checks on pushes/PRs.
+- Structured as a content repository (`docs/` + `mkdocs.yml`) with static-site delivery to a dedicated homepage.
+
+## Portfolio Notes
+- Strong evidence of developer education and documentation craft: clear product scope, operational setup, and maintainable content workflow.
+- Best positioned as a documentation/product-enablement project rather than a software application feature build.
+- Highlights practical domain depth in language-learning tooling (Android e-readers, lookup flow, and study integration patterns).
+- Useful in portfolio curation as a proof of end-to-end knowledge delivery: authoring, formatting standards, CI checks, and public publishing.

@@ -1,22 +1,36 @@
 # JP-Resources
 - GitHub: https://github.com/MarvNC/JP-Resources
-- Status: active
+- Status: active (`archived: false`)
+- Created: 2022-07-10T17:16:43Z
+- Updated: 2026-02-17T16:01:47Z
 - Last pushed: 2025-06-01T09:31:22Z
-- Last updated: 2026-02-17T16:01:47Z
 - Homepage: none
-- Role: owner
-- Repo type: dataset
 - Primary language: Python
-- Language breakdown: Python (100% by GitHub linguist)
-- Suggested tags: japanese-learning, anki, yomichan, frequency-dictionaries, anki-tooling, python
-- Tier suggestion: feature
+- Topics: anki, anki-addon, anki-flashcards, japanese, japanese-language, japanese-learning, japanese-study, yomichan
+- Stars: 132
+- Forks: 5
+- Open issues: 2
+- Default branch: main
+- License: MIT License
 
 ## One-liner
-Curated Japanese-learning resources centered on Anki and Yomichan workflows, with large frequency-list datasets and Python scripts for frequency backfilling/automation.
-It functions as both a practical guide repository and a data source for mining-note workflows.
+A high-value Japanese learning toolkit repo that combines practical Anki and Yomichan workflow guides with reusable frequency datasets and Python backfill scripts.
 
-## Evidence
-- `gh api repos/MarvNC/JP-Resources` shows owner repo (`fork: false`), MIT license, topics (`anki`, `anki-addon`, `japanese-learning`, `yomichan`), `archived: false`, and recent maintenance metadata.
-- `gh api repos/MarvNC/JP-Resources/languages` returns Python only; scripting files include `frequency/backfill.py` and `frequency/frequenciesstylized/backfill-stylized.py`.
-- `gh api repos/MarvNC/JP-Resources/git/trees/main?recursive=1` shows many large `.txt` assets (e.g., `frequency/JPDB.txt`, `frequency/cc100.txt`, stylized frequency lists), indicating strong dataset characteristics.
-- Raw `readme.md` content documents Anki/Yomichan setup guides, frequency sorting/backfilling, and template scripts, confirming practical resource/tooling focus rather than a deployable app.
+## What It Does
+- Curates core Japanese learning resources, including recommended dictionaries and related community tools.
+- Documents a frequency-sorting workflow for mined Anki cards using a configurable Yomichan `freq` handlebar.
+- Provides command-line backfilling guidance and scripts for adding frequency values to existing cards at scale.
+- Includes a dedicated stylized-frequency backfill flow for JP Mining Note (`FrequenciesStylized`) with configurable dictionary ordering.
+- Shares card-template utilities such as NSFW blur toggles, sentence highlighting automation, and text-replacement patterns.
+
+## Stack And Delivery
+- Python scripts power card-frequency backfill automation (`backfill.py`, `backfill-stylized.py`).
+- Large plain-text frequency assets are shipped directly in-repo for immediate local use.
+- Delivery is documentation-first via Markdown playbooks and copy-paste template/code snippets.
+- Integrates with end-user tools rather than a hosted service (Anki, AnkiConnect, Yomichan).
+- Distribution model is GitHub clone/download with no deployment pipeline or runtime service.
+
+## Portfolio Notes
+- Strong example of community-focused developer enablement: clear workflows, pragmatic defaults, and advanced customization paths.
+- Demonstrates product thinking for real learner pain points (queue prioritization, backfill migration, review ergonomics).
+- Useful as a "docs plus tooling" portfolio piece that blends maintainable scripts, domain datasets, and hands-on UX guidance.

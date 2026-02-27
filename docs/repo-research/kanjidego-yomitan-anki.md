@@ -1,20 +1,37 @@
 # kanjidego-yomitan-anki
 - GitHub: https://github.com/MarvNC/kanjidego-yomitan-anki
-- Status: active
+- Status: active (archived: false)
+- Created: 2024-03-04T05:24:49Z
 - Last pushed: 2025-02-23T04:22:54Z
 - Last updated: 2026-02-10T14:01:44Z
 - Homepage: none
-- Role: owner
-- Repo type: dataset
 - Primary language: TypeScript
-- Language breakdown: TypeScript 74.8%, HTML 19.9%, CSS 4.1%, JavaScript 1.2%
-- Suggested tags: japanese, kanji, yomitan, anki, dictionary, scraper
-- Tier suggestion: feature
+- Topics: anki, anki-cards, anki-deck, dictionary, japanese, japanese-dictionary, kanji, yomichan, yomitan, yomitan-dictionaries
+- Stars: 18
+- Forks: 1
+- Open issues: 4
+- Default branch: master
+- License: none specified
+
 ## One-liner
-Owner-maintained Japanese learning data project that scrapes Kanji de Go terms and packages them as both a Yomitan dictionary and an Anki deck. The repository combines source generation scripts with ready-to-use exported artifacts.
-## Evidence
-- `gh api repos/MarvNC/kanjidego-yomitan-anki` shows `archived: false`, default branch `master`, topics for `anki`, `dictionary`, `kanji`, and recent `updated_at`/`pushed_at` timestamps.
-- `gh api repos/MarvNC/kanjidego-yomitan-anki/languages` reports TypeScript as primary (29,933 bytes), followed by HTML, CSS, and JavaScript.
-- `gh api repos/MarvNC/kanjidego-yomitan-anki/git/trees/master?recursive=1` shows both source and data outputs, including `src/scrape/*`, `src/yomitan/*`, `src/anki/*`, and large exports `export/termData.json` and `export/ankiDeck.csv`.
-- README states the repo is for Kanji de Go content "for Yomitan and as an Anki deck," with downloads via GitHub Releases and AnkiWeb.
-- `package.json` scripts (`makeYomitan`, `makeAnki`) and dependencies (`yomichan-dict-builder`, `jsdom`, `sharp`) confirm a data-build pipeline rather than a deployed app.
+Owner-built Japanese learning data pipeline that scrapes Kanji de Go term data and ships it as both a Yomitan importable dictionary and a ready-to-study Anki deck.
+
+## What It Does
+- Collects rare and uncommon kanji term data from the Kanji de Go ecosystem and related community sources.
+- Produces a Yomitan-compatible dictionary package intended for direct import from release assets.
+- Produces an Anki deck from the same source data so dictionary lookup and flashcard review stay aligned.
+- Includes card-side usability features described in the README, such as copy-friendly text fields and optional hint images.
+- Distributes build outputs through GitHub Releases, with AnkiWeb listed as an additional download channel.
+
+## Stack And Delivery
+- Core implementation is TypeScript, with supporting HTML/CSS/JavaScript assets for deck and dictionary presentation layers.
+- Repository functions as a build-and-export project rather than a hosted web app, focused on artifact generation.
+- README documents downstream compatibility expectations for modern Yomitan versions and known limits for older tooling.
+- Delivery model is release-centric: users download prebuilt assets instead of running the pipeline locally.
+- Default branch is `master`, and the project remains publicly maintained with issues enabled.
+
+## Portfolio Notes
+- Strong example of content engineering for language learning: one scraped dataset powers two end-user products.
+- Demonstrates practical packaging discipline for community tools (Yomitan and Anki) with clear distribution paths.
+- Useful showcase piece for data acquisition, normalization, and export automation in a niche but real user workflow.
+- Good fit for a portfolio section on developer-owned educational tooling with measurable community adoption signals.

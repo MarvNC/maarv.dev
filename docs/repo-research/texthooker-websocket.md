@@ -1,22 +1,39 @@
 # texthooker-websocket
+
 - GitHub: https://github.com/MarvNC/texthooker-websocket
 - Status: archived
-- Last pushed: 2023-01-15T07:43:26Z
-- Last updated: 2023-02-03T17:58:01Z
-- Homepage: none
-- Role: owner
-- Repo type: userscript
-- Primary language: JavaScript
-- Language breakdown: JavaScript (100%)
-- Suggested tags: userscript, websocket, textractor, texthooker, visual-novel
-- Tier suggestion: list_item
+- archived: true
+- created_at: 2022-11-22T20:49:36Z
+- updated_at: 2023-02-03T17:58:01Z
+- pushed_at: 2023-01-15T07:43:26Z
+- homepage: none
+- language: JavaScript
+- topics: none
+- stargazers_count: 6
+- forks_count: 0
+- open_issues_count: 0
+- default_branch: master
+- license: none
 
 ## One-liner
-Archived JavaScript userscript that injects websocket text into `texthooker.html` for Textractor workflows. The README marks it as replaced by `Renji-XD/texthooker-ui`, so it is mainly useful as legacy reference.
+Legacy JavaScript userscript for piping Textractor websocket text into Anacreon texthooker pages, later superseded by `Renji-XD/texthooker-ui`.
 
-## Evidence
-- `gh api repos/MarvNC/texthooker-websocket` reports `archived: true`, default branch `master`, primary language `JavaScript`, and timestamps for `pushed_at`/`updated_at`.
-- `gh api repos/MarvNC/texthooker-websocket/languages` returns only `JavaScript` (9017 bytes), supporting the single-language breakdown.
-- `gh api repos/MarvNC/texthooker-websocket/git/trees/master?recursive=1` shows a very small tree: `texthooker.user.js`, `readme.md`, and `images/*`.
-- `texthooker.user.js` starts with a UserScript header (`// ==UserScript==`) and websocket usage (`new WebSocket('ws://localhost:6677/')`), confirming repo type and purpose.
-- `readme.md` explicitly says it is "Replaced by the superior texthooker-ui," supporting archived/legacy positioning and lower tiering.
+## What It Does
+- Connects a texthooker page to the Textractor Websocket plugin so extracted lines appear immediately.
+- Replaces clipboard polling workflows with websocket delivery to reduce delay, skipped lines, and clipboard interference.
+- Supports text editing on inserted lines and manual line insertion through standard paste actions.
+- Adds timer-aware behavior such as preventing inserts while paused, optional auto-pause on idle, and pause-state visibility cues.
+- Provides quick session metrics handling, including easy copy of count and timing fields for spreadsheet logging.
+
+## Stack And Delivery
+- Primary implementation is a browser userscript (`texthooker.user.js`) in JavaScript.
+- Intended runtime is a userscript manager (README recommends Violentmonkey).
+- Integrates with the external Textractor Websocket plugin as the text event source.
+- Targets the Anacreon texthooker page in both hosted and locally saved usage noted by the README.
+- Repository delivery is source-only with no release artifacts, service backend, or deployment pipeline.
+
+## Portfolio Notes
+- Useful as a focused automation artifact showing practical websocket integration for a niche translation workflow.
+- Demonstrates product thinking around operator ergonomics: low-latency ingest, pause safeguards, and fast logging support.
+- Archived and explicitly replaced, so position this as historical groundwork rather than a current flagship.
+- Best curated as a supporting project in a "developer tooling" or "workflow acceleration" subsection.

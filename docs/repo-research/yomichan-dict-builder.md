@@ -1,23 +1,35 @@
 # yomichan-dict-builder
 - GitHub: https://github.com/MarvNC/yomichan-dict-builder
-- Status: active
+- Status: active (archived: false)
+- Created: 2023-12-19T02:43:16Z
+- Updated: 2026-02-16T20:04:00Z
 - Last pushed: 2025-08-17T21:05:16Z
-- Last updated: 2026-02-16T20:04:00Z
 - Homepage: https://www.npmjs.com/package/yomichan-dict-builder
-- Role: owner
-- Repo type: library
+- Default branch: master
 - Primary language: TypeScript
-- Language breakdown: TypeScript (100%)
-- Suggested tags: yomitan, yomichan, dictionary-builder, npm-library, typescript, jszip
-- Tier suggestion: feature
+- Topics: dictionary, dictionary-conversion, dictionary-tools, npm, npm-module, yomichan, yomitan, yomitan-dictionaries
+- Stars: 42
+- Forks: 3
+- Open issues: 1
+- License: MIT License (MIT)
 
 ## One-liner
-TypeScript npm library for programmatically building Yomitan/Yomichan dictionary ZIPs, including index, term/kanji banks, metadata, tags, and bundled assets. It is an actively maintained core building block used by multiple downstream dictionary-generation projects.
+TypeScript npm library that programmatically builds complete Yomitan and Yomichan dictionary ZIP packages, reducing schema and packaging friction for dictionary pipeline projects.
 
-## Evidence
-- `gh api repos/MarvNC/yomichan-dict-builder` shows `archived: false`, `description: "Build Yomitan dictionaries with ease"`, `language: "TypeScript"`, npm homepage, and recent `updated_at`/`pushed_at` values.
-- `gh api repos/MarvNC/yomichan-dict-builder/languages` returns only `TypeScript` bytes, supporting a TypeScript-first implementation.
-- `gh api repos/MarvNC/yomichan-dict-builder/git/trees/master?recursive=1` shows a package-style layout with `src/`, `examples/`, `package.json`, and CI workflows (`test-build`, `prettier-check`, `npm-publish`).
-- `readme.md` explicitly describes the project as a library for building Yomitan dictionaries and documents class-based APIs (`Dictionary`, `DictionaryIndex`, `TermEntry`, `KanjiEntry`).
-- `package.json` confirms npm distribution (`name: yomichan-dict-builder`, `version: 2.10.0`) and build/publish scripts (`build`, `prepublish`).
-- `src/index.ts` exports builder classes and implements dictionary assembly/export via JSZip, including bank chunking and ZIP file output.
+## What It Does
+- Provides a `Dictionary` API to assemble dictionary index data, term entries, kanji entries, metadata banks, and tags before export.
+- Supports structured and simple term definitions, including advanced payloads used for richer dictionary content.
+- Handles term and kanji metadata flows such as frequency and pitch-accent records expected by Yomitan format consumers.
+- Bundles local assets (images, audio, CSS, and other files) into the final dictionary ZIP for self-contained distribution.
+- Exports ready-to-use dictionary archives and reports output stats, enabling automation in conversion and release scripts.
+
+## Stack And Delivery
+- Implemented in TypeScript and distributed as an npm module (`yomichan-dict-builder`) for direct use in JS and TS toolchains.
+- Uses a class-based builder model (`Dictionary`, `DictionaryIndex`, `TermEntry`, `KanjiEntry`) that maps cleanly to dictionary schema components.
+- Ships as a library dependency rather than a standalone app, making it easy to embed in ETL or content-generation pipelines.
+- README includes installation and usage examples plus links to multiple downstream projects that use the package in production workflows.
+
+## Portfolio Notes
+- Strong example of productized developer tooling: it turns a niche, error-prone packaging process into a reusable API surface.
+- Demonstrates practical ecosystem impact through documented adoption in several public Yomitan dictionary projects.
+- Good feature-tier artifact for portfolio curation because it combines domain-specific data modeling with distributable library engineering.

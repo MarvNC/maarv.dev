@@ -1,22 +1,37 @@
 # anki-card
 - GitHub: https://github.com/MarvNC/anki-card
-- Status: active
+- Status: active (archived: false)
+- Created: 2025-04-03T23:36:17Z
+- Updated: 2026-01-30T21:21:49Z
 - Last pushed: 2025-05-18T05:25:55Z
-- Last updated: 2026-01-30T21:21:49Z
 - Homepage: none
-- Role: owner
-- Repo type: tool
 - Primary language: HTML
-- Language breakdown: HTML (62.8%), CSS (37.2%)
-- Suggested tags: anki, chinese-learning, flashcards, card-template, yomitan, pleco, html-css-js
-- Tier suggestion: list_item
+- Topics: none
+- Stars: 2
+- Forks: 0
+- Open issues: 0
+- Default branch: main
+- License: none
 
 ## One-liner
-Anki card template pack for Chinese study with custom front/back HTML and CSS, tuned for Yomitan dictionary output and Pleco integration. It focuses on practical review UX (dual script display, glossary control, sentence/ruby toggle, media lightbox) rather than a deployable web app.
+A Chinese-learning Anki card template repository that improves review usability with script-aware rendering, dictionary control, and quick lookup integrations instead of shipping a standalone app.
 
-## Evidence
-- `gh api repos/MarvNC/anki-card` shows owner `MarvNC`, `archived: false`, `homepage: null`, `language: HTML`, and the reported `pushed_at`/`updated_at` values.
-- `gh api repos/MarvNC/anki-card/languages` reports only HTML and CSS bytes, consistent with a static template-style repository.
-- `gh api repos/MarvNC/anki-card/git/trees/main?recursive=1` shows a compact structure centered on `zh/front.html`, `zh/back.html`, `zh/styling.css`, and `zh/readme.md`.
-- `gh api repos/MarvNC/anki-card/contents/zh/readme.md -H "Accept: application/vnd.github.raw+json"` documents Anki-focused features (dual script display, glossary reordering, Pleco click actions, ruby toggle, night mode).
-- `zh/front.html` and `zh/back.html` use Anki field placeholders (for example `{{Expression}}`, `{{Glossary}}`, `{{Sentence}}`) and client-side scripts for card behavior, indicating a card-template tool rather than a standalone website/app.
+## What It Does
+- Renders front and back cards with randomized simplified and traditional character display when used with CC-CEDICT data through Yomitan parsing.
+- Lets users control glossary priority with regex-based ordering rules and per-card dictionary emphasis.
+- Adds click-to-search behavior from card content into Pleco for fast lookup during review.
+- Supports sentence display modes with a toggle between plain Hanzi and ruby-annotated text when `SentenceReading` is available.
+- Improves study flow with expression highlighting, collapsed-first glossary display, and media lightbox expansion for images.
+
+## Stack And Delivery
+- Built as static Anki template assets (HTML and CSS) with client-side behavior embedded in card templates.
+- Designed around Anki note fields such as `Expression`, `Glossary`, `Reading`, `Sentence`, `Media`, and related audio/source fields.
+- Integrates with Yomitan plus CC-CEDICT dictionary formatting to enable dual-script and glossary features.
+- Includes mobile-friendly study actions via Pleco deep-link style click interactions from expression and sentence text.
+- Supports Anki night mode styling without requiring a separate deployment pipeline or hosted runtime.
+
+## Portfolio Notes
+- Good portfolio fit as a high-leverage learning tool artifact that demonstrates UX thinking inside strict template constraints.
+- Shows practical product judgment: reducing review clutter, preserving fast lookup, and making multilingual content more readable.
+- Demonstrates integration work across Anki templates, dictionary output conventions, and external app handoff.
+- Best presented as a specialized productivity/tooling project rather than a general web application.

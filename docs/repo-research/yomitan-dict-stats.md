@@ -1,22 +1,37 @@
 # yomitan-dict-stats
+
 - GitHub: https://github.com/MarvNC/yomitan-dict-stats
-- Status: active
-- Last pushed: 2024-05-12T01:44:44Z
-- Last updated: 2026-02-14T16:39:05Z
+- Status: active (archived: false)
+- Created: 2023-12-11T03:35:13Z
+- Updated: 2026-02-14T16:39:05Z
+- Pushed: 2024-05-12T01:44:44Z
 - Homepage: none
-- Role: owner
-- Repo type: tool
+- Default branch: master
 - Primary language: JavaScript
-- Language breakdown: JavaScript (89.2%), Shell (10.8%)
-- Suggested tags: yomitan, yomichan, dictionary, dictionary-stats, japanese, chinese, language-learning, markdown-tooling
-- Tier suggestion: feature
+- Topics: chinese, chinese-dictionary, dictionary, japanese, japanese-dictionary, japanese-language, japanese-learning, yomichan, yomitan, yomitan-dictionaries
+- Stars: 21
+- Forks: 1
+- Open issues: 1
+- License: none specified
 
 ## One-liner
-Lightweight utility repository for generating and maintaining Yomitan dictionary statistics tables. It uses a browser-console JavaScript extractor plus a small shell sorter, with the README serving as the published stats catalog.
+Compact data tooling project that generates and curates large Yomichan/Yomitan dictionary statistics tables for Japanese, Cantonese, and Mandarin learning ecosystems.
 
-## Evidence
-- `gh api repos/MarvNC/yomitan-dict-stats` shows `archived: false`, owner `MarvNC`, `pushed_at` `2024-05-12T01:44:44Z`, `updated_at` `2026-02-14T16:39:05Z`, and empty homepage.
-- `gh api repos/MarvNC/yomitan-dict-stats/languages` reports JavaScript (2501 bytes) and Shell (304 bytes), making JavaScript the primary language.
-- `gh api repos/MarvNC/yomitan-dict-stats/git/trees/HEAD?recursive=1` shows a compact tooling-oriented tree: `generateStats.js`, `sort_table.sh`, `types.d.ts`, and `readme.md`.
-- `gh api -H "Accept: application/vnd.github.raw+json" repos/MarvNC/yomitan-dict-stats/contents/generateStats.js` shows IndexedDB extraction from Yomitan's `dict` database and Markdown table output generation.
-- `gh api -H "Accept: application/vnd.github.raw+json" repos/MarvNC/yomitan-dict-stats/readme` describes the project as dictionary stats for Yomichan/Yomitan and usage via browser console script execution.
+## What It Does
+- Publishes a large catalog of dictionary coverage data so learners can compare dictionaries by entry count and metadata.
+- Organizes stats by language and dictionary type (frequency, bilingual, monolingual, grammar, kanji, and hanzi) to support practical selection decisions.
+- Uses a browser-console workflow to run `generateStats.js` from the Yomitan options page against installed dictionary data.
+- Produces markdown-first outputs so the repository README doubles as a browsable, shareable stats reference.
+- Documents caveats about counting methodology (for example, variant-heavy dictionaries being overcounted), which improves interpretation quality.
+
+## Stack And Delivery
+- JavaScript-first utility code with a lightweight shell helper (`sort_table.sh`) for table ordering and maintenance.
+- Data collection approach is client-side and local to the user setup (via Yomitan environment), not a hosted backend service.
+- Delivery format is repository-native documentation: generated markdown tables committed directly to README.
+- Repo is intentionally small and tooling-focused, optimized for repeatable refreshes of stats snapshots.
+
+## Portfolio Notes
+- Strong example of niche developer tooling that creates high utility for a language-learning community with minimal infrastructure.
+- Demonstrates pragmatic product thinking: clear output format, reproducible generation path, and explicit methodology caveats.
+- Useful proof point for data-wrangling + documentation craftsmanship, especially where the README itself is the product surface.
+- Candidate positioning: feature-level portfolio item for educational tooling, open data workflows, and ecosystem curation.

@@ -1,23 +1,38 @@
 # pixiv-dump
+
 - GitHub: https://github.com/MarvNC/pixiv-dump
-- Status: active
+- Status: active (`archived: false`)
+- Created: 2024-02-08T08:19:16Z
 - Last pushed: 2026-01-18T09:59:56Z
 - Last updated: 2026-02-25T13:54:27Z
 - Homepage: none
-- Role: owner
-- Repo type: dataset
 - Primary language: TypeScript
-- Language breakdown: TypeScript (97.9%), JavaScript (2.1%)
-- Suggested tags: pixiv, web-scraping, sqlite, prisma, typescript, github-actions, japanese-dataset
-- Tier suggestion: feature
+- Topics: crawler, database, dump, encyclopedia, japanese, pixiv, pixiv-crawler, pixiv-database, scraping
+- Stars: 9
+- Forks: 1
+- Open issues: 1
+- Default branch: master
+- License: none
 
 ## One-liner
-An automated pipeline that scrapes Pixiv Encyclopedia and publishes periodic SQLite database dumps for downstream use (for example dictionary generation). It is best presented as a data project with crawler automation rather than a user-facing app.
+Automated Pixiv Encyclopedia dataset pipeline that publishes downloadable SQLite dumps for downstream products such as Japanese dictionary tooling.
 
-## Evidence
-- `gh api repos/MarvNC/pixiv-dump` reports `archived: false`, `default_branch: "master"`, topics including `crawler`, `dump`, `pixiv`, and timestamps for `pushed_at`/`updated_at`.
-- `gh api repos/MarvNC/pixiv-dump/languages` returns TypeScript (23001 bytes) and JavaScript (484 bytes), making TypeScript dominant.
-- `gh api repos/MarvNC/pixiv-dump/git/trees/HEAD?recursive=1` is not truncated and shows scraper code in `src/scrape/*`, Prisma schema/migrations in `prisma/*`, and CI workflows in `.github/workflows/*`.
-- `readme.md` states this repo contains Pixiv Encyclopedia dumps and points users to Releases for downloads.
-- `prisma/schema.prisma` and `src/index.ts` show a SQLite-backed data model (`file:../db/pixiv.db`) plus automated scraping flow.
-- `.github/workflows/continuousScrape.yaml` schedules scraping every 6 hours and creates releases containing `db/pixiv.db`.
+## What It Does
+- Collects and packages Pixiv Encyclopedia content into a structured local database format.
+- Publishes database dumps through GitHub Releases for straightforward download and reuse.
+- Exposes article-level fields (for example tag name, summary, reading, main text, counts, and related tags) suited to search and indexing workflows.
+- Supports dictionary-oriented downstream usage, including the linked `pixiv-yomitan` project.
+- Frames the repo as a maintained data product rather than an end-user web application.
+
+## Stack And Delivery
+- TypeScript is the primary implementation language for the scraping and data pipeline code.
+- SQLite is the delivery artifact format, making the dataset easy to consume offline and script against.
+- Prisma schema defines the dump structure and field contract for `PixivArticle` records.
+- GitHub acts as the distribution channel via Releases and as the canonical source repository.
+- Topic metadata emphasizes crawler/scraping/database positioning for discoverability.
+
+## Portfolio Notes
+- Strong portfolio angle for data engineering and automation: repeatable collection, normalization, and publish workflow.
+- Useful proof of practical Japanese content handling and domain-focused dataset design.
+- Complements app-facing repos by showing infrastructure and dataset production capability.
+- For presentation, highlight concrete consumers (for example Yomitan dictionaries) to make impact legible.

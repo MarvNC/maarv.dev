@@ -1,23 +1,35 @@
 # win-to-mac-ahk
 - GitHub: https://github.com/MarvNC/win-to-mac-ahk
-- Status: active
-- Last pushed: 2025-11-12T09:24:38Z
+- Status: active (archived: false)
+- Created: 2025-10-30T05:04:29Z
 - Last updated: 2025-11-12T09:24:09Z
+- Last pushed: 2025-11-12T09:24:38Z
 - Homepage: none
-- Role: owner
-- Repo type: tool
 - Primary language: AutoHotkey
-- Language breakdown: AutoHotkey (100%)
-- Suggested tags: autohotkey, keyboard-remap, macos, windows, remote-desktop, rustdesk, parsec
-- Tier suggestion: list_item
+- Topics: none
+- Stars: 0
+- Forks: 0
+- Open issues: 0
+- Default branch: main
+- License: none
 
 ## One-liner
-Small AutoHotkey v2 utility that swaps Alt/Win to mimic Mac Option/Command when remoting from Windows into macOS. It targets RustDesk and Parsec and ships prebuilt executables through GitHub Actions releases.
+Small AutoHotkey utility that remaps Win and Alt to feel like Command and Option when remoting from Windows into macOS via RustDesk or Parsec.
 
-## Evidence
-- `gh api repos/MarvNC/win-to-mac-ahk` shows `archived: false`, `default_branch: main`, `language: AutoHotkey`, `pushed_at: 2025-11-12T09:24:38Z`, and `updated_at: 2025-11-12T09:24:09Z`.
-- `gh api repos/MarvNC/win-to-mac-ahk/languages` returns only `{"AutoHotkey":328}`, indicating a single-language codebase.
-- `gh api repos/MarvNC/win-to-mac-ahk/git/trees/main?recursive=1` lists a minimal utility structure: `winToMacSwapOptCmd.ahk`, `README.md`, and one workflow `.github/workflows/build-ahk.yml`.
-- `README.md` states the script is for swapping Win/Alt while using RustDesk or Parsec to remote into macOS.
-- `winToMacSwapOptCmd.ahk` contains focused hotkeys (`LAlt::LWin`, `LWin::LAlt`, `RAlt::RWin`, `RWin::RAlt`) gated by active app checks for `rustdesk.exe` and `parsecd.exe`.
-- `build-ahk.yml` builds AutoHotkey v2 x64/x86 binaries and publishes release artifacts, supporting the repo classification as a packaged end-user tool.
+## What It Does
+- Swaps Win/Alt behavior on the local Windows keyboard to match common macOS modifier muscle memory.
+- Targets remote desktop workflows where macOS is controlled from a Windows machine.
+- Supports RustDesk and Parsec out of the box, based on the README and app-specific positioning.
+- Provides a simple end-user flow: download a prebuilt executable from latest releases and run it.
+
+## Stack And Delivery
+- Implementation language is AutoHotkey (single-language codebase per GitHub metadata).
+- Delivered as lightweight executable binaries rather than requiring users to author scripts manually.
+- Release distribution is centered on GitHub Releases with x64/x86 build artifacts referenced in project usage.
+- Default development branch is `main`, with an active public repository and issues enabled.
+
+## Portfolio Notes
+- Good example of a focused, practical developer tool that solves a real daily-friction UX problem.
+- Strong fit for a "workflow polish" or "productivity tooling" portfolio category.
+- Repo is early-stage from a social-proof standpoint (0 stars/forks/issues), so portfolio framing should emphasize problem clarity and user utility over traction.
+- Clear positioning for remote-desktop-heavy workflows can help differentiate this from generic key-remap scripts.
