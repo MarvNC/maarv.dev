@@ -66,6 +66,7 @@ function PhysicsCard({
       <ProjectCard
         project={project}
         expanded={isHovered || project.size === "hero" || project.size === "middle"}
+        hovered={isHovered}
         onTagClick={onTagClick}
         categories={categories}
         primaryCategory={primaryCategory}

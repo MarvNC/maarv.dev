@@ -9,6 +9,7 @@ import { formatUpdatedAt } from "@/components/physics/utils";
 type ProjectCardProps = {
   project: ProjectWithStats;
   expanded: boolean;
+  hovered: boolean;
   onTagClick: (tag: string) => void;
   categories: Category[];
   primaryCategory: Category;
@@ -17,6 +18,7 @@ type ProjectCardProps = {
 export const ProjectCard = memo(function ProjectCard({
   project,
   expanded,
+  hovered,
   onTagClick,
   categories,
   primaryCategory
@@ -24,30 +26,17 @@ export const ProjectCard = memo(function ProjectCard({
   const isHero = project.size === "hero";
   const isMiddle = project.size === "middle";
   const starScale = Math.max(0, Math.log10((project.stars ?? 0) + 1));
-  const starSizeClass =
-    starScale >= 2.7
-      ? "text-lg"
-      : starScale >= 2.2
-        ? "text-base"
-        : starScale >= 1.6
-          ? "text-sm"
-          : "text-xs";
   const starGlowClass =
-    starScale >= 2.2
-      ? "bg-amber-200 text-amber-800 shadow-[0_0_0_2px_rgba(251,191,36,0.25)]"
-      : "bg-amber-100 text-amber-700";
-  const starLabel =
-    project.stars >= 1000
-      ? `${(project.stars / 1000).toFixed(project.stars >= 10000 ? 0 : 1)}k`
-      : `${project.stars}`;
+    starScale >= 2.6
+      ? "bg-amber-300 text-amber-900 shadow-[0_0_0_2px_rgba(245,158,11,0.32),0_6px_14px_-8px_rgba(180,83,9,0.65)]"
+      : starScale >= 2.1
+        ? "bg-amber-200 text-amber-800 shadow-[0_0_0_2px_rgba(251,191,36,0.24)]"
+        : "bg-amber-100 text-amber-700";
   const heroSurfaceClass = isHero
     ? "bg-gradient-to-br from-sky-50/95 via-white/95 to-cyan-50/80 shadow-[0_28px_60px_-30px_rgba(14,116,144,0.45)]"
     : "";
-  const expansionClass = expanded
-    ? isHero || isMiddle
-      ? "shadow-[0_30px_55px_-25px_rgba(58,176,255,0.42)]"
-      : "scale-[1.12] shadow-[0_30px_55px_-25px_rgba(58,176,255,0.42)]"
-    : "";
+  const expansionClass = expanded ? "shadow-[0_30px_55px_-25px_rgba(58,176,255,0.42)]" : "";
+  const hoverScaleClass = hovered ? "scale-[1.05]" : "";
   const visitCtaClass = isHero || isMiddle
     ? "rounded-full bg-brand px-4 py-1.5 text-xs font-extrabold uppercase tracking-wide text-white transition hover:bg-sky-500"
     : "rounded-full bg-brand px-3 py-1 text-[10px] font-extrabold uppercase tracking-wide text-white transition hover:bg-sky-500";
@@ -56,7 +45,7 @@ export const ProjectCard = memo(function ProjectCard({
     <article
       className={`rounded-bubble border bg-surface p-4 shadow-float backdrop-blur-md transition-all duration-200 ${categoryClasses[primaryCategory]} ${heroSurfaceClass} ${
         isHero ? "p-5" : ""
-      } ${expansionClass}`}
+      } ${expansionClass} ${hoverScaleClass}`}
     >
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
@@ -64,12 +53,8 @@ export const ProjectCard = memo(function ProjectCard({
             {project.name}
           </h3>
           <div className="mt-1 flex flex-wrap items-center gap-2 text-xs font-semibold text-secondary">
-            <span
-              className={`inline-flex whitespace-nowrap rounded-full px-2.5 py-0.5 font-extrabold ${starGlowClass} ${
-                isHero ? "text-base" : starSizeClass
-              }`}
-            >
-              ★ {starLabel}
+            <span className={`inline-flex whitespace-nowrap rounded-full px-2.5 py-0.5 text-sm font-extrabold ${starGlowClass}`}>
+              ★ {project.stars}
             </span>
             {categories.slice(0, 2).map((category: Category) => (
               <button
