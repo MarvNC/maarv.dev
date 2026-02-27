@@ -23,6 +23,20 @@ type Body = {
 
 type Vec2 = { x: number; y: number };
 
+type DragState = {
+  repo: string | null;
+  pointerId: number | null;
+  offsetX: number;
+  offsetY: number;
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  lastX: number;
+  lastY: number;
+  lastT: number;
+};
+
 const TOP_PADDING = 116;
 const EDGE_PADDING = 10;
 
@@ -59,9 +73,9 @@ function formatUpdatedAt(value: string): string {
 
 function getCardSize(project: ProjectWithStats) {
   if (project.size === "hero") {
-    return { width: 300, height: 126, mass: 1.35 };
+    return { width: 350, height: 152, mass: 1.38 };
   }
-  return { width: 232, height: 114, mass: 1 };
+  return { width: 238, height: 114, mass: 1 };
 }
 
 function buildInitialBodies(projects: ProjectWithStats[], width: number, height: number): Body[] {
@@ -128,7 +142,7 @@ function ProjectCard({
     >
       <div className="flex items-start justify-between gap-2">
         <div>
-          <h3 className={`${isHero ? "text-lg" : "text-base"} font-extrabold leading-tight text-primary`}>{project.name}</h3>
+          <h3 className={`${isHero ? "text-xl" : "text-base"} font-extrabold leading-tight text-primary`}>{project.name}</h3>
           <div className="mt-1 flex items-center gap-2 text-xs font-semibold text-secondary">
             <span className="rounded-full bg-amber-100 px-2 py-0.5 text-sm font-extrabold text-amber-700">★ {project.stars}</span>
             <span>{formatUpdatedAt(project.updatedAt)}</span>
@@ -140,7 +154,7 @@ function ProjectCard({
               href={project.website}
               target="_blank"
               rel="noreferrer"
-              className="rounded-full bg-brand px-3 py-1 text-[10px] font-extrabold uppercase tracking-wide text-white transition hover:bg-sky-500"
+              className="rounded-full bg-brand px-4 py-1.5 text-xs font-extrabold uppercase tracking-wide text-white transition hover:bg-sky-500"
             >
               Visit
             </a>
@@ -197,6 +211,19 @@ export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfol
     active: false
   });
   const lastMouseRef = useRef<{ x: number; y: number; t: number } | null>(null);
+  const dragRef = useRef<DragState>({
+    repo: null,
+    pointerId: null,
+    offsetX: 0,
+    offsetY: 0,
+    x: 0,
+    y: 0,
+    vx: 0,
+    vy: 0,
+    lastX: 0,
+    lastY: 0,
+    lastT: 0
+  });
 
   const normalizedQuery = query.trim().toLowerCase();
   const isSearching = normalizedQuery.length > 0;
@@ -233,6 +260,34 @@ export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfol
     });
     return mapped;
   }, [matches, viewport.height, viewport.width]);
+
+  const heroTargets = useMemo(() => {
+    const heroes = projects.filter((project: ProjectWithStats) => project.size === "hero");
+    const mapped: Record<string, Vec2> = {};
+    if (heroes.length === 0) {
+      return mapped;
+    }
+
+    const centerX = viewport.width / 2;
+    const centerY = Math.max(TOP_PADDING + 120, viewport.height * 0.46);
+    const radiusX = Math.min(170, Math.max(70, viewport.width * 0.14));
+    const radiusY = Math.min(105, Math.max(45, viewport.height * 0.1));
+
+    if (heroes.length === 1) {
+      mapped[heroes[0].repo] = { x: centerX, y: centerY };
+      return mapped;
+    }
+
+    heroes.forEach((hero: ProjectWithStats, index: number) => {
+      const angle = (-Math.PI / 2) + (index / heroes.length) * Math.PI * 2;
+      mapped[hero.repo] = {
+        x: centerX + Math.cos(angle) * radiusX,
+        y: centerY + Math.sin(angle) * radiusY
+      };
+    });
+
+    return mapped;
+  }, [projects, viewport.height, viewport.width]);
 
   const bodyMap = useMemo(() => new Map(bodies.map((body: Body) => [body.repo, body])), [bodies]);
 
@@ -308,20 +363,33 @@ export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfol
 
         const mouse = mouseRef.current;
         const mouseSpeed = Math.hypot(mouse.vx, mouse.vy);
+        const drag = dragRef.current;
 
         for (const body of next) {
           const isHovered = body.repo === hoveredRepo;
+          const isDragging = drag.repo === body.repo;
 
-          if (mouse.active && !isHovered && mouseSpeed > 32) {
-            const dx = body.x - mouse.x;
-            const dy = body.y - mouse.y;
+          if (isDragging) {
+            const targetX = drag.x - drag.offsetX;
+            const targetY = drag.y - drag.offsetY;
+            body.vx += (targetX - body.x) * 18 * dt;
+            body.vy += (targetY - body.y) * 18 * dt;
+          }
+
+          if (mouse.active && !isHovered && !isDragging && mouseSpeed > 14) {
+            const dx = mouse.x - body.x;
+            const dy = mouse.y - body.y;
             const dist = Math.max(1, Math.hypot(dx, dy));
-            const influence = 180;
+            const influence = 230;
 
             if (dist < influence) {
+              const nX = dx / dist;
+              const nY = dy / dist;
               const power = ((influence - dist) / influence) ** 1.6;
-              body.vx += mouse.vx * power * dt * 0.055;
-              body.vy += mouse.vy * power * dt * 0.055;
+              body.vx += nX * power * dt * 110;
+              body.vy += nY * power * dt * 110;
+              body.vx += mouse.vx * power * dt * 0.08;
+              body.vy += mouse.vy * power * dt * 0.08;
             }
           }
 
@@ -333,9 +401,17 @@ export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfol
             }
           }
 
-          const drag = isHovered ? 0.9 : isSearching ? 0.986 : 0.991;
-          body.vx *= drag;
-          body.vy *= drag;
+          if (!isSearching) {
+            const heroTarget = heroTargets[body.repo];
+            if (heroTarget) {
+              body.vx += (heroTarget.x - body.x) * 1.5 * dt;
+              body.vy += (heroTarget.y - body.y) * 1.5 * dt;
+            }
+          }
+
+          const damping = isDragging ? 0.86 : isHovered ? 0.92 : isSearching ? 0.986 : 0.991;
+          body.vx *= damping;
+          body.vy *= damping;
 
           body.x += body.vx * dt;
           body.y += body.vy * dt;
@@ -370,7 +446,7 @@ export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfol
 
     frame = window.requestAnimationFrame(step);
     return () => window.cancelAnimationFrame(frame);
-  }, [bodies.length, hoveredRepo, isSearching, magnets, matchSet, viewport.height, viewport.width]);
+  }, [bodies.length, heroTargets, hoveredRepo, isSearching, magnets, matchSet, viewport.height, viewport.width]);
 
   return (
     <section
@@ -393,12 +469,47 @@ export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfol
         mouseRef.current.y = y;
         mouseRef.current.active = true;
         lastMouseRef.current = { x, y, t: now };
+
+        const drag = dragRef.current;
+        if (drag.repo && drag.pointerId === event.pointerId) {
+          const dt = Math.max(0.01, (now - drag.lastT) / 1000);
+          drag.vx = (x - drag.lastX) / dt;
+          drag.vy = (y - drag.lastY) / dt;
+          drag.x = x;
+          drag.y = y;
+          drag.lastX = x;
+          drag.lastY = y;
+          drag.lastT = now;
+        }
+      }}
+      onPointerUp={(event) => {
+        const drag = dragRef.current;
+        if (drag.repo && drag.pointerId === event.pointerId) {
+          setBodies((prev: Body[]) =>
+            prev.map((body: Body) => {
+              if (body.repo !== drag.repo) return body;
+              return {
+                ...body,
+                vx: body.vx + drag.vx * 0.04,
+                vy: body.vy + drag.vy * 0.04
+              };
+            })
+          );
+          drag.repo = null;
+          drag.pointerId = null;
+        }
+      }}
+      onPointerCancel={() => {
+        dragRef.current.repo = null;
+        dragRef.current.pointerId = null;
       }}
       onPointerLeave={() => {
         mouseRef.current.active = false;
         mouseRef.current.vx = 0;
         mouseRef.current.vy = 0;
         lastMouseRef.current = null;
+        dragRef.current.repo = null;
+        dragRef.current.pointerId = null;
         setHoveredRepo(null);
       }}
     >
@@ -412,6 +523,35 @@ export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfol
           <div
             key={project.repo}
             className="absolute"
+            onPointerDown={(event) => {
+              const target = event.target as HTMLElement;
+              if (target.closest("a,button")) {
+                return;
+              }
+
+              if (!containerRef.current) {
+                return;
+              }
+
+              const containerRect = containerRef.current.getBoundingClientRect();
+              const pointerX = event.clientX - containerRect.left;
+              const pointerY = event.clientY - containerRect.top;
+
+              const now = performance.now();
+              dragRef.current.repo = project.repo;
+              dragRef.current.pointerId = event.pointerId;
+              dragRef.current.offsetX = pointerX - body.x;
+              dragRef.current.offsetY = pointerY - body.y;
+              dragRef.current.x = pointerX;
+              dragRef.current.y = pointerY;
+              dragRef.current.vx = 0;
+              dragRef.current.vy = 0;
+              dragRef.current.lastX = pointerX;
+              dragRef.current.lastY = pointerY;
+              dragRef.current.lastT = now;
+
+              event.currentTarget.setPointerCapture(event.pointerId);
+            }}
             onPointerEnter={() => setHoveredRepo(project.repo)}
             onPointerLeave={() => setHoveredRepo((current: string | null) => (current === project.repo ? null : current))}
             style={{
@@ -422,7 +562,8 @@ export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfol
               transform: "translate(-50%, -50%)",
               opacity: !isSearching || matched ? 1 : 0.18,
               zIndex: isHovered ? 70 : project.size === "hero" ? 14 : 9,
-              transition: "opacity 150ms ease, z-index 20ms linear"
+              transition: "opacity 150ms ease, z-index 20ms linear",
+              cursor: dragRef.current.repo === project.repo ? "grabbing" : "grab"
             }}
           >
             <ProjectCard project={project} expanded={isHovered} onTagClick={onTagClick} />
