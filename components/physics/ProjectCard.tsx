@@ -38,7 +38,7 @@ export const ProjectCard = memo(function ProjectCard({
   const visitCtaClass = isHero || isMiddle
     ? "rounded-full bg-brand px-4 py-1.5 text-xs font-extrabold uppercase tracking-wide text-white transition hover:bg-sky-500"
     : "rounded-full bg-brand px-3 py-1 text-[10px] font-extrabold uppercase tracking-wide text-white transition hover:bg-sky-500";
-  const shownCategories = (isHero || isMiddle ? categories.slice(0, 2) : categories.slice(0, 1)) as Category[];
+  const shownCategories = categories.slice(0, 2) as Category[];
 
   return (
     <article

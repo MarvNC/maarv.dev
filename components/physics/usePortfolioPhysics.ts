@@ -15,12 +15,6 @@ function normalizeSearch(value: string): string {
   return value.toLowerCase().replace(/[-_/]+/g, " ").replace(/\s+/g, " ").trim();
 }
 
-function projectPriority(project: ProjectWithStats): number {
-  const sizeWeight = project.size === "hero" ? 3 : project.size === "middle" ? 2 : 1;
-  const starsWeight = Math.min(2.5, Math.log10((project.stars ?? 0) + 1));
-  return sizeWeight * 10 + starsWeight;
-}
-
 export function usePortfolioPhysics({ projects, query }: UsePortfolioPhysicsArgs) {
   const containerRef = useRef<HTMLElement>(null);
   const [viewport, setViewport] = useState({ width: 1280, height: 820 });
@@ -54,26 +48,7 @@ export function usePortfolioPhysics({ projects, query }: UsePortfolioPhysicsArgs
 
   const normalizedQuery = query.trim().toLowerCase();
   const isSearching = normalizedQuery.length > 0;
-
-  const maxFloatingCount = useMemo(() => {
-    if (viewport.width < 560) return 10;
-    if (viewport.width < 860) return 14;
-    if (viewport.width < 1100) return 20;
-    return projects.length;
-  }, [projects.length, viewport.width]);
   const isCompactViewport = viewport.width < 900;
-
-  const defaultFloatingProjects = useMemo(() => {
-    if (maxFloatingCount >= projects.length) {
-      return projects;
-    }
-
-    return [...projects]
-      .sort((a: ProjectWithStats, b: ProjectWithStats) => projectPriority(b) - projectPriority(a))
-      .slice(0, maxFloatingCount);
-  }, [maxFloatingCount, projects]);
-
-  const activeProjects = useMemo(() => (isSearching ? projects : defaultFloatingProjects), [defaultFloatingProjects, isSearching, projects]);
 
   const matches = useMemo(() => {
     if (!isSearching) return projects;
@@ -99,14 +74,14 @@ export function usePortfolioPhysics({ projects, query }: UsePortfolioPhysicsArgs
 
   const matchSet = useMemo(() => new Set(matches.map((project: ProjectWithStats) => project.repo)), [matches]);
   const heroSet = useMemo(
-    () => new Set(activeProjects.filter((project: ProjectWithStats) => project.size === "hero").map((project: ProjectWithStats) => project.repo)),
-    [activeProjects]
+    () => new Set(projects.filter((project: ProjectWithStats) => project.size === "hero").map((project: ProjectWithStats) => project.repo)),
+    [projects]
   );
 
   const hasCategoryOverlap = (a: Category[], b: Category[]): boolean => a.some((category: Category) => b.includes(category));
 
   const magnets = useMemo(() => createMagnetTargets(matches, viewport.width, viewport.height), [matches, viewport.height, viewport.width]);
-  const heroTargets = useMemo(() => createHeroTargets(activeProjects, viewport.width, viewport.height), [activeProjects, viewport.height, viewport.width]);
+  const heroTargets = useMemo(() => createHeroTargets(projects, viewport.width, viewport.height), [projects, viewport.height, viewport.width]);
   const bodyMap = useMemo(() => new Map(bodies.map((body: Body) => [body.repo, body])), [bodies]);
 
   useEffect(() => {
@@ -122,8 +97,8 @@ export function usePortfolioPhysics({ projects, query }: UsePortfolioPhysicsArgs
   }, []);
 
   useEffect(() => {
-    setBodies(buildInitialBodies(activeProjects, viewport.width, viewport.height));
-  }, [activeProjects, viewport.height, viewport.width]);
+    setBodies(buildInitialBodies(projects, viewport.width, viewport.height));
+  }, [projects, viewport.height, viewport.width]);
 
   useEffect(() => {
     if (physicsReady) return;
@@ -456,7 +431,6 @@ export function usePortfolioPhysics({ projects, query }: UsePortfolioPhysicsArgs
   };
 
   return {
-    renderProjects: activeProjects,
     containerRef,
     bodyMap,
     hoveredRepo,
