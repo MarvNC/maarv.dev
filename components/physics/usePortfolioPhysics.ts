@@ -153,7 +153,7 @@ export function usePortfolioPhysics({ projects, query }: UsePortfolioPhysicsArgs
             const minDist = (rA + rB) * 1.08;
             const avoidDist = minDist * 1.28;
 
-            const multiplier = a.repo === hoveredRepo || b.repo === hoveredRepo ? 0.24 : 1;
+            const multiplier = a.repo === hoveredRepo || b.repo === hoveredRepo ? 0.08 : 1;
             const baseRepel = (760 * rA * rB) / (dist * dist);
             const nearBoost = dist < avoidDist ? 1 + ((avoidDist - dist) / avoidDist) * 3.2 : 1;
             const repel = Math.min(20000, baseRepel * nearBoost * multiplier);
@@ -168,6 +168,8 @@ export function usePortfolioPhysics({ projects, query }: UsePortfolioPhysicsArgs
             if (
               !isSearching &&
               hasCategoryOverlap(categoryByRepo[a.repo] ?? ["tooling"], categoryByRepo[b.repo] ?? ["tooling"]) &&
+              a.repo !== hoveredRepo &&
+              b.repo !== hoveredRepo &&
               dist > avoidDist * 1.25
             ) {
               const attract = Math.min(140, (dist - avoidDist * 1.25) * 0.16);
@@ -282,9 +284,20 @@ export function usePortfolioPhysics({ projects, query }: UsePortfolioPhysicsArgs
             }
           }
 
-          const damping = isHovered ? 0.94 : isHero ? 0.989 : isSearching ? 0.985 : 0.989;
+          const damping = isDragging ? 0.92 : isHovered ? 0.72 : isHero ? 0.989 : isSearching ? 0.985 : 0.989;
           body.vx *= damping;
           body.vy *= damping;
+
+          const speed = Math.hypot(body.vx, body.vy);
+          if (isHovered && !isDragging) {
+            if (speed < 16) {
+              body.vx = 0;
+              body.vy = 0;
+            }
+          } else if (speed < 1.2) {
+            body.vx = 0;
+            body.vy = 0;
+          }
 
           body.x += body.vx * dt;
           body.y += body.vy * dt;

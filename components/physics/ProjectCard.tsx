@@ -27,9 +27,9 @@ export const ProjectCard = memo(function ProjectCard({
   const isMiddle = project.size === "middle";
   const starScale = Math.max(0, Math.log10((project.stars ?? 0) + 1));
   const starProminence = Math.min(1, starScale / 3.2);
-  const starHalo = `0 0 0 ${Math.round(1 + starProminence * 3)}px rgba(251,191,36,${(0.12 + starProminence * 0.22).toFixed(
+  const cardGlow = `drop-shadow(0 0 ${Math.round(6 + starProminence * 8)}px rgba(250,204,21,${(0.08 + starProminence * 0.14).toFixed(
     3
-  )}), 0 6px 14px -10px rgba(251,191,36,${(0.1 + starProminence * 0.25).toFixed(3)})`;
+  )}))`;
   const heroSurfaceClass = isHero
     ? "bg-gradient-to-br from-sky-50/95 via-white/95 to-cyan-50/80 shadow-[0_28px_60px_-30px_rgba(14,116,144,0.45)]"
     : "";
@@ -44,6 +44,7 @@ export const ProjectCard = memo(function ProjectCard({
       className={`rounded-bubble border bg-surface p-4 shadow-float backdrop-blur-md transition-all duration-200 ${categoryClasses[primaryCategory]} ${heroSurfaceClass} ${
         isHero ? "p-5" : ""
       } ${expansionClass} ${hoverScaleClass}`}
+      style={{ filter: cardGlow }}
     >
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
@@ -51,10 +52,7 @@ export const ProjectCard = memo(function ProjectCard({
             {project.name}
           </h3>
           <div className="mt-1 flex flex-wrap items-center gap-2 text-xs font-semibold text-secondary">
-            <span
-              className="inline-flex whitespace-nowrap rounded-full bg-amber-100 px-2.5 py-0.5 text-sm font-extrabold text-amber-800"
-              style={{ boxShadow: starHalo }}
-            >
+            <span className="inline-flex whitespace-nowrap rounded-full bg-amber-100 px-2.5 py-0.5 text-sm font-extrabold text-amber-800">
               ★ {project.stars}
             </span>
             {categories.slice(0, 2).map((category: Category) => (
