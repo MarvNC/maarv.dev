@@ -1,7 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import type { ProjectWithStats } from "@/lib/github";
 
@@ -10,22 +9,36 @@ type PhysicsPortfolioProps = {
   query: string;
 };
 
-type Vec2 = { x: number; y: number };
-type Positioned = Record<string, Vec2>;
+type Body = {
+  repo: string;
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  width: number;
+  height: number;
+  mass: number;
+};
 
-const TOP_PADDING = 130;
+type Vec2 = {
+  x: number;
+  y: number;
+};
+
+const TOP_PADDING = 116;
+const EDGE_PADDING = 12;
 
 function hashSeed(text: string): number {
-  let hash = 1779033703;
+  let hash = 2166136261;
   for (let i = 0; i < text.length; i += 1) {
-    hash = (hash ^ text.charCodeAt(i)) * 3432918353;
-    hash = (hash << 13) | (hash >>> 19);
+    hash ^= text.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
   }
   return Math.abs(hash >>> 0);
 }
 
 function rng(seed: number): () => number {
-  let t = seed + 0x6d2b79f5;
+  let t = seed;
   return () => {
     t += 0x6d2b79f5;
     let m = Math.imul(t ^ (t >>> 15), t | 1);
@@ -35,113 +48,67 @@ function rng(seed: number): () => number {
 }
 
 function formatUpdatedAt(value: string): string {
-  if (!value) {
-    return "unknown";
-  }
-
+  if (!value) return "unknown";
   const then = new Date(value).getTime();
   const now = Date.now();
-  const diffInDays = Math.floor((now - then) / (1000 * 60 * 60 * 24));
-
-  if (diffInDays <= 0) return "today";
-  if (diffInDays < 30) return `${diffInDays}d ago`;
-  const diffInMonths = Math.floor(diffInDays / 30);
-  if (diffInMonths < 12) return `${diffInMonths}mo ago`;
-  return `${Math.floor(diffInMonths / 12)}y ago`;
+  const days = Math.floor((now - then) / (1000 * 60 * 60 * 24));
+  if (days <= 0) return "today";
+  if (days < 30) return `${days}d ago`;
+  const months = Math.floor(days / 30);
+  if (months < 12) return `${months}mo ago`;
+  return `${Math.floor(months / 12)}y ago`;
 }
 
-function getCardMetrics(size: ProjectWithStats["size"]) {
-  if (size === "hero") {
-    return { width: 360, radius: 180 };
+function getCardSize(project: ProjectWithStats) {
+  if (project.size === "hero") {
+    return { width: 350, height: 250, mass: 1.25 };
   }
-  return { width: 300, radius: 148 };
+  return { width: 300, height: 230, mass: 1 };
 }
 
-function nonOverlappingPositions(projects: ProjectWithStats[], width: number, height: number): Positioned {
-  const positions: Positioned = {};
-  const placed: Array<{ x: number; y: number; r: number }> = [];
-  const margin = 28;
-  const random = rng(hashSeed(`w:${width}-h:${height}-n:${projects.length}`));
+function buildInitialBodies(projects: ProjectWithStats[], width: number, height: number): Body[] {
+  const random = rng(hashSeed(`${width}-${height}-${projects.length}`));
+  const bodies: Body[] = [];
 
-  const sorted = [...projects].sort((a, b) => (a.size === "hero" ? -1 : 1) - (b.size === "hero" ? -1 : 1));
+  for (const project of projects) {
+    const size = getCardSize(project);
+    let x = width / 2;
+    let y = height / 2;
 
-  for (const project of sorted) {
-    const { radius } = getCardMetrics(project.size);
-    let chosen: Vec2 | null = null;
+    for (let i = 0; i < 2000; i += 1) {
+      const px = EDGE_PADDING + size.width / 2 + random() * (width - EDGE_PADDING * 2 - size.width);
+      const py =
+        TOP_PADDING +
+        EDGE_PADDING +
+        size.height / 2 +
+        random() * (height - TOP_PADDING - EDGE_PADDING * 2 - size.height);
 
-    for (let i = 0; i < 2200; i += 1) {
-      const x = margin + radius + random() * (width - margin * 2 - radius * 2);
-      const y = TOP_PADDING + radius + random() * (height - TOP_PADDING - margin - radius * 2);
-
-      const overlaps = placed.some((other) => {
-        const dx = x - other.x;
-        const dy = y - other.y;
-        const distance = Math.hypot(dx, dy);
-        return distance < radius + other.r + 16;
+      const overlaps = bodies.some((other) => {
+        const minX = (size.width + other.width) / 2 + 8;
+        const minY = (size.height + other.height) / 2 + 8;
+        return Math.abs(px - other.x) < minX && Math.abs(py - other.y) < minY;
       });
 
       if (!overlaps) {
-        chosen = { x, y };
+        x = px;
+        y = py;
         break;
       }
     }
 
-    if (!chosen) {
-      const index = placed.length;
-      const cols = Math.max(2, Math.floor(width / 330));
-      const col = index % cols;
-      const row = Math.floor(index / cols);
-      chosen = {
-        x: 90 + col * ((width - 180) / Math.max(1, cols - 1)),
-        y: TOP_PADDING + 70 + row * 170
-      };
-    }
-
-    positions[project.repo] = chosen;
-    placed.push({ x: chosen.x, y: chosen.y, r: radius });
+    bodies.push({
+      repo: project.repo,
+      x,
+      y,
+      vx: (random() - 0.5) * 28,
+      vy: (random() - 0.5) * 28,
+      width: size.width,
+      height: size.height,
+      mass: size.mass
+    });
   }
 
-  return positions;
-}
-
-function magnetPositions(matches: ProjectWithStats[], width: number, height: number): Positioned {
-  const target: Positioned = {};
-  const cols = Math.max(1, Math.min(4, Math.floor(width / 320)));
-  const cardW = 300;
-  const cardH = 208;
-  const gap = 22;
-  const rows = Math.ceil(matches.length / cols);
-  const blockW = cols * cardW + (cols - 1) * gap;
-  const blockH = rows * cardH + (rows - 1) * gap;
-  const startX = width / 2 - blockW / 2 + cardW / 2;
-  const startY = Math.max(TOP_PADDING + 30, height / 2 - blockH / 2 + cardH / 2);
-
-  matches.forEach((project, index) => {
-    const col = index % cols;
-    const row = Math.floor(index / cols);
-    target[project.repo] = {
-      x: startX + col * (cardW + gap),
-      y: startY + row * (cardH + gap)
-    };
-  });
-
-  return target;
-}
-
-function cursorPush(point: Vec2, cursor: Vec2 | null): Vec2 {
-  if (!cursor) return { x: 0, y: 0 };
-
-  const dx = point.x - cursor.x;
-  const dy = point.y - cursor.y;
-  const distance = Math.hypot(dx, dy);
-  const influence = 210;
-  if (distance === 0 || distance > influence) return { x: 0, y: 0 };
-
-  const force = ((influence - distance) / influence) ** 1.3;
-  return {
-    x: (dx / distance) * force * 26,
-    y: (dy / distance) * force * 26
-  };
+  return bodies;
 }
 
 function ProjectCard({ project }: { project: ProjectWithStats }) {
@@ -154,23 +121,16 @@ function ProjectCard({ project }: { project: ProjectWithStats }) {
       }`}
     >
       <div className="mb-3 flex items-start justify-between gap-2">
-        <div>
-          <h3 className={`${isHero ? "text-2xl" : "text-xl"} font-extrabold text-primary`}>{project.name}</h3>
-          {isHero && (
-            <span className="mt-1 inline-flex rounded-full bg-brand px-3 py-1 text-xs font-extrabold uppercase tracking-wide text-white">
-              Hero
-            </span>
-          )}
-        </div>
+        <h3 className={`${isHero ? "text-2xl" : "text-xl"} font-extrabold text-primary`}>{project.name}</h3>
         <div className="flex gap-2">
           {project.website && (
             <a
               href={project.website}
               target="_blank"
               rel="noreferrer"
-              className="rounded-full bg-brand px-3 py-1 text-xs font-bold text-white transition hover:bg-sky-500"
+              className="rounded-full bg-brand px-3.5 py-1.5 text-xs font-extrabold uppercase tracking-wide text-white transition hover:bg-sky-500"
             >
-              Site
+              Visit site
             </a>
           )}
           <a
@@ -201,17 +161,18 @@ function ProjectCard({ project }: { project: ProjectWithStats }) {
 }
 
 export function PhysicsPortfolio({ projects, query }: PhysicsPortfolioProps) {
-  const [viewport, setViewport] = useState({ width: 1280, height: 880 });
-  const [cursor, setCursor] = useState<Vec2 | null>(null);
+  const containerRef = useRef<HTMLElement>(null);
+  const [viewport, setViewport] = useState({ width: 1280, height: 820 });
+  const [bodies, setBodies] = useState<Body[]>([]);
 
-  useEffect(() => {
-    const onResize = () => {
-      setViewport({ width: window.innerWidth, height: window.innerHeight });
-    };
-    onResize();
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
+  const mouseRef = useRef<{ x: number; y: number; vx: number; vy: number; active: boolean }>({
+    x: 0,
+    y: 0,
+    vx: 0,
+    vy: 0,
+    active: false
+  });
+  const lastMouseRef = useRef<{ x: number; y: number; t: number } | null>(null);
 
   const normalizedQuery = query.trim().toLowerCase();
   const isSearching = normalizedQuery.length > 0;
@@ -224,91 +185,218 @@ export function PhysicsPortfolio({ projects, query }: PhysicsPortfolioProps) {
     });
   }, [isSearching, normalizedQuery, projects]);
 
-  const worldHeight = useMemo(() => {
-    const approxRows = Math.ceil(projects.length / Math.max(2, Math.floor(viewport.width / 320)));
-    return Math.max(viewport.height, TOP_PADDING + approxRows * 176 + 180);
-  }, [projects.length, viewport.height, viewport.width]);
-
-  const basePositions = useMemo(
-    () => nonOverlappingPositions(projects, Math.max(720, viewport.width - 24), worldHeight),
-    [projects, viewport.width, worldHeight]
-  );
-
-  const magnet = useMemo(
-    () => magnetPositions(matches, Math.max(720, viewport.width - 24), viewport.height),
-    [matches, viewport.height, viewport.width]
-  );
-
   const matchSet = useMemo(() => new Set(matches.map((project: ProjectWithStats) => project.repo)), [matches]);
+
+  const magnets = useMemo(() => {
+    const cols = Math.max(1, Math.min(4, Math.floor(viewport.width / 320)));
+    const cardW = 300;
+    const cardH = 220;
+    const gap = 22;
+    const rows = Math.max(1, Math.ceil(matches.length / cols));
+    const blockW = cols * cardW + (cols - 1) * gap;
+    const blockH = rows * cardH + (rows - 1) * gap;
+    const startX = viewport.width / 2 - blockW / 2 + cardW / 2;
+    const startY = Math.max(TOP_PADDING + 40, viewport.height / 2 - blockH / 2 + cardH / 2);
+
+    const mapped: Record<string, Vec2> = {};
+    matches.forEach((project: ProjectWithStats, index: number) => {
+      const col = index % cols;
+      const row = Math.floor(index / cols);
+      mapped[project.repo] = {
+        x: startX + col * (cardW + gap),
+        y: startY + row * (cardH + gap)
+      };
+    });
+    return mapped;
+  }, [matches, viewport.height, viewport.width]);
+
+  useEffect(() => {
+    const onResize = () => {
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      setViewport({ width: Math.max(360, rect.width), height: Math.max(520, rect.height) });
+    };
+
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  useEffect(() => {
+    setBodies(buildInitialBodies(projects, viewport.width, viewport.height));
+  }, [projects, viewport.height, viewport.width]);
+
+  useEffect(() => {
+    if (!bodies.length) return;
+
+    let frame = 0;
+    let last = performance.now();
+
+    const step = (now: number) => {
+      const dt = Math.min(0.03, (now - last) / 1000);
+      last = now;
+
+      setBodies((prev: Body[]) => {
+        const next = prev.map((body: Body) => ({ ...body }));
+
+        for (let i = 0; i < next.length; i += 1) {
+          const a = next[i];
+
+          for (let j = i + 1; j < next.length; j += 1) {
+            const b = next[j];
+            const dx = b.x - a.x;
+            const dy = b.y - a.y;
+            const dist = Math.max(1, Math.hypot(dx, dy));
+            const nx = dx / dist;
+            const ny = dy / dist;
+
+            const rA = Math.max(a.width, a.height) * 0.34;
+            const rB = Math.max(b.width, b.height) * 0.34;
+            const minDist = rA + rB;
+
+            const repel = Math.min(62000, (8200 * rA * rB) / (dist * dist));
+            const fx = nx * repel;
+            const fy = ny * repel;
+            a.vx -= (fx / a.mass) * dt;
+            a.vy -= (fy / a.mass) * dt;
+            b.vx += (fx / b.mass) * dt;
+            b.vy += (fy / b.mass) * dt;
+
+            if (dist < minDist) {
+              const overlap = minDist - dist;
+              const push = overlap * 0.5;
+              a.x -= nx * push;
+              a.y -= ny * push;
+              b.x += nx * push;
+              b.y += ny * push;
+
+              a.vx -= nx * overlap * 9;
+              a.vy -= ny * overlap * 9;
+              b.vx += nx * overlap * 9;
+              b.vy += ny * overlap * 9;
+            }
+          }
+        }
+
+        const mouse = mouseRef.current;
+
+        for (const body of next) {
+          if (mouse.active) {
+            const dx = body.x - mouse.x;
+            const dy = body.y - mouse.y;
+            const dist = Math.max(1, Math.hypot(dx, dy));
+            const influence = 220;
+
+            if (dist < influence) {
+              const nX = dx / dist;
+              const nY = dy / dist;
+              const power = ((influence - dist) / influence) ** 1.25;
+
+              body.vx += nX * power * 780 * dt + mouse.vx * power * 0.4;
+              body.vy += nY * power * 780 * dt + mouse.vy * power * 0.4;
+            }
+          }
+
+          if (isSearching && matchSet.has(body.repo)) {
+            const target = magnets[body.repo];
+            if (target) {
+              body.vx += (target.x - body.x) * 2.2 * dt;
+              body.vy += (target.y - body.y) * 2.2 * dt;
+            }
+          }
+
+          const drag = isSearching ? 0.988 : 0.992;
+          body.vx *= drag;
+          body.vy *= drag;
+
+          body.x += body.vx * dt;
+          body.y += body.vy * dt;
+
+          const minX = EDGE_PADDING + body.width / 2;
+          const maxX = viewport.width - EDGE_PADDING - body.width / 2;
+          const minY = TOP_PADDING + body.height / 2;
+          const maxY = viewport.height - EDGE_PADDING - body.height / 2;
+
+          if (body.x < minX) {
+            body.x = minX;
+            body.vx = Math.abs(body.vx) * 0.78;
+          } else if (body.x > maxX) {
+            body.x = maxX;
+            body.vx = -Math.abs(body.vx) * 0.78;
+          }
+
+          if (body.y < minY) {
+            body.y = minY;
+            body.vy = Math.abs(body.vy) * 0.78;
+          } else if (body.y > maxY) {
+            body.y = maxY;
+            body.vy = -Math.abs(body.vy) * 0.78;
+          }
+        }
+
+        return next;
+      });
+
+      frame = window.requestAnimationFrame(step);
+    };
+
+    frame = window.requestAnimationFrame(step);
+    return () => window.cancelAnimationFrame(frame);
+  }, [bodies.length, isSearching, magnets, matchSet, viewport.height, viewport.width]);
 
   return (
     <section
-      className="relative h-[100dvh] w-full overflow-auto"
+      ref={containerRef}
+      className="relative h-[100dvh] w-full overflow-hidden"
       onPointerMove={(event) => {
         const rect = event.currentTarget.getBoundingClientRect();
-        setCursor({
-          x: event.clientX - rect.left,
-          y: event.clientY - rect.top + event.currentTarget.scrollTop
-        });
-      }}
-      onPointerLeave={() => setCursor(null)}
-    >
-      <div className="relative" style={{ height: worldHeight }}>
-        {projects.map((project: ProjectWithStats) => {
-          const metrics = getCardMetrics(project.size);
-          const base = basePositions[project.repo] ?? { x: viewport.width / 2, y: viewport.height / 2 };
-          const matched = matchSet.has(project.repo);
-          const target = isSearching && matched ? magnet[project.repo] ?? base : base;
-          const force = cursorPush(target, cursor);
-          const seed = hashSeed(project.repo);
-          const amp = isSearching ? 5 : 10;
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        const now = performance.now();
 
-          return (
-            <motion.div
-              key={project.repo}
-              drag
-              dragElastic={0.22}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{
-                left: target.x,
-                top: target.y,
-                opacity: !isSearching || matched ? 1 : 0.18,
-                scale: !isSearching || matched ? 1 : 0.9
-              }}
-              transition={{
-                left: { type: "spring", stiffness: isSearching ? 200 : 110, damping: 24 },
-                top: { type: "spring", stiffness: isSearching ? 200 : 110, damping: 24 },
-                opacity: { duration: 0.28 },
-                scale: { type: "spring", stiffness: 180, damping: 18 }
-              }}
-              className="absolute"
-              style={{
-                width: metrics.width,
-                maxWidth: "min(94vw, 360px)",
-                transform: "translate(-50%, -50%)",
-                x: force.x,
-                y: force.y,
-                zIndex: project.size === "hero" ? 12 : 8
-              }}
-            >
-              <motion.div
-                animate={{
-                  x: [0, amp, -amp * 0.8, amp * 0.4, 0],
-                  y: [0, -amp * 0.9, amp * 0.6, -amp * 0.4, 0]
-                }}
-                transition={{
-                  duration: 8 + (seed % 5),
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "easeInOut",
-                  delay: (seed % 7) * 0.15
-                }}
-              >
-                <ProjectCard project={project} />
-              </motion.div>
-            </motion.div>
-          );
-        })}
-      </div>
+        const prev = lastMouseRef.current;
+        if (prev) {
+          const dt = Math.max(0.01, (now - prev.t) / 1000);
+          mouseRef.current.vx = (x - prev.x) / dt;
+          mouseRef.current.vy = (y - prev.y) / dt;
+        }
+
+        mouseRef.current.x = x;
+        mouseRef.current.y = y;
+        mouseRef.current.active = true;
+        lastMouseRef.current = { x, y, t: now };
+      }}
+      onPointerLeave={() => {
+        mouseRef.current.active = false;
+        mouseRef.current.vx = 0;
+        mouseRef.current.vy = 0;
+        lastMouseRef.current = null;
+      }}
+    >
+      {projects.map((project: ProjectWithStats) => {
+        const body = bodies.find((item: Body) => item.repo === project.repo);
+        if (!body) return null;
+        const matched = matchSet.has(project.repo);
+
+        return (
+          <div
+            key={project.repo}
+            className="absolute"
+            style={{
+              left: body.x,
+              top: body.y,
+              width: body.width,
+              maxWidth: "min(94vw, 360px)",
+              transform: "translate(-50%, -50%)",
+              opacity: !isSearching || matched ? 1 : 0.2,
+              zIndex: project.size === "hero" ? 12 : 8,
+              transition: "opacity 180ms ease"
+            }}
+          >
+            <ProjectCard project={project} />
+          </div>
+        );
+      })}
     </section>
   );
 }
