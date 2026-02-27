@@ -103,13 +103,16 @@ export function formatUpdatedAt(value: string): string {
 }
 
 export function getCardSize(project: ProjectWithStats) {
+  const nameLength = project.name.length;
+  const widthBonus = nameLength > 18 ? Math.min(180, (nameLength - 18) * 6) : 0;
+
   if (project.size === "hero") {
-    return { width: 388, height: 176, mass: 1.46 };
+    return { width: 388 + Math.round(widthBonus * 0.7), height: 176, mass: 1.46 };
   }
   if (project.size === "middle") {
-    return { width: 296, height: 132, mass: 1.12 };
+    return { width: 296 + widthBonus, height: 132, mass: 1.12 };
   }
-  return { width: 268, height: 120, mass: 1 };
+  return { width: 268 + widthBonus, height: 120, mass: 1 };
 }
 
 export function buildInitialBodies(projects: ProjectWithStats[], width: number, height: number): Body[] {

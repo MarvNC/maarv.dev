@@ -54,26 +54,11 @@ export const ProjectCard = memo(function ProjectCard({
                 ★ {project.stars}
               </span>
             )}
-            <h3 className={`${isHero ? "text-2xl" : isMiddle ? "text-lg" : "text-base"} font-extrabold leading-tight text-primary`}>
+            <h3
+              className={`${isHero ? "text-2xl" : isMiddle ? "text-lg" : "text-base"} min-w-0 whitespace-nowrap font-extrabold leading-tight text-primary`}
+            >
               {project.name}
             </h3>
-          </div>
-          <div className="mt-1 flex flex-wrap items-center gap-2 text-xs font-semibold text-secondary">
-            {categories.slice(0, 2).map((category: Category) => (
-              <button
-                key={category}
-                type="button"
-                onClick={(event) => {
-                  event.preventDefault();
-                  event.stopPropagation();
-                  onTagClick(category);
-                }}
-                className={`rounded-full px-2 py-0.5 text-[11px] font-extrabold uppercase ${categoryBadgeClasses[category]}`}
-              >
-                {category}
-              </button>
-            ))}
-            <span className="whitespace-nowrap">{formatUpdatedAt(project.updatedAt)}</span>
           </div>
         </div>
         <div className="flex shrink-0 flex-nowrap items-center gap-1">
@@ -96,6 +81,24 @@ export const ProjectCard = memo(function ProjectCard({
             Repo
           </a>
         </div>
+      </div>
+
+      <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs font-semibold text-secondary">
+        {categories.slice(0, 2).map((category: Category) => (
+          <button
+            key={category}
+            type="button"
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              onTagClick(category);
+            }}
+            className={`rounded-full px-2 py-0.5 text-[11px] font-extrabold uppercase ${categoryBadgeClasses[category]}`}
+          >
+            {category}
+          </button>
+        ))}
+        <span className="whitespace-nowrap">{formatUpdatedAt(project.updatedAt)}</span>
       </div>
 
       <div className={`overflow-hidden transition-all duration-200 ${expanded ? "mt-3 max-h-64 opacity-100" : "max-h-0 opacity-0"}`}>

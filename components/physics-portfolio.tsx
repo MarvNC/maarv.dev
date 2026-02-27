@@ -58,7 +58,7 @@ function PhysicsCard({
         left: body.x,
         top: body.y,
         width: body.width,
-        maxWidth: "min(93vw, 360px)",
+        maxWidth: "95vw",
         transform: `translate(-50%, -50%) scale(${zoom})`,
         opacity: !isSearching || isMatched ? 1 : 0.18,
         zIndex: isHovered ? 70 : project.size === "hero" ? 14 : 9,
