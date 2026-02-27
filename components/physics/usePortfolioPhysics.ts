@@ -50,6 +50,7 @@ export function usePortfolioPhysics({ projects, query, disablePhysics = false }:
   const normalizedQuery = query.trim().toLowerCase();
   const isSearching = normalizedQuery.length > 0;
   const isCompactViewport = viewport.width < 900;
+  const isDenseViewport = viewport.width < 1280;
 
   const matches = useMemo(() => {
     if (!isSearching) return projects;
@@ -138,7 +139,7 @@ export function usePortfolioPhysics({ projects, query, disablePhysics = false }:
     let last = performance.now();
 
     const step = (now: number) => {
-      const dt = Math.min(0.03, (now - last) / 1000);
+      const dt = Math.min(0.02, Math.max(0.001, (now - last) / 1000));
       last = now;
 
       setBodies((prev: Body[]) => {
@@ -161,10 +162,11 @@ export function usePortfolioPhysics({ projects, query, disablePhysics = false }:
             const avoidDist = minDist * 1.28;
 
             const multiplier = a.repo === hoveredRepo || b.repo === hoveredRepo ? 0.08 : 1;
-            const compactForceScale = isCompactViewport ? 0.42 : 1;
-            const baseRepel = ((560 * rA * rB) / (dist * dist)) * compactForceScale;
-            const nearBoost = dist < avoidDist ? 1 + ((avoidDist - dist) / avoidDist) * (isCompactViewport ? 1.35 : 2.2) : 1;
-            const repel = Math.min(20000, baseRepel * nearBoost * multiplier);
+            const interactionScale = isCompactViewport ? 0.2 : isDenseViewport ? 0.32 : 0.5;
+            const baseRepel = ((420 * rA * rB) / (dist * dist)) * interactionScale;
+            const nearBoost =
+              dist < avoidDist ? 1 + ((avoidDist - dist) / avoidDist) * (isCompactViewport ? 0.7 : isDenseViewport ? 1 : 1.35) : 1;
+            const repel = Math.min(7000, baseRepel * nearBoost * multiplier);
 
             const fx = nx * repel;
             const fy = ny * repel;
@@ -180,7 +182,10 @@ export function usePortfolioPhysics({ projects, query, disablePhysics = false }:
               b.repo !== hoveredRepo &&
               dist > avoidDist * 1.25
             ) {
-              const attract = Math.min(isCompactViewport ? 36 : 70, (dist - avoidDist * 1.25) * (isCompactViewport ? 0.06 : 0.1));
+              const attract = Math.min(
+                isCompactViewport ? 10 : isDenseViewport ? 20 : 35,
+                (dist - avoidDist * 1.25) * (isCompactViewport ? 0.025 : isDenseViewport ? 0.04 : 0.06)
+              );
               a.vx += (nx * attract * dt) / a.mass;
               a.vy += (ny * attract * dt) / a.mass;
               b.vx -= (nx * attract * dt) / b.mass;
@@ -189,16 +194,16 @@ export function usePortfolioPhysics({ projects, query, disablePhysics = false }:
 
             if (dist < minDist) {
               const overlap = minDist - dist;
-              const push = overlap * 0.46;
+              const push = overlap * 0.32;
               a.x -= nx * push;
               a.y -= ny * push;
               b.x += nx * push;
               b.y += ny * push;
 
-              a.vx -= nx * overlap * 2.2;
-              a.vy -= ny * overlap * 2.2;
-              b.vx += nx * overlap * 2.2;
-              b.vy += ny * overlap * 2.2;
+              a.vx -= nx * overlap * 1.1;
+              a.vy -= ny * overlap * 1.1;
+              b.vx += nx * overlap * 1.1;
+              b.vy += ny * overlap * 1.1;
             }
           }
         }
@@ -231,7 +236,7 @@ export function usePortfolioPhysics({ projects, query, disablePhysics = false }:
             const dx = mouse.x - body.x;
             const dy = mouse.y - body.y;
             const dist = Math.max(1, Math.hypot(dx, dy));
-            const influence = isCompactViewport ? 160 : 220;
+            const influence = isCompactViewport ? 120 : isDenseViewport ? 150 : 190;
 
             if (dist < influence) {
               const nX = dx / dist;
@@ -242,8 +247,8 @@ export function usePortfolioPhysics({ projects, query, disablePhysics = false }:
               const speedBoost = Math.min(2, mouseSpeed / 720);
               const spinSign = Math.sign(mouse.vx * nY - mouse.vy * nX) || 1;
 
-              const pullStrength = (isCompactViewport ? 20 : 36) + speedBoost * (isCompactViewport ? 64 : 110);
-              const swirlStrength = (isCompactViewport ? 34 : 56) + speedBoost * (isCompactViewport ? 90 : 150);
+              const pullStrength = (isCompactViewport ? 8 : isDenseViewport ? 14 : 22) + speedBoost * (isCompactViewport ? 24 : isDenseViewport ? 40 : 64);
+              const swirlStrength = (isCompactViewport ? 16 : isDenseViewport ? 24 : 36) + speedBoost * (isCompactViewport ? 36 : isDenseViewport ? 54 : 80);
 
               body.vx += (nX * pullStrength + tangentX * swirlStrength * spinSign) * power * dt;
               body.vy += (nY * pullStrength + tangentY * swirlStrength * spinSign) * power * dt;
@@ -256,7 +261,7 @@ export function usePortfolioPhysics({ projects, query, disablePhysics = false }:
 
                 if (ahead > -90 && ahead < 180 && side < 130) {
                   const wake = (1 - side / 130) * (1 - clamp(ahead, 0, 180) / 180);
-                  const wakeStrength = isCompactViewport ? 70 : 110;
+                  const wakeStrength = isCompactViewport ? 24 : isDenseViewport ? 38 : 58;
                   body.vx += dirX * wake * speedBoost * wakeStrength * dt;
                   body.vy += dirY * wake * speedBoost * wakeStrength * dt;
                 }
@@ -275,7 +280,7 @@ export function usePortfolioPhysics({ projects, query, disablePhysics = false }:
           if (!isSearching) {
             const heroTarget = heroTargets[body.repo];
             if (heroTarget) {
-              const heroPull = isCompactViewport ? 0.72 : 0.95;
+              const heroPull = isCompactViewport ? 0.18 : isDenseViewport ? 0.28 : 0.4;
               body.vx += (heroTarget.x - body.x) * heroPull * dt;
               body.vy += (heroTarget.y - body.y) * heroPull * dt;
             } else {
@@ -286,36 +291,45 @@ export function usePortfolioPhysics({ projects, query, disablePhysics = false }:
               const targetX = body.homeX + wanderX;
               const targetY = body.homeY + wanderY;
 
-              const homePull = isCompactViewport ? 0.36 : 0.46;
+              const homePull = isCompactViewport ? 0.12 : isDenseViewport ? 0.18 : 0.24;
               body.vx += (targetX - body.x) * homePull * dt;
               body.vy += (targetY - body.y) * homePull * dt;
 
-              const swirl = Math.sin(time * 0.7 + seed * 0.0004) * (isCompactViewport ? 6 : 9);
+              const swirl = Math.sin(time * 0.7 + seed * 0.0004) * (isCompactViewport ? 2 : isDenseViewport ? 3 : 4);
               body.vx += ((seed % 2 === 0 ? 1 : -1) * swirl * dt) / body.mass;
             }
           }
 
           const damping = isDragging
-            ? 0.92
+            ? 0.88
             : isHovered
-              ? 0.72
+              ? 0.55
               : isCompactViewport
-                ? 0.955
-                : isHero
-                  ? 0.979
-                  : isSearching
-                    ? 0.972
-                    : 0.975;
+                ? 0.9
+                : isDenseViewport
+                  ? 0.92
+                  : isHero
+                    ? 0.94
+                    : isSearching
+                      ? 0.93
+                      : 0.935;
           body.vx *= damping;
           body.vy *= damping;
 
+          const maxSpeed = isCompactViewport ? 190 : isDenseViewport ? 240 : 320;
           const speed = Math.hypot(body.vx, body.vy);
+          if (speed > maxSpeed) {
+            const velocityScale = maxSpeed / speed;
+            body.vx *= velocityScale;
+            body.vy *= velocityScale;
+          }
+
           if (isHovered && !isDragging) {
-            if (speed < 8) {
+            if (speed < 4) {
               body.vx = 0;
               body.vy = 0;
             }
-          } else if (speed < 0.7) {
+          } else if (speed < 0.45) {
             body.vx = 0;
             body.vy = 0;
           }
@@ -325,18 +339,18 @@ export function usePortfolioPhysics({ projects, query, disablePhysics = false }:
 
           if (body.x < minX) {
             body.x = minX;
-            body.vx = Math.abs(body.vx) * (isCompactViewport ? 0.42 : 0.56);
+            body.vx = Math.abs(body.vx) * (isCompactViewport ? 0.18 : isDenseViewport ? 0.22 : 0.3);
           } else if (body.x > maxX) {
             body.x = maxX;
-            body.vx = -Math.abs(body.vx) * (isCompactViewport ? 0.42 : 0.56);
+            body.vx = -Math.abs(body.vx) * (isCompactViewport ? 0.18 : isDenseViewport ? 0.22 : 0.3);
           }
 
           if (body.y < minY) {
             body.y = minY;
-            body.vy = Math.abs(body.vy) * (isCompactViewport ? 0.42 : 0.56);
+            body.vy = Math.abs(body.vy) * (isCompactViewport ? 0.18 : isDenseViewport ? 0.22 : 0.3);
           } else if (body.y > maxY) {
             body.y = maxY;
-            body.vy = -Math.abs(body.vy) * (isCompactViewport ? 0.42 : 0.56);
+            body.vy = -Math.abs(body.vy) * (isCompactViewport ? 0.18 : isDenseViewport ? 0.22 : 0.3);
           }
         }
 
@@ -348,7 +362,22 @@ export function usePortfolioPhysics({ projects, query, disablePhysics = false }:
 
     frame = window.requestAnimationFrame(step);
     return () => window.cancelAnimationFrame(frame);
-  }, [bodies.length, categoryByRepo, disablePhysics, heroSet, heroTargets, hoveredRepo, isCompactViewport, isSearching, magnets, matchSet, physicsReady, viewport.height, viewport.width]);
+  }, [
+    bodies.length,
+    categoryByRepo,
+    disablePhysics,
+    heroSet,
+    heroTargets,
+    hoveredRepo,
+    isCompactViewport,
+    isDenseViewport,
+    isSearching,
+    magnets,
+    matchSet,
+    physicsReady,
+    viewport.height,
+    viewport.width
+  ]);
 
   const onSurfacePointerMove: PointerEventHandler<HTMLElement> = (event) => {
     if (disablePhysics) {

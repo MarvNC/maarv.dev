@@ -81,7 +81,7 @@ function PhysicsCard({
 export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfolioProps) {
   const [zoom, setZoom] = useState(1);
   const [viewportWidth, setViewportWidth] = useState(1280);
-  const isListMode = viewportWidth < 980;
+  const isListMode = viewportWidth < 1080;
 
   useEffect(() => {
     const onResize = () => {
