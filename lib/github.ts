@@ -22,13 +22,29 @@ type RestRepoPayload = {
   pushed_at?: string;
 };
 
-function getGithubToken(): string | undefined {
-  return process.env.GITHUB_TOKEN ?? process.env.GH_TOKEN ?? process.env.GITHUB_PAT;
+async function getGithubToken(): Promise<string | undefined> {
+  const processToken = process.env.GITHUB_TOKEN ?? process.env.GH_TOKEN ?? process.env.GITHUB_PAT;
+
+  if (processToken) {
+    return processToken;
+  }
+
+  try {
+    const { getCloudflareContext } = await import("@opennextjs/cloudflare");
+    const cfEnv = getCloudflareContext().env as Record<string, unknown>;
+    const cfToken = cfEnv?.GITHUB_TOKEN;
+
+    if (typeof cfToken === "string" && cfToken.length > 0) {
+      return cfToken;
+    }
+  } catch {
+    // Ignore: local/dev or non-Cloudflare runtime.
+  }
+
+  return undefined;
 }
 
-function getGithubHeaders(): Record<string, string> {
-  const token = getGithubToken();
-
+function getGithubHeaders(token?: string): Record<string, string> {
   return {
     Accept: "application/vnd.github+json",
     ...(token ? { Authorization: `Bearer ${token}` } : {})
@@ -44,7 +60,9 @@ function buildGraphQLQuery() {
 }
 
 async function fetchRepoStatsGraphQL(): Promise<Map<string, ProjectLiveStats> | null> {
-  if (!getGithubToken()) {
+  const token = await getGithubToken();
+
+  if (!token) {
     return null;
   }
 
@@ -52,7 +70,7 @@ async function fetchRepoStatsGraphQL(): Promise<Map<string, ProjectLiveStats> | 
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      ...getGithubHeaders()
+      ...getGithubHeaders(token)
     },
     body: JSON.stringify({ query: buildGraphQLQuery() }),
     next: { revalidate: 3600 }
@@ -82,10 +100,12 @@ async function fetchRepoStatsGraphQL(): Promise<Map<string, ProjectLiveStats> | 
 }
 
 async function fetchRepoStatsRest(): Promise<Map<string, ProjectLiveStats> | null> {
+  const token = await getGithubToken();
+
   const stats = await Promise.all(
     projects.map(async (project: Project) => {
       const response = await fetch(`https://api.github.com/repos/${project.owner}/${project.repo}`, {
-        headers: getGithubHeaders(),
+        headers: getGithubHeaders(token),
         next: { revalidate: 3600 }
       } as RequestInit);
 
