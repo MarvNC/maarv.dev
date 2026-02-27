@@ -7,9 +7,7 @@ const DEFAULT_STATS = {
   updatedAt: ""
 } as const;
 
-export const dynamic = "force-static";
-
-export default function Page() {
+export function App() {
   const initialProjects: ProjectWithStats[] = projects.map((project) => ({
     ...project,
     ...DEFAULT_STATS

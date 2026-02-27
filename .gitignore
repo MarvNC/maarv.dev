@@ -1,6 +1,7 @@
 .next
 .open-next
 .wrangler
+.vite
 node_modules
 .vercel
 dist
