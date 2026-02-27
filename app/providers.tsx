@@ -15,11 +15,11 @@ export function Providers({ projects }: ProvidersProps) {
 
   const subtitle = useMemo(() => {
     if (!query.trim()) {
-      return "Drag, toss, and search. Type to magnetize matching work.";
+      return `Drag, toss, and search. ${projects.length} repos indexed.`;
     }
 
-    return `Searching for \"${query}\"`;
-  }, [query]);
+    return `Searching for \"${query}\" in ${projects.length} repos`;
+  }, [projects.length, query]);
 
   return (
     <>

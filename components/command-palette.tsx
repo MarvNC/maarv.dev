@@ -11,22 +11,50 @@ export function CommandPalette({ value, onChange }: CommandPaletteProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    const isTypingTarget = (target: EventTarget | null) => {
+      if (!(target instanceof HTMLElement)) {
+        return false;
+      }
+
+      const tag = target.tagName.toLowerCase();
+      return tag === "input" || tag === "textarea" || target.isContentEditable;
+    };
+
     const onKeyDown = (event: KeyboardEvent) => {
       const isPaletteShortcut = (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k";
       if (isPaletteShortcut || event.key === "/") {
         event.preventDefault();
         inputRef.current?.focus();
+        return;
       }
 
       if (event.key === "Escape" && document.activeElement === inputRef.current) {
         onChange("");
         inputRef.current?.blur();
+        return;
+      }
+
+      if (isTypingTarget(event.target)) {
+        return;
+      }
+
+      if (event.key === "Backspace" && value.length > 0) {
+        event.preventDefault();
+        onChange(value.slice(0, -1));
+        inputRef.current?.focus();
+        return;
+      }
+
+      if (event.key.length === 1 && !event.metaKey && !event.ctrlKey && !event.altKey) {
+        event.preventDefault();
+        onChange(value + event.key);
+        inputRef.current?.focus();
       }
     };
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [onChange]);
+  }, [onChange, value]);
 
   return (
     <div className="pointer-events-none fixed left-1/2 top-4 z-40 w-full max-w-3xl -translate-x-1/2 px-4 sm:top-6">
