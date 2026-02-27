@@ -25,6 +25,8 @@ type Body = {
 
 type Vec2 = { x: number; y: number };
 
+type Category = "app" | "dictionary" | "userscript" | "data" | "tooling" | "other";
+
 type DragState = {
   repo: string | null;
   pointerId: number | null;
@@ -41,6 +43,36 @@ type DragState = {
 
 const TOP_PADDING = 116;
 const EDGE_PADDING = 10;
+
+const categoryClasses: Record<Category, string> = {
+  app: "border-emerald-300/80",
+  dictionary: "border-sky-300/80",
+  userscript: "border-fuchsia-300/80",
+  data: "border-amber-300/80",
+  tooling: "border-cyan-300/80",
+  other: "border-slate-300/80"
+};
+
+const categoryBadgeClasses: Record<Category, string> = {
+  app: "bg-emerald-100 text-emerald-700",
+  dictionary: "bg-sky-100 text-sky-700",
+  userscript: "bg-fuchsia-100 text-fuchsia-700",
+  data: "bg-amber-100 text-amber-700",
+  tooling: "bg-cyan-100 text-cyan-700",
+  other: "bg-slate-100 text-slate-700"
+};
+
+function toCategory(project: ProjectWithStats): Category {
+  const tags = new Set(project.tags.map((tag: string) => tag.toLowerCase()));
+  const name = project.name.toLowerCase();
+
+  if (tags.has("userscript") || tags.has("tampermonkey") || name.includes("userscript")) return "userscript";
+  if (tags.has("dictionary") || tags.has("yomitan") || tags.has("yomichan")) return "dictionary";
+  if (tags.has("dataset") || tags.has("data-pipeline") || tags.has("analytics-dashboard")) return "data";
+  if (tags.has("desktop") || tags.has("web-game") || tags.has("nextjs") || tags.has("react")) return "app";
+  if (tags.has("library") || tags.has("tool") || tags.has("automation") || tags.has("bun")) return "tooling";
+  return "other";
+}
 
 function hashSeed(text: string): number {
   let hash = 2166136261;
@@ -134,17 +166,19 @@ function buildInitialBodies(projects: ProjectWithStats[], width: number, height:
 function ProjectCard({
   project,
   expanded,
-  onTagClick
+  onTagClick,
+  category
 }: {
   project: ProjectWithStats;
   expanded: boolean;
   onTagClick: (tag: string) => void;
+  category: Category;
 }) {
   const isHero = project.size === "hero";
 
   return (
     <article
-      className={`rounded-bubble border border-white/70 bg-surface p-4 shadow-float backdrop-blur-md transition-all duration-200 ${
+      className={`rounded-bubble border bg-surface p-4 shadow-float backdrop-blur-md transition-all duration-200 ${categoryClasses[category]} ${
         isHero ? "ring-2 ring-brand/35 bg-gradient-to-br from-sky-50/85 to-white/95" : ""
       } ${expanded ? "scale-[1.12] shadow-[0_30px_55px_-25px_rgba(58,176,255,0.42)]" : ""}`}
     >
@@ -153,6 +187,17 @@ function ProjectCard({
           <h3 className={`${isHero ? "text-xl" : "text-base"} font-extrabold leading-tight text-primary`}>{project.name}</h3>
           <div className="mt-1 flex items-center gap-2 text-xs font-semibold text-secondary">
             <span className="rounded-full bg-amber-100 px-2 py-0.5 text-sm font-extrabold text-amber-700">★ {project.stars}</span>
+            <button
+              type="button"
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                onTagClick(category);
+              }}
+              className={`rounded-full px-2 py-0.5 text-[11px] font-extrabold uppercase ${categoryBadgeClasses[category]}`}
+            >
+              {category}
+            </button>
             <span>{formatUpdatedAt(project.updatedAt)}</span>
           </div>
         </div>
@@ -249,6 +294,13 @@ export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfol
     () => new Set(projects.filter((project: ProjectWithStats) => project.size === "hero").map((project: ProjectWithStats) => project.repo)),
     [projects]
   );
+  const categoryByRepo = useMemo(() => {
+    const mapped: Record<string, Category> = {};
+    projects.forEach((project: ProjectWithStats) => {
+      mapped[project.repo] = toCategory(project);
+    });
+    return mapped;
+  }, [projects]);
 
   const magnets = useMemo(() => {
     const cols = Math.max(1, Math.min(4, Math.floor(viewport.width / 290)));
@@ -356,6 +408,14 @@ export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfol
             a.vy -= (fy / a.mass) * dt;
             b.vx += (fx / b.mass) * dt;
             b.vy += (fy / b.mass) * dt;
+
+            if (!isSearching && categoryByRepo[a.repo] === categoryByRepo[b.repo] && dist > minDist * 1.35) {
+              const attract = Math.min(220, (dist - minDist * 1.35) * 0.32);
+              a.vx += (nx * attract * dt) / a.mass;
+              a.vy += (ny * attract * dt) / a.mass;
+              b.vx -= (nx * attract * dt) / b.mass;
+              b.vy -= (ny * attract * dt) / b.mass;
+            }
 
             if (dist < minDist) {
               const overlap = minDist - dist;
@@ -494,7 +554,7 @@ export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfol
 
     frame = window.requestAnimationFrame(step);
     return () => window.cancelAnimationFrame(frame);
-  }, [bodies.length, heroSet, heroTargets, hoveredRepo, isSearching, magnets, matchSet, viewport.height, viewport.width]);
+  }, [bodies.length, categoryByRepo, heroSet, heroTargets, hoveredRepo, isSearching, magnets, matchSet, viewport.height, viewport.width]);
 
   return (
     <section
@@ -614,7 +674,12 @@ export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfol
               cursor: dragRef.current.repo === project.repo ? "grabbing" : "grab"
             }}
           >
-            <ProjectCard project={project} expanded={isHovered || project.size === "hero"} onTagClick={onTagClick} />
+            <ProjectCard
+              project={project}
+              expanded={isHovered || project.size === "hero"}
+              onTagClick={onTagClick}
+              category={categoryByRepo[project.repo] ?? "other"}
+            />
           </div>
         );
       })}
