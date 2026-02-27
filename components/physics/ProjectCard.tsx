@@ -46,7 +46,7 @@ export const ProjectCard = memo(function ProjectCard({
       } ${expansionClass} ${hoverScaleClass}`}
       style={{ filter: cardGlow }}
     >
-      <div className="flex items-start justify-between gap-2">
+      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2">
         <div className="min-w-0">
           <div className="flex min-w-0 items-center gap-2">
             {project.stars > 0 && (
@@ -55,7 +55,7 @@ export const ProjectCard = memo(function ProjectCard({
               </span>
             )}
             <h3
-              className={`${isHero ? "text-2xl" : isMiddle ? "text-lg" : "text-base"} min-w-0 truncate font-extrabold leading-tight text-primary`}
+              className={`${isHero ? "text-2xl" : isMiddle ? "text-lg" : "text-base"} min-w-0 font-extrabold leading-tight text-primary [overflow-wrap:anywhere]`}
             >
               {project.name}
             </h3>
