@@ -1,7 +1,7 @@
 "use client";
 
 import type { PointerEvent } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import type { ProjectWithStats } from "@/lib/github";
 
@@ -80,6 +80,19 @@ function PhysicsCard({
 
 export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfolioProps) {
   const [zoom, setZoom] = useState(1);
+  const [viewportWidth, setViewportWidth] = useState(1280);
+  const isListMode = viewportWidth < 980;
+
+  useEffect(() => {
+    const onResize = () => {
+      setViewportWidth(window.innerWidth);
+    };
+
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
   const {
     containerRef,
     bodyMap,
@@ -94,7 +107,29 @@ export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfol
     onSurfacePointerLeave,
     startCardDrag,
     isDragging
-  } = usePortfolioPhysics({ projects, query });
+  } = usePortfolioPhysics({ projects, query, disablePhysics: isListMode });
+
+  if (isListMode) {
+    const visibleProjects = isSearching ? projects.filter((project: ProjectWithStats) => matchSet.has(project.repo)) : projects;
+
+    return (
+      <section className="h-[100dvh] w-full overflow-y-auto px-3 pb-24 pt-24">
+        <div className="mx-auto flex w-full max-w-5xl flex-col gap-3">
+          {visibleProjects.map((project: ProjectWithStats) => (
+            <ProjectCard
+              key={project.repo}
+              project={project}
+              expanded={project.size !== "feature" || isSearching}
+              hovered={false}
+              onTagClick={onTagClick}
+              categories={categoryByRepo[project.repo] ?? ["tooling"]}
+              primaryCategory={(categoryByRepo[project.repo] ?? ["tooling"])[0]}
+            />
+          ))}
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
