@@ -27,7 +27,7 @@ export function Providers({ projects }: ProvidersProps) {
       <div className="pointer-events-none fixed bottom-4 left-1/2 z-20 -translate-x-1/2 rounded-full bg-white/75 px-4 py-2 text-center text-sm font-semibold text-secondary shadow-float backdrop-blur-sm">
         {subtitle}
       </div>
-      <PhysicsPortfolio projects={projects} query={query} />
+      <PhysicsPortfolio projects={projects} query={query} onTagClick={setQuery} />
     </>
   );
 }

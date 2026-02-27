@@ -7,6 +7,7 @@ import type { ProjectWithStats } from "@/lib/github";
 type PhysicsPortfolioProps = {
   projects: ProjectWithStats[];
   query: string;
+  onTagClick: (tag: string) => void;
 };
 
 type Body = {
@@ -20,13 +21,10 @@ type Body = {
   mass: number;
 };
 
-type Vec2 = {
-  x: number;
-  y: number;
-};
+type Vec2 = { x: number; y: number };
 
 const TOP_PADDING = 116;
-const EDGE_PADDING = 12;
+const EDGE_PADDING = 10;
 
 function hashSeed(text: string): number {
   let hash = 2166136261;
@@ -61,9 +59,9 @@ function formatUpdatedAt(value: string): string {
 
 function getCardSize(project: ProjectWithStats) {
   if (project.size === "hero") {
-    return { width: 350, height: 250, mass: 1.25 };
+    return { width: 300, height: 126, mass: 1.35 };
   }
-  return { width: 300, height: 230, mass: 1 };
+  return { width: 232, height: 114, mass: 1 };
 }
 
 function buildInitialBodies(projects: ProjectWithStats[], width: number, height: number): Body[] {
@@ -75,7 +73,7 @@ function buildInitialBodies(projects: ProjectWithStats[], width: number, height:
     let x = width / 2;
     let y = height / 2;
 
-    for (let i = 0; i < 2000; i += 1) {
+    for (let i = 0; i < 1800; i += 1) {
       const px = EDGE_PADDING + size.width / 2 + random() * (width - EDGE_PADDING * 2 - size.width);
       const py =
         TOP_PADDING +
@@ -100,8 +98,8 @@ function buildInitialBodies(projects: ProjectWithStats[], width: number, height:
       repo: project.repo,
       x,
       y,
-      vx: (random() - 0.5) * 28,
-      vy: (random() - 0.5) * 28,
+      vx: (random() - 0.5) * 16,
+      vy: (random() - 0.5) * 16,
       width: size.width,
       height: size.height,
       mass: size.mass
@@ -111,59 +109,85 @@ function buildInitialBodies(projects: ProjectWithStats[], width: number, height:
   return bodies;
 }
 
-function ProjectCard({ project }: { project: ProjectWithStats }) {
+function ProjectCard({
+  project,
+  expanded,
+  onTagClick
+}: {
+  project: ProjectWithStats;
+  expanded: boolean;
+  onTagClick: (tag: string) => void;
+}) {
   const isHero = project.size === "hero";
 
   return (
     <article
-      className={`rounded-bubble border border-white/70 bg-surface p-5 shadow-float backdrop-blur-md ${
+      className={`rounded-bubble border border-white/70 bg-surface p-4 shadow-float backdrop-blur-md transition-all duration-200 ${
         isHero ? "ring-2 ring-brand/35 bg-gradient-to-br from-sky-50/85 to-white/95" : ""
-      }`}
+      } ${expanded ? "scale-[1.12] shadow-[0_30px_55px_-25px_rgba(58,176,255,0.42)]" : ""}`}
     >
-      <div className="mb-3 flex items-start justify-between gap-2">
-        <h3 className={`${isHero ? "text-2xl" : "text-xl"} font-extrabold text-primary`}>{project.name}</h3>
-        <div className="flex gap-2">
+      <div className="flex items-start justify-between gap-2">
+        <div>
+          <h3 className={`${isHero ? "text-lg" : "text-base"} font-extrabold leading-tight text-primary`}>{project.name}</h3>
+          <div className="mt-1 flex items-center gap-2 text-xs font-semibold text-secondary">
+            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-sm font-extrabold text-amber-700">★ {project.stars}</span>
+            <span>{formatUpdatedAt(project.updatedAt)}</span>
+          </div>
+        </div>
+        <div className="flex gap-1.5">
           {project.website && (
             <a
               href={project.website}
               target="_blank"
               rel="noreferrer"
-              className="rounded-full bg-brand px-3.5 py-1.5 text-xs font-extrabold uppercase tracking-wide text-white transition hover:bg-sky-500"
+              className="rounded-full bg-brand px-3 py-1 text-[10px] font-extrabold uppercase tracking-wide text-white transition hover:bg-sky-500"
             >
-              Visit site
+              Visit
             </a>
           )}
           <a
             href={project.href}
             target="_blank"
             rel="noreferrer"
-            className="rounded-full bg-brand/10 px-3 py-1 text-xs font-bold text-brand transition hover:bg-brand hover:text-white"
+            className="rounded-full bg-brand/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-brand transition hover:bg-brand hover:text-white"
           >
             Repo
           </a>
         </div>
       </div>
-      <p className="text-sm font-medium text-secondary">{project.description}</p>
-      <div className="mt-4 flex flex-wrap gap-2">
-        {project.tags.map((tag: string) => (
-          <span key={tag} className="rounded-full bg-sky-100 px-2.5 py-1 text-xs font-bold text-sky-700">
-            {tag}
-          </span>
-        ))}
-      </div>
-      <div className="mt-4 flex items-center gap-3 text-xs font-semibold text-secondary">
-        <span className="rounded-full bg-amber-100 px-2.5 py-1 text-sm font-extrabold text-amber-700">★ {project.stars}</span>
-        <span>Updated {formatUpdatedAt(project.updatedAt)}</span>
-        {project.archived && <span className="rounded-full bg-slate-200 px-2 py-1 text-slate-700">Archived</span>}
+
+      <div className={`overflow-hidden transition-all duration-200 ${expanded ? "mt-3 max-h-64 opacity-100" : "max-h-0 opacity-0"}`}>
+        <p className="text-xs font-medium text-secondary">{project.description}</p>
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {project.tags.map((tag: string) => (
+            <button
+              key={tag}
+              type="button"
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                onTagClick(tag);
+              }}
+              className="cursor-pointer rounded-full bg-sky-100 px-2.5 py-1 text-[11px] font-bold text-sky-700 transition hover:bg-brand hover:text-white"
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
+        <div className="mt-2 flex items-center gap-2 text-[11px] font-semibold text-secondary">
+          {project.archived && <span className="rounded-full bg-slate-200 px-2 py-0.5 text-slate-700">Archived</span>}
+          {project.role && <span className="rounded-full bg-cyan-100 px-2 py-0.5 text-cyan-700">{project.role}</span>}
+        </div>
       </div>
     </article>
   );
 }
 
-export function PhysicsPortfolio({ projects, query }: PhysicsPortfolioProps) {
+export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfolioProps) {
   const containerRef = useRef<HTMLElement>(null);
   const [viewport, setViewport] = useState({ width: 1280, height: 820 });
   const [bodies, setBodies] = useState<Body[]>([]);
+  const [hoveredRepo, setHoveredRepo] = useState<string | null>(null);
 
   const mouseRef = useRef<{ x: number; y: number; vx: number; vy: number; active: boolean }>({
     x: 0,
@@ -188,15 +212,15 @@ export function PhysicsPortfolio({ projects, query }: PhysicsPortfolioProps) {
   const matchSet = useMemo(() => new Set(matches.map((project: ProjectWithStats) => project.repo)), [matches]);
 
   const magnets = useMemo(() => {
-    const cols = Math.max(1, Math.min(4, Math.floor(viewport.width / 320)));
-    const cardW = 300;
-    const cardH = 220;
-    const gap = 22;
+    const cols = Math.max(1, Math.min(4, Math.floor(viewport.width / 290)));
+    const cardW = 250;
+    const cardH = 150;
+    const gap = 16;
     const rows = Math.max(1, Math.ceil(matches.length / cols));
     const blockW = cols * cardW + (cols - 1) * gap;
     const blockH = rows * cardH + (rows - 1) * gap;
     const startX = viewport.width / 2 - blockW / 2 + cardW / 2;
-    const startY = Math.max(TOP_PADDING + 40, viewport.height / 2 - blockH / 2 + cardH / 2);
+    const startY = Math.max(TOP_PADDING + 35, viewport.height / 2 - blockH / 2 + cardH / 2);
 
     const mapped: Record<string, Vec2> = {};
     matches.forEach((project: ProjectWithStats, index: number) => {
@@ -209,6 +233,8 @@ export function PhysicsPortfolio({ projects, query }: PhysicsPortfolioProps) {
     });
     return mapped;
   }, [matches, viewport.height, viewport.width]);
+
+  const bodyMap = useMemo(() => new Map(bodies.map((body: Body) => [body.repo, body])), [bodies]);
 
   useEffect(() => {
     const onResize = () => {
@@ -250,11 +276,13 @@ export function PhysicsPortfolio({ projects, query }: PhysicsPortfolioProps) {
             const nx = dx / dist;
             const ny = dy / dist;
 
-            const rA = Math.max(a.width, a.height) * 0.34;
-            const rB = Math.max(b.width, b.height) * 0.34;
+            const rA = Math.max(a.width, a.height) * 0.32;
+            const rB = Math.max(b.width, b.height) * 0.32;
             const minDist = rA + rB;
 
-            const repel = Math.min(62000, (8200 * rA * rB) / (dist * dist));
+            const multiplier = a.repo === hoveredRepo || b.repo === hoveredRepo ? 0.24 : 1;
+            const repel = Math.min(23000, ((2200 * rA * rB) / (dist * dist)) * multiplier);
+
             const fx = nx * repel;
             const fy = ny * repel;
             a.vx -= (fx / a.mass) * dt;
@@ -264,48 +292,48 @@ export function PhysicsPortfolio({ projects, query }: PhysicsPortfolioProps) {
 
             if (dist < minDist) {
               const overlap = minDist - dist;
-              const push = overlap * 0.5;
+              const push = overlap * 0.42;
               a.x -= nx * push;
               a.y -= ny * push;
               b.x += nx * push;
               b.y += ny * push;
 
-              a.vx -= nx * overlap * 9;
-              a.vy -= ny * overlap * 9;
-              b.vx += nx * overlap * 9;
-              b.vy += ny * overlap * 9;
+              a.vx -= nx * overlap * 2.2;
+              a.vy -= ny * overlap * 2.2;
+              b.vx += nx * overlap * 2.2;
+              b.vy += ny * overlap * 2.2;
             }
           }
         }
 
         const mouse = mouseRef.current;
+        const mouseSpeed = Math.hypot(mouse.vx, mouse.vy);
 
         for (const body of next) {
-          if (mouse.active) {
+          const isHovered = body.repo === hoveredRepo;
+
+          if (mouse.active && !isHovered && mouseSpeed > 32) {
             const dx = body.x - mouse.x;
             const dy = body.y - mouse.y;
             const dist = Math.max(1, Math.hypot(dx, dy));
-            const influence = 220;
+            const influence = 180;
 
             if (dist < influence) {
-              const nX = dx / dist;
-              const nY = dy / dist;
-              const power = ((influence - dist) / influence) ** 1.25;
-
-              body.vx += nX * power * 780 * dt + mouse.vx * power * 0.4;
-              body.vy += nY * power * 780 * dt + mouse.vy * power * 0.4;
+              const power = ((influence - dist) / influence) ** 1.6;
+              body.vx += mouse.vx * power * dt * 0.055;
+              body.vy += mouse.vy * power * dt * 0.055;
             }
           }
 
           if (isSearching && matchSet.has(body.repo)) {
             const target = magnets[body.repo];
             if (target) {
-              body.vx += (target.x - body.x) * 2.2 * dt;
-              body.vy += (target.y - body.y) * 2.2 * dt;
+              body.vx += (target.x - body.x) * 1.9 * dt;
+              body.vy += (target.y - body.y) * 1.9 * dt;
             }
           }
 
-          const drag = isSearching ? 0.988 : 0.992;
+          const drag = isHovered ? 0.9 : isSearching ? 0.986 : 0.991;
           body.vx *= drag;
           body.vy *= drag;
 
@@ -319,18 +347,18 @@ export function PhysicsPortfolio({ projects, query }: PhysicsPortfolioProps) {
 
           if (body.x < minX) {
             body.x = minX;
-            body.vx = Math.abs(body.vx) * 0.78;
+            body.vx = Math.abs(body.vx) * 0.74;
           } else if (body.x > maxX) {
             body.x = maxX;
-            body.vx = -Math.abs(body.vx) * 0.78;
+            body.vx = -Math.abs(body.vx) * 0.74;
           }
 
           if (body.y < minY) {
             body.y = minY;
-            body.vy = Math.abs(body.vy) * 0.78;
+            body.vy = Math.abs(body.vy) * 0.74;
           } else if (body.y > maxY) {
             body.y = maxY;
-            body.vy = -Math.abs(body.vy) * 0.78;
+            body.vy = -Math.abs(body.vy) * 0.74;
           }
         }
 
@@ -342,12 +370,12 @@ export function PhysicsPortfolio({ projects, query }: PhysicsPortfolioProps) {
 
     frame = window.requestAnimationFrame(step);
     return () => window.cancelAnimationFrame(frame);
-  }, [bodies.length, isSearching, magnets, matchSet, viewport.height, viewport.width]);
+  }, [bodies.length, hoveredRepo, isSearching, magnets, matchSet, viewport.height, viewport.width]);
 
   return (
     <section
       ref={containerRef}
-      className="relative h-[100dvh] w-full overflow-hidden"
+      className="relative h-[100dvh] w-full select-none overflow-hidden"
       onPointerMove={(event) => {
         const rect = event.currentTarget.getBoundingClientRect();
         const x = event.clientX - rect.left;
@@ -371,29 +399,33 @@ export function PhysicsPortfolio({ projects, query }: PhysicsPortfolioProps) {
         mouseRef.current.vx = 0;
         mouseRef.current.vy = 0;
         lastMouseRef.current = null;
+        setHoveredRepo(null);
       }}
     >
       {projects.map((project: ProjectWithStats) => {
-        const body = bodies.find((item: Body) => item.repo === project.repo);
+        const body = bodyMap.get(project.repo);
         if (!body) return null;
         const matched = matchSet.has(project.repo);
+        const isHovered = hoveredRepo === project.repo;
 
         return (
           <div
             key={project.repo}
             className="absolute"
+            onPointerEnter={() => setHoveredRepo(project.repo)}
+            onPointerLeave={() => setHoveredRepo((current: string | null) => (current === project.repo ? null : current))}
             style={{
               left: body.x,
               top: body.y,
               width: body.width,
-              maxWidth: "min(94vw, 360px)",
+              maxWidth: "min(93vw, 360px)",
               transform: "translate(-50%, -50%)",
-              opacity: !isSearching || matched ? 1 : 0.2,
-              zIndex: project.size === "hero" ? 12 : 8,
-              transition: "opacity 180ms ease"
+              opacity: !isSearching || matched ? 1 : 0.18,
+              zIndex: isHovered ? 70 : project.size === "hero" ? 14 : 9,
+              transition: "opacity 150ms ease, z-index 20ms linear"
             }}
           >
-            <ProjectCard project={project} />
+            <ProjectCard project={project} expanded={isHovered} onTagClick={onTagClick} />
           </div>
         );
       })}
