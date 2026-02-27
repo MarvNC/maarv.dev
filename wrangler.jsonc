@@ -22,5 +22,15 @@
     }
   },
   "compatibility_date": "2026-02-27",
-  "compatibility_flags": ["nodejs_compat", "nodejs_compat_populate_process_env"]
+  "compatibility_flags": ["nodejs_compat", "nodejs_compat_populate_process_env"],
+  "routes": [
+    {
+      "pattern": "maarv.dev/*",
+      "zone_name": "maarv.dev"
+    },
+    {
+      "pattern": "www.maarv.dev/*",
+      "zone_name": "maarv.dev"
+    }
+  ]
 }
