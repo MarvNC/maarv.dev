@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 
 import type { ProjectWithStats } from "@/lib/github";
 
@@ -163,7 +163,7 @@ function buildInitialBodies(projects: ProjectWithStats[], width: number, height:
   return bodies;
 }
 
-function ProjectCard({
+const ProjectCard = memo(function ProjectCard({
   project,
   expanded,
   onTagClick,
@@ -248,13 +248,14 @@ function ProjectCard({
       </div>
     </article>
   );
-}
+});
 
 export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfolioProps) {
   const containerRef = useRef<HTMLElement>(null);
   const [viewport, setViewport] = useState({ width: 1280, height: 820 });
   const [bodies, setBodies] = useState<Body[]>([]);
   const [hoveredRepo, setHoveredRepo] = useState<string | null>(null);
+  const [physicsReady, setPhysicsReady] = useState(false);
 
   const mouseRef = useRef<{ x: number; y: number; vx: number; vy: number; active: boolean }>({
     x: 0,
@@ -372,7 +373,32 @@ export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfol
   }, [projects, viewport.height, viewport.width]);
 
   useEffect(() => {
-    if (!bodies.length) return;
+    if (physicsReady) return;
+
+    let cancelled = false;
+    const start = () => {
+      if (!cancelled) {
+        setPhysicsReady(true);
+      }
+    };
+
+    if (typeof window !== "undefined" && "requestIdleCallback" in globalThis) {
+      const idleId = window.requestIdleCallback(start, { timeout: 450 });
+      return () => {
+        cancelled = true;
+        window.cancelIdleCallback(idleId);
+      };
+    }
+
+    const timerId = setTimeout(start, 180);
+    return () => {
+      cancelled = true;
+      clearTimeout(timerId);
+    };
+  }, [physicsReady]);
+
+  useEffect(() => {
+    if (!bodies.length || !physicsReady) return;
 
     let frame = 0;
     let last = performance.now();
@@ -554,7 +580,7 @@ export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfol
 
     frame = window.requestAnimationFrame(step);
     return () => window.cancelAnimationFrame(frame);
-  }, [bodies.length, categoryByRepo, heroSet, heroTargets, hoveredRepo, isSearching, magnets, matchSet, viewport.height, viewport.width]);
+  }, [bodies.length, categoryByRepo, heroSet, heroTargets, hoveredRepo, isSearching, magnets, matchSet, physicsReady, viewport.height, viewport.width]);
 
   return (
     <section

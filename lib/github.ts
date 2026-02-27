@@ -7,37 +7,61 @@ const DEFAULT_STATS: ProjectLiveStats = {
   updatedAt: ""
 };
 
-async function fetchRepoStats(owner: string, repo: string): Promise<ProjectLiveStats> {
-  const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
+type GraphNode = {
+  stargazerCount?: number;
+  pushedAt?: string;
+};
+
+function buildGraphQLQuery() {
+  const lines = projects.map(
+    (project: Project, index: number) =>
+      `r${index}: repository(owner: \"${project.owner}\", name: \"${project.repo}\") { stargazerCount pushedAt }`
+  );
+  return `query PortfolioStats {\n${lines.join("\n")}\n}`;
+}
+
+async function fetchRepoStatsGraphQL(): Promise<Map<string, ProjectLiveStats> | null> {
+  const response = await fetch("https://api.github.com/graphql", {
+    method: "POST",
     headers: {
+      "Content-Type": "application/json",
       Accept: "application/vnd.github+json",
       ...(process.env.GITHUB_TOKEN ? { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` } : {})
     },
+    body: JSON.stringify({ query: buildGraphQLQuery() }),
     next: { revalidate: 3600 }
-  });
+  } as RequestInit);
 
   if (!response.ok) {
-    return DEFAULT_STATS;
+    return null;
   }
 
-  const data = (await response.json()) as {
-    stargazers_count?: number;
-    pushed_at?: string;
+  const payload = (await response.json()) as {
+    data?: Record<string, GraphNode | null>;
   };
 
-  return {
-    stars: data.stargazers_count ?? 0,
-    updatedAt: data.pushed_at ?? ""
-  };
+  if (!payload.data) {
+    return null;
+  }
+
+  const mapped = new Map<string, ProjectLiveStats>();
+
+  projects.forEach((project: Project, index: number) => {
+    const node = payload.data?.[`r${index}`];
+    mapped.set(project.repo, {
+      stars: node?.stargazerCount ?? 0,
+      updatedAt: node?.pushedAt ?? ""
+    });
+  });
+
+  return mapped;
 }
 
 export async function getProjectsWithStats(): Promise<ProjectWithStats[]> {
-  const stats = await Promise.all(
-    projects.map(async (project) => {
-      const live = await fetchRepoStats(project.owner, project.repo);
-      return { ...project, ...live };
-    })
-  );
+  const statsMap = await fetchRepoStatsGraphQL();
 
-  return stats;
+  return projects.map((project: Project) => ({
+    ...project,
+    ...(statsMap?.get(project.repo) ?? DEFAULT_STATS)
+  }));
 }
