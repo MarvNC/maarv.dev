@@ -15,7 +15,7 @@ type StatsSnapshot = {
 };
 
 const STATS_URL =
-  process.env.NEXT_PUBLIC_STATS_URL ?? "https://raw.githubusercontent.com/MarvNC/maarv.dev/data/stats.json";
+  import.meta.env.VITE_STATS_URL ?? "https://raw.githubusercontent.com/MarvNC/maarv.dev/data/stats.json";
 
 export function Providers({ projects }: ProvidersProps) {
   const [query, setQuery] = useState("");
@@ -38,8 +38,8 @@ export function Providers({ projects }: ProvidersProps) {
         const payload = (await response.json()) as StatsSnapshot;
         const statsMap = payload.projects ?? {};
 
-        setLiveProjects((current) =>
-          current.map((project) => ({
+        setLiveProjects((current: ProjectWithStats[]) =>
+          current.map((project: ProjectWithStats) => ({
             ...project,
             stars: statsMap[project.repo]?.stars ?? project.stars,
             updatedAt: statsMap[project.repo]?.updatedAt ?? project.updatedAt
