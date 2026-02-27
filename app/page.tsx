@@ -1,10 +1,19 @@
 import { Providers } from "@/app/providers";
-import { getProjectsWithStats } from "@/lib/github";
+import type { ProjectWithStats } from "@/lib/github";
+import { projects } from "@/lib/projects";
 
-export const dynamic = "force-dynamic";
+const DEFAULT_STATS = {
+  stars: 0,
+  updatedAt: ""
+} as const;
 
-export default async function Page() {
-  const projects = await getProjectsWithStats();
+export const dynamic = "force-static";
 
-  return <Providers projects={projects} />;
+export default function Page() {
+  const initialProjects: ProjectWithStats[] = projects.map((project) => ({
+    ...project,
+    ...DEFAULT_STATS
+  }));
+
+  return <Providers projects={initialProjects} />;
 }

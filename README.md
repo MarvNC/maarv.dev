@@ -35,10 +35,15 @@ bun run format
 ## Data
 
 - Project metadata lives in `data/projects.json`.
-- Live stars and update times are fetched from GitHub in `lib/github.ts` with ISR caching.
+- `app/providers.tsx` fetches `stats.json` from the `data` branch on GitHub CDN at runtime.
+- `scripts/generate-stats.mjs` builds the stats snapshot.
+- `.github/workflows/update-stats-data.yml` overwrites the `data` branch every 24h.
 
-Optional environment variable for higher GitHub rate limits:
+Optional local environment variables:
 
 ```bash
 GITHUB_TOKEN=your_token_here
+NEXT_PUBLIC_STATS_URL=https://raw.githubusercontent.com/MarvNC/maarv.dev/data/stats.json
 ```
+
+For GitHub Actions, set `GH_STATS_TOKEN` in repository secrets if the default workflow token cannot access all repos.
