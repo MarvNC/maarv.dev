@@ -1,6 +1,6 @@
 import projectsJson from "@/data/projects.json";
 
-export type BubbleSize = "hero" | "feature";
+export type BubbleSize = "hero" | "middle" | "feature";
 
 export type Project = {
   name: string;
@@ -9,6 +9,7 @@ export type Project = {
   href: string;
   description: string;
   tags: string[];
+  categories?: string[];
   size: BubbleSize;
   archived?: boolean;
   website?: string;

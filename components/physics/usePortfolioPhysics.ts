@@ -4,12 +4,16 @@ import type { ProjectWithStats } from "@/lib/github";
 
 import { EDGE_PADDING, TOP_PADDING } from "@/components/physics/constants";
 import type { Body, Category, DragState, PointerState } from "@/components/physics/types";
-import { buildInitialBodies, clamp, createHeroTargets, createMagnetTargets, hashSeed, toCategory } from "@/components/physics/utils";
+import { buildInitialBodies, clamp, createHeroTargets, createMagnetTargets, hashSeed, toCategories } from "@/components/physics/utils";
 
 type UsePortfolioPhysicsArgs = {
   projects: ProjectWithStats[];
   query: string;
 };
+
+function normalizeSearch(value: string): string {
+  return value.toLowerCase().replace(/[-_/]+/g, " ").replace(/\s+/g, " ").trim();
+}
 
 export function usePortfolioPhysics({ projects, query }: UsePortfolioPhysicsArgs) {
   const containerRef = useRef<HTMLElement>(null);
@@ -34,29 +38,46 @@ export function usePortfolioPhysics({ projects, query }: UsePortfolioPhysicsArgs
     lastT: 0
   });
 
+  const categoryByRepo = useMemo(() => {
+    const mapped: Record<string, Category[]> = {};
+    projects.forEach((project: ProjectWithStats) => {
+      mapped[project.repo] = toCategories(project);
+    });
+    return mapped;
+  }, [projects]);
+
   const normalizedQuery = query.trim().toLowerCase();
   const isSearching = normalizedQuery.length > 0;
 
   const matches = useMemo(() => {
     if (!isSearching) return projects;
+
+    const terms = normalizeSearch(normalizedQuery)
+      .split(" ")
+      .filter(Boolean);
+
     return projects.filter((project: ProjectWithStats) => {
-      const haystack = [project.name, project.description, ...project.tags].join(" ").toLowerCase();
-      return haystack.includes(normalizedQuery);
+      const categories = categoryByRepo[project.repo] ?? ["tooling"];
+      const searchable = [
+        project.name,
+        project.description,
+        ...project.tags,
+        ...categories,
+        ...categories.map((category: Category) => category.replace(/-/g, " "))
+      ].join(" ");
+
+      const haystack = normalizeSearch(searchable);
+      return terms.every((term: string) => haystack.includes(term));
     });
-  }, [isSearching, normalizedQuery, projects]);
+  }, [categoryByRepo, isSearching, normalizedQuery, projects]);
 
   const matchSet = useMemo(() => new Set(matches.map((project: ProjectWithStats) => project.repo)), [matches]);
   const heroSet = useMemo(
     () => new Set(projects.filter((project: ProjectWithStats) => project.size === "hero").map((project: ProjectWithStats) => project.repo)),
     [projects]
   );
-  const categoryByRepo = useMemo(() => {
-    const mapped: Record<string, Category> = {};
-    projects.forEach((project: ProjectWithStats) => {
-      mapped[project.repo] = toCategory(project);
-    });
-    return mapped;
-  }, [projects]);
+
+  const hasCategoryOverlap = (a: Category[], b: Category[]): boolean => a.some((category: Category) => b.includes(category));
 
   const magnets = useMemo(() => createMagnetTargets(matches, viewport.width, viewport.height), [matches, viewport.height, viewport.width]);
   const heroTargets = useMemo(() => createHeroTargets(projects, viewport.width, viewport.height), [projects, viewport.height, viewport.width]);
@@ -127,12 +148,15 @@ export function usePortfolioPhysics({ projects, query }: UsePortfolioPhysicsArgs
             const nx = dx / dist;
             const ny = dy / dist;
 
-            const rA = Math.max(a.width, a.height) * 0.32;
-            const rB = Math.max(b.width, b.height) * 0.32;
-            const minDist = rA + rB;
+            const rA = Math.max(a.width, a.height) * 0.34;
+            const rB = Math.max(b.width, b.height) * 0.34;
+            const minDist = (rA + rB) * 1.08;
+            const avoidDist = minDist * 1.28;
 
             const multiplier = a.repo === hoveredRepo || b.repo === hoveredRepo ? 0.24 : 1;
-            const repel = Math.min(12000, ((980 * rA * rB) / (dist * dist)) * multiplier);
+            const baseRepel = (760 * rA * rB) / (dist * dist);
+            const nearBoost = dist < avoidDist ? 1 + ((avoidDist - dist) / avoidDist) * 3.2 : 1;
+            const repel = Math.min(20000, baseRepel * nearBoost * multiplier);
 
             const fx = nx * repel;
             const fy = ny * repel;
@@ -141,8 +165,12 @@ export function usePortfolioPhysics({ projects, query }: UsePortfolioPhysicsArgs
             b.vx += (fx / b.mass) * dt;
             b.vy += (fy / b.mass) * dt;
 
-            if (!isSearching && categoryByRepo[a.repo] === categoryByRepo[b.repo] && dist > minDist * 1.35) {
-              const attract = Math.min(220, (dist - minDist * 1.35) * 0.32);
+            if (
+              !isSearching &&
+              hasCategoryOverlap(categoryByRepo[a.repo] ?? ["tooling"], categoryByRepo[b.repo] ?? ["tooling"]) &&
+              dist > avoidDist * 1.25
+            ) {
+              const attract = Math.min(140, (dist - avoidDist * 1.25) * 0.16);
               a.vx += (nx * attract * dt) / a.mass;
               a.vy += (ny * attract * dt) / a.mass;
               b.vx -= (nx * attract * dt) / b.mass;
@@ -151,16 +179,16 @@ export function usePortfolioPhysics({ projects, query }: UsePortfolioPhysicsArgs
 
             if (dist < minDist) {
               const overlap = minDist - dist;
-              const push = overlap * 0.42;
+              const push = overlap * 0.56;
               a.x -= nx * push;
               a.y -= ny * push;
               b.x += nx * push;
               b.y += ny * push;
 
-              a.vx -= nx * overlap * 2.2;
-              a.vy -= ny * overlap * 2.2;
-              b.vx += nx * overlap * 2.2;
-              b.vy += ny * overlap * 2.2;
+              a.vx -= nx * overlap * 2.8;
+              a.vy -= ny * overlap * 2.8;
+              b.vx += nx * overlap * 2.8;
+              b.vy += ny * overlap * 2.8;
             }
           }
         }

@@ -13,7 +13,12 @@
       "bun"
     ],
     "size": "hero",
-    "website": "https://rotmg-stats.maarv.dev/"
+    "website": "https://rotmg-stats.maarv.dev/",
+    "categories": [
+      "dataset",
+      "analytics",
+      "web-app"
+    ]
   },
   {
     "name": "cc-cedict-yomitan",
@@ -28,7 +33,12 @@
       "dataset-generation",
       "bun"
     ],
-    "size": "feature"
+    "size": "feature",
+    "categories": [
+      "dictionary",
+      "dataset",
+      "learning"
+    ]
   },
   {
     "name": "wordshk-yomitan",
@@ -43,7 +53,12 @@
       "linguistic-data",
       "data-pipeline"
     ],
-    "size": "feature"
+    "size": "middle",
+    "categories": [
+      "dictionary",
+      "dataset",
+      "learning"
+    ]
   },
   {
     "name": "pixiv-yomitan",
@@ -58,7 +73,12 @@
       "dataset",
       "bun"
     ],
-    "size": "feature"
+    "size": "middle",
+    "categories": [
+      "dictionary",
+      "dataset",
+      "learning"
+    ]
   },
   {
     "name": "GeiDuckApp",
@@ -74,7 +94,11 @@
       "flashcards"
     ],
     "size": "hero",
-    "website": "https://geiduck.app"
+    "website": "https://geiduck.app",
+    "categories": [
+      "learning",
+      "web-app"
+    ]
   },
   {
     "name": "lolibrary-links",
@@ -89,7 +113,11 @@
       "annas-archive",
       "nyaa"
     ],
-    "size": "feature"
+    "size": "feature",
+    "categories": [
+      "userscript",
+      "library"
+    ]
   },
   {
     "name": "day-one-to-md",
@@ -105,7 +133,10 @@
       "bun"
     ],
     "size": "feature",
-    "website": "https://day-one-to-md.maarv.dev/"
+    "website": "https://day-one-to-md.maarv.dev/",
+    "categories": [
+      "web-app"
+    ]
   },
   {
     "name": "mydramalist-native-titles",
@@ -120,7 +151,11 @@
       "mydramalist",
       "browser-automation"
     ],
-    "size": "feature"
+    "size": "feature",
+    "categories": [
+      "userscript",
+      "automation"
+    ]
   },
   {
     "name": "FreeVinesStats",
@@ -136,7 +171,12 @@
       "dashboard"
     ],
     "size": "hero",
-    "website": "https://vine.maarv.dev/"
+    "website": "https://vine.maarv.dev/",
+    "categories": [
+      "dataset",
+      "analytics",
+      "web-app"
+    ]
   },
   {
     "name": "pixiv-dump",
@@ -151,7 +191,12 @@
       "prisma",
       "typescript"
     ],
-    "size": "feature"
+    "size": "middle",
+    "categories": [
+      "dictionary",
+      "dataset",
+      "learning"
+    ]
   },
   {
     "name": "EReaders-for-Language-Learning",
@@ -167,7 +212,12 @@
       "android"
     ],
     "size": "feature",
-    "website": "https://ereaders.maarv.dev/"
+    "website": "https://ereaders.maarv.dev/",
+    "categories": [
+      "integration",
+      "learning",
+      "resource"
+    ]
   },
   {
     "name": "ReallySafeSkiing",
@@ -183,7 +233,10 @@
       "vite"
     ],
     "size": "hero",
-    "website": "https://ski.maarv.dev/"
+    "website": "https://ski.maarv.dev/",
+    "categories": [
+      "game"
+    ]
   },
   {
     "name": "nyaawords",
@@ -199,7 +252,11 @@
       "nextjs"
     ],
     "size": "feature",
-    "website": "https://nyaawords.app/"
+    "website": "https://nyaawords.app/",
+    "categories": [
+      "dictionary",
+      "web-app"
+    ]
   },
   {
     "name": "words-hk-parse",
@@ -215,7 +272,12 @@
       "csv"
     ],
     "size": "feature",
-    "website": "https://www.npmjs.com/package/words-hk-parse"
+    "website": "https://www.npmjs.com/package/words-hk-parse",
+    "categories": [
+      "dictionary",
+      "library",
+      "learning"
+    ]
   },
   {
     "name": "win-to-mac-ahk",
@@ -230,7 +292,10 @@
       "windows",
       "remote-desktop"
     ],
-    "size": "feature"
+    "size": "feature",
+    "categories": [
+      "cli"
+    ]
   },
   {
     "name": "yomitan-dictionaries",
@@ -245,7 +310,11 @@
       "japanese",
       "chinese"
     ],
-    "size": "feature"
+    "size": "middle",
+    "categories": [
+      "dictionary",
+      "learning"
+    ]
   },
   {
     "name": "yomitan",
@@ -262,7 +331,12 @@
     ],
     "size": "feature",
     "website": "https://yomitan.wiki",
-    "role": "maintainer"
+    "role": "maintainer",
+    "categories": [
+      "browser-extension",
+      "dictionary",
+      "learning"
+    ]
   },
   {
     "name": "yomichan-dict-builder",
@@ -277,8 +351,12 @@
       "npm-library",
       "typescript"
     ],
-    "size": "feature",
-    "website": "https://www.npmjs.com/package/yomichan-dict-builder"
+    "size": "middle",
+    "website": "https://www.npmjs.com/package/yomichan-dict-builder",
+    "categories": [
+      "dictionary",
+      "library"
+    ]
   },
   {
     "name": "AB-enhancements",
@@ -293,7 +371,11 @@
       "metadata-autofill",
       "filtering"
     ],
-    "size": "feature"
+    "size": "feature",
+    "categories": [
+      "userscript",
+      "automation"
+    ]
   },
   {
     "name": "JP-Resources",
@@ -308,7 +390,12 @@
       "frequency-dictionaries",
       "anki-tooling"
     ],
-    "size": "feature"
+    "size": "feature",
+    "categories": [
+      "dictionary",
+      "dataset",
+      "learning"
+    ]
   },
   {
     "name": "better-bookwalker",
@@ -323,7 +410,11 @@
       "react",
       "vite"
     ],
-    "size": "feature"
+    "size": "feature",
+    "categories": [
+      "userscript",
+      "web-app"
+    ]
   },
   {
     "name": "anki-card",
@@ -338,7 +429,12 @@
       "card-template",
       "yomitan"
     ],
-    "size": "feature"
+    "size": "feature",
+    "categories": [
+      "dictionary",
+      "integration",
+      "learning"
+    ]
   },
   {
     "name": "StampNyaa",
@@ -353,7 +449,11 @@
       "line-stickers",
       "sticker-manager"
     ],
-    "size": "feature"
+    "size": "middle",
+    "categories": [
+      "desktop-app",
+      "integration"
+    ]
   },
   {
     "name": "kanjidego-yomitan-anki",
@@ -368,7 +468,12 @@
       "anki",
       "dictionary"
     ],
-    "size": "feature"
+    "size": "feature",
+    "categories": [
+      "dictionary",
+      "dataset",
+      "learning"
+    ]
   },
   {
     "name": "name-ln",
@@ -383,7 +488,10 @@
       "light-novel",
       "file-renaming"
     ],
-    "size": "feature"
+    "size": "feature",
+    "categories": [
+      "cli"
+    ]
   },
   {
     "name": "light-novel-naming-scheme",
@@ -398,7 +506,10 @@
       "file-naming",
       "epub"
     ],
-    "size": "feature"
+    "size": "feature",
+    "categories": [
+      "resource"
+    ]
   },
   {
     "name": "canvas-attendance-sheets",
@@ -413,7 +524,10 @@
       "markdown",
       "pdf"
     ],
-    "size": "feature"
+    "size": "feature",
+    "categories": [
+      "cli"
+    ]
   },
   {
     "name": "discord-websocket-text-inserter",
@@ -428,7 +542,12 @@
       "violentmonkey",
       "automation"
     ],
-    "size": "feature"
+    "size": "feature",
+    "categories": [
+      "userscript",
+      "automation",
+      "integration"
+    ]
   },
   {
     "name": "jpdb-freq-list",
@@ -443,7 +562,12 @@
       "yomitan",
       "jpdb"
     ],
-    "size": "feature"
+    "size": "feature",
+    "categories": [
+      "userscript",
+      "dictionary",
+      "learning"
+    ]
   },
   {
     "name": "wikipedia-yomitan",
@@ -458,7 +582,12 @@
       "dbpedia",
       "dictionary"
     ],
-    "size": "feature"
+    "size": "feature",
+    "categories": [
+      "dictionary",
+      "dataset",
+      "learning"
+    ]
   },
   {
     "name": "japanese-furigana-normalize",
@@ -474,7 +603,12 @@
       "npm"
     ],
     "size": "feature",
-    "website": "https://www.npmjs.com/package/japanese-furigana-normalize"
+    "website": "https://www.npmjs.com/package/japanese-furigana-normalize",
+    "categories": [
+      "dictionary",
+      "library",
+      "learning"
+    ]
   },
   {
     "name": "yomitan-dict-stats",
@@ -489,7 +623,12 @@
       "dictionary-stats",
       "japanese"
     ],
-    "size": "feature"
+    "size": "feature",
+    "categories": [
+      "dictionary",
+      "analytics",
+      "learning"
+    ]
   },
   {
     "name": "is-cjk-hanzi",
@@ -505,7 +644,11 @@
       "text-processing"
     ],
     "size": "feature",
-    "website": "https://www.npmjs.com/package/is-cjk-hanzi"
+    "website": "https://www.npmjs.com/package/is-cjk-hanzi",
+    "categories": [
+      "library",
+      "learning"
+    ]
   },
   {
     "name": "vn-userscripts",
@@ -520,7 +663,10 @@
       "browser-enhancement",
       "javascript"
     ],
-    "size": "feature"
+    "size": "feature",
+    "categories": [
+      "userscript"
+    ]
   },
   {
     "name": "twitter-rss-discord-webhook",
@@ -535,7 +681,11 @@
       "nitter",
       "twitter"
     ],
-    "size": "feature"
+    "size": "feature",
+    "categories": [
+      "automation",
+      "integration"
+    ]
   },
   {
     "name": "yomichan-dict-reader",
@@ -550,7 +700,12 @@
       "nodejs",
       "npm-package"
     ],
-    "size": "feature"
+    "size": "feature",
+    "categories": [
+      "dictionary",
+      "library",
+      "learning"
+    ]
   },
   {
     "name": "vndb-highlighter",
@@ -566,7 +721,10 @@
       "violentmonkey"
     ],
     "size": "feature",
-    "archived": true
+    "archived": true,
+    "categories": [
+      "userscript"
+    ]
   },
   {
     "name": "texthooker-websocket",
@@ -582,6 +740,10 @@
       "visual-novel"
     ],
     "size": "feature",
-    "archived": true
+    "archived": true,
+    "categories": [
+      "userscript",
+      "integration"
+    ]
   }
 ]

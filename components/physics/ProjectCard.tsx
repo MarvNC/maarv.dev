@@ -10,47 +10,74 @@ type ProjectCardProps = {
   project: ProjectWithStats;
   expanded: boolean;
   onTagClick: (tag: string) => void;
-  category: Category;
+  categories: Category[];
+  primaryCategory: Category;
 };
 
-export const ProjectCard = memo(function ProjectCard({ project, expanded, onTagClick, category }: ProjectCardProps) {
+export const ProjectCard = memo(function ProjectCard({
+  project,
+  expanded,
+  onTagClick,
+  categories,
+  primaryCategory
+}: ProjectCardProps) {
   const isHero = project.size === "hero";
-  const headerLayout = isHero ? "flex-row items-start" : "flex-col items-start";
+  const isMiddle = project.size === "middle";
+  const heroSurfaceClass = isHero
+    ? "bg-gradient-to-br from-sky-50/95 via-white/95 to-cyan-50/80 shadow-[0_28px_60px_-30px_rgba(14,116,144,0.45)]"
+    : "";
+  const expansionClass = expanded
+    ? isHero || isMiddle
+      ? "shadow-[0_30px_55px_-25px_rgba(58,176,255,0.42)]"
+      : "scale-[1.12] shadow-[0_30px_55px_-25px_rgba(58,176,255,0.42)]"
+    : "";
+  const visitCtaClass = isHero || isMiddle
+    ? "rounded-full bg-brand px-4 py-1.5 text-xs font-extrabold uppercase tracking-wide text-white transition hover:bg-sky-500"
+    : "rounded-full bg-brand px-3 py-1 text-[10px] font-extrabold uppercase tracking-wide text-white transition hover:bg-sky-500";
 
   return (
     <article
-      className={`rounded-bubble border bg-surface p-4 shadow-float backdrop-blur-md transition-all duration-200 ${categoryClasses[category]} ${
-        isHero ? "ring-2 ring-brand/35 bg-gradient-to-br from-sky-50/85 to-white/95" : ""
-      } ${expanded ? "scale-[1.12] shadow-[0_30px_55px_-25px_rgba(58,176,255,0.42)]" : ""}`}
+      className={`rounded-bubble border bg-surface p-4 shadow-float backdrop-blur-md transition-all duration-200 ${categoryClasses[primaryCategory]} ${heroSurfaceClass} ${
+        isHero ? "p-5" : ""
+      } ${expansionClass}`}
     >
-      <div className={`flex ${headerLayout} justify-between gap-2`}>
+      <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <h3 className={`${isHero ? "text-xl" : "text-base"} font-extrabold leading-tight text-primary`}>{project.name}</h3>
+          <h3 className={`${isHero ? "text-2xl" : isMiddle ? "text-lg" : "text-base"} font-extrabold leading-tight text-primary`}>
+            {project.name}
+          </h3>
           <div className="mt-1 flex flex-wrap items-center gap-2 text-xs font-semibold text-secondary">
-            <span className="inline-flex whitespace-nowrap rounded-full bg-amber-100 px-2 py-0.5 text-sm font-extrabold text-amber-700">
+            <span
+              className={`inline-flex whitespace-nowrap rounded-full bg-amber-100 px-2 py-0.5 font-extrabold text-amber-700 ${
+                isHero ? "text-base" : "text-sm"
+              }`}
+            >
               ★ {project.stars}
             </span>
-            <button
-              type="button"
-              onClick={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                onTagClick(category);
-              }}
-              className={`rounded-full px-2 py-0.5 text-[11px] font-extrabold uppercase ${categoryBadgeClasses[category]}`}
-            >
-              {category}
-            </button>
+            {categories.slice(0, 2).map((category: Category) => (
+              <button
+                key={category}
+                type="button"
+                onClick={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  onTagClick(category);
+                }}
+                className={`rounded-full px-2 py-0.5 text-[11px] font-extrabold uppercase ${categoryBadgeClasses[category]}`}
+              >
+                {category}
+              </button>
+            ))}
             <span className="whitespace-nowrap">{formatUpdatedAt(project.updatedAt)}</span>
           </div>
         </div>
-        <div className="flex flex-wrap items-center gap-1.5">
+        <div className="flex shrink-0 flex-nowrap items-center gap-1">
           {project.website && (
             <a
               href={project.website}
               target="_blank"
               rel="noreferrer"
-              className="rounded-full bg-brand px-4 py-1.5 text-xs font-extrabold uppercase tracking-wide text-white transition hover:bg-sky-500"
+              className={`${visitCtaClass} whitespace-nowrap`}
             >
               Visit
             </a>
@@ -59,7 +86,7 @@ export const ProjectCard = memo(function ProjectCard({ project, expanded, onTagC
             href={project.href}
             target="_blank"
             rel="noreferrer"
-            className="rounded-full bg-brand/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-brand transition hover:bg-brand hover:text-white"
+            className="whitespace-nowrap rounded-full bg-brand/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-brand transition hover:bg-brand hover:text-white"
           >
             Repo
           </a>

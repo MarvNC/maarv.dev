@@ -3,16 +3,68 @@ import type { ProjectWithStats } from "@/lib/github";
 import { EDGE_PADDING, TOP_PADDING } from "@/components/physics/constants";
 import type { Body, Category, Vec2 } from "@/components/physics/types";
 
-export function toCategory(project: ProjectWithStats): Category {
+const categoryOrder: Category[] = [
+  "web-app",
+  "desktop-app",
+  "game",
+  "dictionary",
+  "dataset",
+  "userscript",
+  "browser-extension",
+  "library",
+  "automation",
+  "cli",
+  "learning",
+  "analytics",
+  "integration",
+  "resource",
+  "tooling"
+];
+
+function inferCategories(project: ProjectWithStats): Category[] {
   const tags = new Set(project.tags.map((tag: string) => tag.toLowerCase()));
   const name = project.name.toLowerCase();
 
-  if (tags.has("userscript") || tags.has("tampermonkey") || name.includes("userscript")) return "userscript";
-  if (tags.has("dictionary") || tags.has("yomitan") || tags.has("yomichan")) return "dictionary";
-  if (tags.has("dataset") || tags.has("data-pipeline") || tags.has("analytics-dashboard")) return "data";
-  if (tags.has("desktop") || tags.has("web-game") || tags.has("nextjs") || tags.has("react")) return "app";
-  if (tags.has("library") || tags.has("tool") || tags.has("automation") || tags.has("bun")) return "tooling";
-  return "other";
+  const categories = new Set<Category>();
+
+  if (tags.has("userscript") || tags.has("tampermonkey") || name.includes("userscript")) categories.add("userscript");
+  if (tags.has("browser-extension") || tags.has("extension")) categories.add("browser-extension");
+  if (tags.has("desktop") || tags.has("desktop-app") || tags.has("electron") || tags.has("ahk")) categories.add("desktop-app");
+  if (tags.has("web-game") || tags.has("game") || tags.has("threejs") || tags.has("rapier")) categories.add("game");
+  if (tags.has("dictionary") || tags.has("yomitan") || tags.has("yomichan")) categories.add("dictionary");
+  if (tags.has("dataset") || tags.has("data-pipeline") || tags.has("sqlite")) categories.add("dataset");
+  if (tags.has("library") || tags.has("npm") || tags.has("package")) categories.add("library");
+  if (tags.has("cli") || tags.has("command") || tags.has("deno")) categories.add("cli");
+  if (tags.has("automation") || tags.has("github-actions") || tags.has("rss") || tags.has("webhook")) categories.add("automation");
+  if (tags.has("dashboard") || tags.has("analytics") || tags.has("stats")) categories.add("analytics");
+  if (tags.has("websocket") || tags.has("discord") || tags.has("integration")) categories.add("integration");
+  if (tags.has("learning") || tags.has("japanese") || tags.has("cantonese") || tags.has("anki")) categories.add("learning");
+  if (tags.has("resource") || tags.has("mkdocs") || tags.has("documentation")) categories.add("resource");
+  if ((tags.has("nextjs") || tags.has("react") || tags.has("vite") || tags.has("webapp")) && !categories.has("game")) {
+    categories.add("web-app");
+  }
+
+  if (categories.size === 0) {
+    categories.add("tooling");
+  }
+
+  return categoryOrder.filter((category: Category) => categories.has(category));
+}
+
+export function toCategories(project: ProjectWithStats): Category[] {
+  const given = (project.categories ?? [])
+    .map((category: string) => category as Category)
+    .filter((category: Category) => categoryOrder.includes(category));
+
+  if (given.length > 0) {
+    return categoryOrder.filter((category: Category) => given.includes(category));
+  }
+
+  return inferCategories(project);
+}
+
+export function primaryCategory(project: ProjectWithStats): Category {
+  return toCategories(project)[0] ?? "tooling";
 }
 
 export function hashSeed(text: string): number {
@@ -52,7 +104,10 @@ export function formatUpdatedAt(value: string): string {
 
 export function getCardSize(project: ProjectWithStats) {
   if (project.size === "hero") {
-    return { width: 350, height: 152, mass: 1.38 };
+    return { width: 388, height: 176, mass: 1.46 };
+  }
+  if (project.size === "middle") {
+    return { width: 296, height: 132, mass: 1.12 };
   }
   return { width: 268, height: 120, mass: 1 };
 }

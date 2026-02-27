@@ -21,7 +21,22 @@ export type Body = {
 
 export type Vec2 = { x: number; y: number };
 
-export type Category = "app" | "dictionary" | "userscript" | "data" | "tooling" | "other";
+export type Category =
+  | "web-app"
+  | "desktop-app"
+  | "game"
+  | "dictionary"
+  | "dataset"
+  | "userscript"
+  | "browser-extension"
+  | "library"
+  | "automation"
+  | "cli"
+  | "learning"
+  | "analytics"
+  | "integration"
+  | "resource"
+  | "tooling";
 
 export type DragState = {
   repo: string | null;

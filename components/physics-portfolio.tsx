@@ -5,7 +5,7 @@ import type { PointerEvent } from "react";
 import type { ProjectWithStats } from "@/lib/github";
 
 import { ProjectCard } from "@/components/physics/ProjectCard";
-import type { PhysicsPortfolioProps } from "@/components/physics/types";
+import type { Category, PhysicsPortfolioProps } from "@/components/physics/types";
 import { usePortfolioPhysics } from "@/components/physics/usePortfolioPhysics";
 
 function PhysicsCard({
@@ -15,7 +15,8 @@ function PhysicsCard({
   isHovered,
   isMatched,
   isSearching,
-  category,
+  categories,
+  primaryCategory,
   isDragging,
   onStartDrag,
   onHoverEnter,
@@ -31,7 +32,8 @@ function PhysicsCard({
   isHovered: boolean;
   isMatched: boolean;
   isSearching: boolean;
-  category: "app" | "dictionary" | "userscript" | "data" | "tooling" | "other";
+  categories: Category[];
+  primaryCategory: Category;
   isDragging: boolean;
   onStartDrag: (event: PointerEvent<HTMLDivElement>) => void;
   onHoverEnter: () => void;
@@ -63,9 +65,10 @@ function PhysicsCard({
     >
       <ProjectCard
         project={project}
-        expanded={isHovered || project.size === "hero"}
+        expanded={isHovered || project.size === "hero" || project.size === "middle"}
         onTagClick={onTagClick}
-        category={category}
+        categories={categories}
+        primaryCategory={primaryCategory}
       />
     </div>
   );
@@ -110,7 +113,8 @@ export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfol
             isHovered={hoveredRepo === project.repo}
             isMatched={matchSet.has(project.repo)}
             isSearching={isSearching}
-            category={categoryByRepo[project.repo] ?? "other"}
+            categories={categoryByRepo[project.repo] ?? ["tooling"]}
+            primaryCategory={(categoryByRepo[project.repo] ?? ["tooling"])[0]}
             isDragging={isDragging(project.repo)}
             onStartDrag={(event) => startCardDrag(project.repo, body, event)}
             onHoverEnter={() => setHoveredRepo(project.repo)}

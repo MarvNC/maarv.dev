@@ -11,8 +11,8 @@ const dosis = Dosis({
 });
 
 export const metadata: Metadata = {
-  title: "MarvNC - Physics Canvas Portfolio",
-  description: "Playful floating portfolio with magnetic command search."
+  title: "Marv's Repos",
+  description: "Interactive repository catalog with live search and physics-based layout."
 };
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
