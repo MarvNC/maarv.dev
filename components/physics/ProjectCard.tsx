@@ -26,12 +26,11 @@ export const ProjectCard = memo(function ProjectCard({
   const isHero = project.size === "hero";
   const isMiddle = project.size === "middle";
   const starScale = Math.max(0, Math.log10((project.stars ?? 0) + 1));
-  const starGlowClass =
-    starScale >= 2.6
-      ? "bg-amber-300 text-amber-900 shadow-[0_0_0_2px_rgba(245,158,11,0.32),0_6px_14px_-8px_rgba(180,83,9,0.65)]"
-      : starScale >= 2.1
-        ? "bg-amber-200 text-amber-800 shadow-[0_0_0_2px_rgba(251,191,36,0.24)]"
-        : "bg-amber-100 text-amber-700";
+  const starProminence = Math.min(1, starScale / 3.2);
+  const starTransform = `scale(${(1 + starProminence * 0.18).toFixed(3)})`;
+  const starShadow = `0 ${Math.round(2 + starProminence * 2)}px ${Math.round(8 + starProminence * 8)}px -8px rgba(15,23,42,${(
+    0.18 + starProminence * 0.28
+  ).toFixed(3)})`;
   const heroSurfaceClass = isHero
     ? "bg-gradient-to-br from-sky-50/95 via-white/95 to-cyan-50/80 shadow-[0_28px_60px_-30px_rgba(14,116,144,0.45)]"
     : "";
@@ -53,7 +52,10 @@ export const ProjectCard = memo(function ProjectCard({
             {project.name}
           </h3>
           <div className="mt-1 flex flex-wrap items-center gap-2 text-xs font-semibold text-secondary">
-            <span className={`inline-flex whitespace-nowrap rounded-full px-2.5 py-0.5 text-sm font-extrabold ${starGlowClass}`}>
+            <span
+              className="inline-flex whitespace-nowrap rounded-full bg-amber-100 px-2.5 py-0.5 text-sm font-extrabold text-amber-800"
+              style={{ transform: starTransform, transformOrigin: "left center", boxShadow: starShadow }}
+            >
               ★ {project.stars}
             </span>
             {categories.slice(0, 2).map((category: Category) => (
