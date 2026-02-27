@@ -46,59 +46,60 @@ export const ProjectCard = memo(function ProjectCard({
       } ${expansionClass} ${hoverScaleClass}`}
       style={{ filter: cardGlow }}
     >
-      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2">
-        <div className="min-w-0">
-          <div className="flex min-w-0 items-center gap-2">
-            {project.stars > 0 && (
-              <span className="inline-flex whitespace-nowrap rounded-full bg-amber-100 px-2.5 py-0.5 text-sm font-extrabold text-amber-800">
-                ★ {project.stars}
-              </span>
-            )}
-            <h3
-              className={`${isHero ? "text-2xl" : isMiddle ? "text-lg" : "text-base"} min-w-0 font-extrabold leading-tight text-primary [overflow-wrap:anywhere]`}
-            >
-              {project.name}
-            </h3>
-          </div>
+      <div className="min-w-0">
+        <div className="flex min-w-0 items-center gap-2">
+          {project.stars > 0 && (
+            <span className="inline-flex whitespace-nowrap rounded-full bg-amber-100 px-2.5 py-0.5 text-sm font-extrabold text-amber-800">
+              ★ {project.stars}
+            </span>
+          )}
+          <h3
+            className={`${isHero ? "text-2xl" : isMiddle ? "text-lg" : "text-base"} min-w-0 font-extrabold leading-tight text-primary [overflow-wrap:anywhere]`}
+          >
+            {project.name}
+          </h3>
         </div>
-        <div className="flex shrink-0 flex-nowrap items-center gap-1">
-          {project.website && (
+
+        <div className="mt-1.5 flex flex-wrap items-center gap-2">
+          <div className="flex min-w-0 flex-wrap items-center gap-2 text-xs font-semibold text-secondary">
+            {categories.slice(0, 2).map((category: Category) => (
+              <button
+                key={category}
+                type="button"
+                onClick={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  onTagClick(category);
+                }}
+                className={`rounded-full px-2 py-0.5 text-[11px] font-extrabold uppercase ${categoryBadgeClasses[category]}`}
+              >
+                {category}
+              </button>
+            ))}
+            <span className="whitespace-nowrap">{formatUpdatedAt(project.updatedAt)}</span>
+          </div>
+
+          <div className="ml-auto flex shrink-0 flex-nowrap items-center gap-1">
+            {project.website && (
+              <a
+                href={project.website}
+                target="_blank"
+                rel="noreferrer"
+                className={`${visitCtaClass} whitespace-nowrap`}
+              >
+                Visit
+              </a>
+            )}
             <a
-              href={project.website}
+              href={project.href}
               target="_blank"
               rel="noreferrer"
-              className={`${visitCtaClass} whitespace-nowrap`}
+              className="whitespace-nowrap rounded-full bg-brand/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-brand transition hover:bg-brand hover:text-white"
             >
-              Visit
+              Repo
             </a>
-          )}
-          <a
-            href={project.href}
-            target="_blank"
-            rel="noreferrer"
-            className="whitespace-nowrap rounded-full bg-brand/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-brand transition hover:bg-brand hover:text-white"
-          >
-            Repo
-          </a>
+          </div>
         </div>
-      </div>
-
-      <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs font-semibold text-secondary">
-        {categories.slice(0, 2).map((category: Category) => (
-          <button
-            key={category}
-            type="button"
-            onClick={(event) => {
-              event.preventDefault();
-              event.stopPropagation();
-              onTagClick(category);
-            }}
-            className={`rounded-full px-2 py-0.5 text-[11px] font-extrabold uppercase ${categoryBadgeClasses[category]}`}
-          >
-            {category}
-          </button>
-        ))}
-        <span className="whitespace-nowrap">{formatUpdatedAt(project.updatedAt)}</span>
       </div>
 
       <div className={`overflow-hidden transition-all duration-200 ${expanded ? "mt-3 max-h-64 opacity-100" : "max-h-0 opacity-0"}`}>
