@@ -32,23 +32,16 @@ async function getGithubToken(): Promise<string | undefined> {
   try {
     const { getCloudflareContext } = await import("@opennextjs/cloudflare");
     const cfEnv = getCloudflareContext().env as Record<string, unknown>;
-    const cfToken = cfEnv?.GITHUB_TOKEN;
+    const cfToken = cfEnv.GITHUB_TOKEN;
 
     if (typeof cfToken === "string" && cfToken.length > 0) {
       return cfToken;
     }
   } catch {
-    // Ignore: local/dev or non-Cloudflare runtime.
+    // Not running in Cloudflare runtime.
   }
 
   return undefined;
-}
-
-function getGithubHeaders(token?: string): Record<string, string> {
-  return {
-    Accept: "application/vnd.github+json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
 }
 
 function buildGraphQLQuery() {
@@ -70,7 +63,8 @@ async function fetchRepoStatsGraphQL(): Promise<Map<string, ProjectLiveStats> | 
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      ...getGithubHeaders(token)
+      Accept: "application/vnd.github+json",
+      Authorization: `Bearer ${token}`
     },
     body: JSON.stringify({ query: buildGraphQLQuery() }),
     next: { revalidate: 3600 }
@@ -105,7 +99,10 @@ async function fetchRepoStatsRest(): Promise<Map<string, ProjectLiveStats> | nul
   const stats = await Promise.all(
     projects.map(async (project: Project) => {
       const response = await fetch(`https://api.github.com/repos/${project.owner}/${project.repo}`, {
-        headers: getGithubHeaders(token),
+        headers: {
+          Accept: "application/vnd.github+json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        },
         next: { revalidate: 3600 }
       } as RequestInit);
 
