@@ -48,14 +48,14 @@ export const ProjectCard = memo(function ProjectCard({
     >
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <div className="flex items-center gap-2">
+          <div className="flex min-w-0 items-center gap-2">
             {project.stars > 0 && (
               <span className="inline-flex whitespace-nowrap rounded-full bg-amber-100 px-2.5 py-0.5 text-sm font-extrabold text-amber-800">
                 ★ {project.stars}
               </span>
             )}
             <h3
-              className={`${isHero ? "text-2xl" : isMiddle ? "text-lg" : "text-base"} min-w-0 whitespace-nowrap font-extrabold leading-tight text-primary`}
+              className={`${isHero ? "text-2xl" : isMiddle ? "text-lg" : "text-base"} min-w-0 truncate font-extrabold leading-tight text-primary`}
             >
               {project.name}
             </h3>
