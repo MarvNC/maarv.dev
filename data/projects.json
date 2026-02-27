@@ -1,0 +1,587 @@
+[
+  {
+    "name": "rotmg-player-stats",
+    "owner": "MarvNC",
+    "repo": "rotmg-player-stats",
+    "href": "https://github.com/MarvNC/rotmg-player-stats",
+    "description": "Static React dashboard for Realm of the Mad God player-count trends, backed by automated scraping, aggregation, and daily published data snapshots.",
+    "tags": [
+      "rotmg",
+      "analytics-dashboard",
+      "react",
+      "typescript",
+      "bun"
+    ],
+    "size": "hero",
+    "website": "https://rotmg-stats.maarv.dev/"
+  },
+  {
+    "name": "cc-cedict-yomitan",
+    "owner": "MarvNC",
+    "repo": "cc-cedict-yomitan",
+    "href": "https://github.com/MarvNC/cc-cedict-yomitan",
+    "description": "Automated pipeline that fetches CC-CEDICT and CC-Canto source data, converts it into Yomitan-ready dictionary packages, and publishes updated release artifacts daily. This is a practical language-learning dataset repo backed by reproducible build scripts.",
+    "tags": [
+      "chinese-dictionary",
+      "cantonese",
+      "yomitan",
+      "dataset-generation",
+      "bun"
+    ],
+    "size": "feature"
+  },
+  {
+    "name": "wordshk-yomitan",
+    "owner": "MarvNC",
+    "repo": "wordshk-yomitan",
+    "href": "https://github.com/MarvNC/wordshk-yomitan",
+    "description": "Automated pipeline that fetches Words.hk source data and publishes Yomitan-ready Cantonese dictionaries as versioned GitHub releases. It turns raw CSV exports into installable term, hanzi, and frequency dictionaries for end users.",
+    "tags": [
+      "cantonese",
+      "yomitan",
+      "dictionary",
+      "linguistic-data",
+      "data-pipeline"
+    ],
+    "size": "feature"
+  },
+  {
+    "name": "pixiv-yomitan",
+    "owner": "MarvNC",
+    "repo": "pixiv-yomitan",
+    "href": "https://github.com/MarvNC/pixiv-yomitan",
+    "description": "Automated pipeline that converts Pixiv Encyclopedia dumps into large Yomitan dictionaries (full and light variants) and publishes fresh release artifacts daily. Built as a Bun + TypeScript data build project with reproducible export outputs.",
+    "tags": [
+      "yomitan",
+      "japanese-dictionary",
+      "pixiv",
+      "dataset",
+      "bun"
+    ],
+    "size": "feature"
+  },
+  {
+    "name": "GeiDuckApp",
+    "owner": "MarvNC",
+    "repo": "GeiDuckApp",
+    "href": "https://github.com/MarvNC/GeiDuckApp",
+    "description": "GeiDuckApp is a full-stack Cantonese SRS web app that combines dictionary and frequency-list data into a review workflow. It is built with Next.js + Drizzle on Cloudflare D1 and includes import pipelines for multiple Cantonese learning datasets.",
+    "tags": [
+      "nextjs",
+      "typescript",
+      "cantonese",
+      "srs",
+      "flashcards"
+    ],
+    "size": "hero",
+    "website": "https://geiduck.app"
+  },
+  {
+    "name": "lolibrary-links",
+    "owner": "MarvNC",
+    "repo": "lolibrary-links",
+    "href": "https://github.com/MarvNC/lolibrary-links",
+    "description": "Small browser userscript that augments lolibrary.moe entries with direct outbound links to Anna's Archive and related sources, improving click-through access to external archives/search results.",
+    "tags": [
+      "userscript",
+      "tampermonkey",
+      "lolibrary",
+      "annas-archive",
+      "nyaa"
+    ],
+    "size": "feature"
+  },
+  {
+    "name": "day-one-to-md",
+    "owner": "MarvNC",
+    "repo": "day-one-to-md",
+    "href": "https://github.com/MarvNC/day-one-to-md",
+    "description": "Browser-based Day One export converter that turns `Journal.json` or `.zip` archives into one chronologically sorted Markdown file. Processing is local-only in the client, with copy/download output actions for quick export.",
+    "tags": [
+      "day-one",
+      "markdown",
+      "javascript",
+      "vite",
+      "bun"
+    ],
+    "size": "feature",
+    "website": "https://day-one-to-md.maarv.dev/"
+  },
+  {
+    "name": "mydramalist-native-titles",
+    "owner": "MarvNC",
+    "repo": "mydramalist-native-titles",
+    "href": "https://github.com/MarvNC/mydramalist-native-titles",
+    "description": "A focused browser userscript that augments MyDramaList by injecting native-language titles for dramas and staff pages, with a toggle to keep English titles visible. It is a lightweight utility project suitable as a supporting portfolio item.",
+    "tags": [
+      "userscript",
+      "tampermonkey",
+      "violentmonkey",
+      "mydramalist",
+      "browser-automation"
+    ],
+    "size": "feature"
+  },
+  {
+    "name": "FreeVinesStats",
+    "owner": "MarvNC",
+    "repo": "FreeVinesStats",
+    "href": "https://github.com/MarvNC/FreeVinesStats",
+    "description": "FreeVinesStats is a React + TypeScript web dashboard that visualizes Amazon Vine drop activity from a remote stats feed. It focuses on time-based trends (hourly, daily, weekly) with interactive filtering and chart views.",
+    "tags": [
+      "react",
+      "typescript",
+      "vite",
+      "data-visualization",
+      "dashboard"
+    ],
+    "size": "hero",
+    "website": "https://vine.maarv.dev/"
+  },
+  {
+    "name": "pixiv-dump",
+    "owner": "MarvNC",
+    "repo": "pixiv-dump",
+    "href": "https://github.com/MarvNC/pixiv-dump",
+    "description": "An automated pipeline that scrapes Pixiv Encyclopedia and publishes periodic SQLite database dumps for downstream use (for example dictionary generation). It is best presented as a data project with crawler automation rather than a user-facing app.",
+    "tags": [
+      "pixiv",
+      "web-scraping",
+      "sqlite",
+      "prisma",
+      "typescript"
+    ],
+    "size": "feature"
+  },
+  {
+    "name": "EReaders-for-Language-Learning",
+    "owner": "MarvNC",
+    "repo": "EReaders-for-Language-Learning",
+    "href": "https://github.com/MarvNC/EReaders-for-Language-Learning",
+    "description": "An MkDocs-powered documentation website for using Android e-readers in language learning workflows (dictionary lookups, Anki mining, and device reviews). It is content-first rather than application code.",
+    "tags": [
+      "ereader",
+      "language-learning",
+      "mkdocs",
+      "documentation",
+      "android"
+    ],
+    "size": "feature",
+    "website": "https://ereaders.maarv.dev/"
+  },
+  {
+    "name": "ReallySafeSkiing",
+    "owner": "MarvNC",
+    "repo": "ReallySafeSkiing",
+    "href": "https://github.com/MarvNC/ReallySafeSkiing",
+    "description": "ReallySafeSkiing is a deployed browser game: a low-poly downhill skiing experience built with React, Three.js, and Rapier physics. It combines procedural terrain, multiple game modes, and mobile/desktop controls in a polished web app package.",
+    "tags": [
+      "web-game",
+      "skiing",
+      "threejs",
+      "react",
+      "vite"
+    ],
+    "size": "feature",
+    "website": "https://ski.maarv.dev/"
+  },
+  {
+    "name": "nyaawords",
+    "owner": "MarvNC",
+    "repo": "nyaawords",
+    "href": "https://github.com/MarvNC/nyaawords",
+    "description": "AI-powered multilingual dictionary web app built with Next.js and Gemini, focused on high-quality structured entries and export workflows for language learning.",
+    "tags": [
+      "dictionary",
+      "multilingual",
+      "llm",
+      "gemini",
+      "nextjs"
+    ],
+    "size": "feature",
+    "website": "https://nyaawords.app/"
+  },
+  {
+    "name": "words-hk-parse",
+    "owner": "MarvNC",
+    "repo": "words-hk-parse",
+    "href": "https://github.com/MarvNC/words-hk-parse",
+    "description": "`words-hk-parse` is a TypeScript npm library that downloads and parses Words.hk Cantonese dictionary CSV data into structured entries. It also includes Jyutping/text parsing utilities and test-backed parsing logic.",
+    "tags": [
+      "cantonese",
+      "dictionary",
+      "words.hk",
+      "jyutping",
+      "csv"
+    ],
+    "size": "feature",
+    "website": "https://www.npmjs.com/package/words-hk-parse"
+  },
+  {
+    "name": "win-to-mac-ahk",
+    "owner": "MarvNC",
+    "repo": "win-to-mac-ahk",
+    "href": "https://github.com/MarvNC/win-to-mac-ahk",
+    "description": "Small AutoHotkey v2 utility that swaps Alt/Win to mimic Mac Option/Command when remoting from Windows into macOS. It targets RustDesk and Parsec and ships prebuilt executables through GitHub Actions releases.",
+    "tags": [
+      "autohotkey",
+      "keyboard-remap",
+      "macos",
+      "windows",
+      "remote-desktop"
+    ],
+    "size": "feature"
+  },
+  {
+    "name": "yomitan-dictionaries",
+    "owner": "MarvNC",
+    "repo": "yomitan-dictionaries",
+    "href": "https://github.com/MarvNC/yomitan-dictionaries",
+    "description": "Large curated dictionary dataset and build workspace for Yomitan, covering Japanese, Mandarin, Cantonese, and related language resources. It combines downloadable dictionary artifacts with JavaScript scripts that scrape, convert, and maintain updates.",
+    "tags": [
+      "yomitan",
+      "yomichan",
+      "dictionary",
+      "japanese",
+      "chinese"
+    ],
+    "size": "feature"
+  },
+  {
+    "name": "yomitan",
+    "owner": "yomidevs",
+    "repo": "yomitan",
+    "href": "https://github.com/yomidevs/yomitan",
+    "description": "Contributor/maintainer work on Yomitan, a widely used open-source browser extension for language learning and dictionary lookup across Chrome, Firefox, and Edge. The project sits in a major OSS ecosystem as the actively maintained successor to Yomichan.",
+    "tags": [
+      "browser-extension",
+      "language-learning",
+      "dictionary",
+      "anki",
+      "oss-maintenance"
+    ],
+    "size": "feature",
+    "website": "https://yomitan.wiki",
+    "role": "maintainer"
+  },
+  {
+    "name": "yomichan-dict-builder",
+    "owner": "MarvNC",
+    "repo": "yomichan-dict-builder",
+    "href": "https://github.com/MarvNC/yomichan-dict-builder",
+    "description": "TypeScript npm library for programmatically building Yomitan/Yomichan dictionary ZIPs, including index, term/kanji banks, metadata, tags, and bundled assets. It is an actively maintained core building block used by multiple downstream dictionary-generation projects.",
+    "tags": [
+      "yomitan",
+      "yomichan",
+      "dictionary-builder",
+      "npm-library",
+      "typescript"
+    ],
+    "size": "feature",
+    "website": "https://www.npmjs.com/package/yomichan-dict-builder"
+  },
+  {
+    "name": "AB-enhancements",
+    "owner": "MarvNC",
+    "repo": "AB-enhancements",
+    "href": "https://github.com/MarvNC/AB-enhancements",
+    "description": "Collection of AnimeBytes-focused userscripts that automate upload metadata entry, improve release filtering, and add quality-of-life UI tweaks. Built for Violentmonkey/Tampermonkey-style execution in the browser.",
+    "tags": [
+      "userscript",
+      "animebytes",
+      "automation",
+      "metadata-autofill",
+      "filtering"
+    ],
+    "size": "feature"
+  },
+  {
+    "name": "JP-Resources",
+    "owner": "MarvNC",
+    "repo": "JP-Resources",
+    "href": "https://github.com/MarvNC/JP-Resources",
+    "description": "Curated Japanese-learning resources centered on Anki and Yomichan workflows, with large frequency-list datasets and Python scripts for frequency backfilling/automation. It functions as both a practical guide repository and a data source for mining-note workflows.",
+    "tags": [
+      "japanese-learning",
+      "anki",
+      "yomichan",
+      "frequency-dictionaries",
+      "anki-tooling"
+    ],
+    "size": "feature"
+  },
+  {
+    "name": "better-bookwalker",
+    "owner": "MarvNC",
+    "repo": "better-bookwalker",
+    "href": "https://github.com/MarvNC/better-bookwalker",
+    "description": "Modern Bookwalker enhancement userscript that adds richer series views and release-date charting, built with a React + Vite userscript pipeline and published as a `.user.js` installable script.",
+    "tags": [
+      "userscript",
+      "bookwalker",
+      "charts",
+      "react",
+      "vite"
+    ],
+    "size": "feature"
+  },
+  {
+    "name": "anki-card",
+    "owner": "MarvNC",
+    "repo": "anki-card",
+    "href": "https://github.com/MarvNC/anki-card",
+    "description": "Anki card template pack for Chinese study with custom front/back HTML and CSS, tuned for Yomitan dictionary output and Pleco integration. It focuses on practical review UX (dual script display, glossary control, sentence/ruby toggle, media lightbox) rather than a deployable web app.",
+    "tags": [
+      "anki",
+      "chinese-learning",
+      "flashcards",
+      "card-template",
+      "yomitan"
+    ],
+    "size": "feature"
+  },
+  {
+    "name": "StampNyaa",
+    "owner": "MarvNC",
+    "repo": "StampNyaa",
+    "href": "https://github.com/MarvNC/StampNyaa",
+    "description": "StampNyaa is a cross-platform Electron desktop app that downloads LINE sticker packs and lets users paste stickers into chat apps like Discord, WhatsApp, and Telegram. It includes local sticker management, favorites, and packaging workflows for Windows/macOS/Linux.",
+    "tags": [
+      "electron",
+      "typescript",
+      "desktop-app",
+      "line-stickers",
+      "sticker-manager"
+    ],
+    "size": "feature"
+  },
+  {
+    "name": "kanjidego-yomitan-anki",
+    "owner": "MarvNC",
+    "repo": "kanjidego-yomitan-anki",
+    "href": "https://github.com/MarvNC/kanjidego-yomitan-anki",
+    "description": "Owner-maintained Japanese learning data project that scrapes Kanji de Go terms and packages them as both a Yomitan dictionary and an Anki deck. The repository combines source generation scripts with ready-to-use exported artifacts.",
+    "tags": [
+      "japanese",
+      "kanji",
+      "yomitan",
+      "anki",
+      "dictionary"
+    ],
+    "size": "feature"
+  },
+  {
+    "name": "name-ln",
+    "owner": "MarvNC",
+    "repo": "name-ln",
+    "href": "https://github.com/MarvNC/name-ln",
+    "description": "`name-ln` is a Deno-based CLI (with a small Windows GUI companion) that renames light novel EPUB files and folders to a standardized naming scheme for cleaner sorting and collection management.",
+    "tags": [
+      "deno",
+      "cli",
+      "epub",
+      "light-novel",
+      "file-renaming"
+    ],
+    "size": "feature"
+  },
+  {
+    "name": "light-novel-naming-scheme",
+    "owner": "MarvNC",
+    "repo": "light-novel-naming-scheme",
+    "href": "https://github.com/MarvNC/light-novel-naming-scheme",
+    "description": "This repository is a documentation/spec project defining a consistent light novel file and folder naming convention for sorting and machine parsing. It is minimal, maintained, and centered around a single comprehensive README.",
+    "tags": [
+      "light-novel",
+      "naming-scheme",
+      "documentation",
+      "file-naming",
+      "epub"
+    ],
+    "size": "feature"
+  },
+  {
+    "name": "canvas-attendance-sheets",
+    "owner": "MarvNC",
+    "repo": "canvas-attendance-sheets",
+    "href": "https://github.com/MarvNC/canvas-attendance-sheets",
+    "description": "Small Bun-based CLI utility that converts Canvas gradebook CSV exports into CRN-specific attendance sheets, then renders both Markdown and PDF outputs. It is a focused automation script rather than a reusable package or web app.",
+    "tags": [
+      "canvas",
+      "attendance",
+      "csv",
+      "markdown",
+      "pdf"
+    ],
+    "size": "feature"
+  },
+  {
+    "name": "discord-websocket-text-inserter",
+    "owner": "MarvNC",
+    "repo": "discord-websocket-text-inserter",
+    "href": "https://github.com/MarvNC/discord-websocket-text-inserter",
+    "description": "A lightweight browser userscript that listens to a local websocket and posts incoming text into the currently open Discord channel. It is aimed at live text sharing workflows (e.g., VN/anime group reading) with built-in message rate limiting.",
+    "tags": [
+      "discord",
+      "websocket",
+      "userscript",
+      "violentmonkey",
+      "automation"
+    ],
+    "size": "feature"
+  },
+  {
+    "name": "jpdb-freq-list",
+    "owner": "MarvNC",
+    "repo": "jpdb-freq-list",
+    "href": "https://github.com/MarvNC/jpdb-freq-list",
+    "description": "`jpdb-freq-list` is a JavaScript userscript project that exports JPDB deck vocabulary into Yomichan-compatible frequency lists, with downloadable generated lists published in releases. It targets Japanese learners using JPDB/Yomichan tooling.",
+    "tags": [
+      "userscript",
+      "frequency-list",
+      "japanese-learning",
+      "yomitan",
+      "jpdb"
+    ],
+    "size": "feature"
+  },
+  {
+    "name": "wikipedia-yomitan",
+    "owner": "MarvNC",
+    "repo": "wikipedia-yomitan",
+    "href": "https://github.com/MarvNC/wikipedia-yomitan",
+    "description": "TypeScript/Bun pipeline that converts DBpedia Wikipedia short-abstract dumps into Yomitan dictionaries and publishes downloadable release artifacts. It targets multilingual lookup workflows (non-English focus) for Yomitan users.",
+    "tags": [
+      "yomitan",
+      "yomichan",
+      "wikipedia",
+      "dbpedia",
+      "dictionary"
+    ],
+    "size": "feature"
+  },
+  {
+    "name": "japanese-furigana-normalize",
+    "owner": "MarvNC",
+    "repo": "japanese-furigana-normalize",
+    "href": "https://github.com/MarvNC/japanese-furigana-normalize",
+    "description": "`japanese-furigana-normalize` is a small TypeScript npm library that normalizes Japanese readings so furigana aligns cleanly with mixed-script terms (kanji/kana), with a focus on Yomitan dictionary workflows.",
+    "tags": [
+      "japanese",
+      "furigana",
+      "yomitan",
+      "text-processing",
+      "npm"
+    ],
+    "size": "feature",
+    "website": "https://www.npmjs.com/package/japanese-furigana-normalize"
+  },
+  {
+    "name": "yomitan-dict-stats",
+    "owner": "MarvNC",
+    "repo": "yomitan-dict-stats",
+    "href": "https://github.com/MarvNC/yomitan-dict-stats",
+    "description": "Lightweight utility repository for generating and maintaining Yomitan dictionary statistics tables. It uses a browser-console JavaScript extractor plus a small shell sorter, with the README serving as the published stats catalog.",
+    "tags": [
+      "yomitan",
+      "yomichan",
+      "dictionary",
+      "dictionary-stats",
+      "japanese"
+    ],
+    "size": "feature"
+  },
+  {
+    "name": "is-cjk-hanzi",
+    "owner": "MarvNC",
+    "repo": "is-cjk-hanzi",
+    "href": "https://github.com/MarvNC/is-cjk-hanzi",
+    "description": "`is-cjk-hanzi` is a small npm utility library for detecting whether text contains CJK Hanzi/Kanji characters, including surrogate-pair-safe checks for single-character validation. It is geared toward text-processing use cases rather than a standalone app.",
+    "tags": [
+      "cjk",
+      "hanzi",
+      "kanji",
+      "unicode",
+      "text-processing"
+    ],
+    "size": "feature",
+    "website": "https://www.npmjs.com/package/is-cjk-hanzi"
+  },
+  {
+    "name": "vn-userscripts",
+    "owner": "MarvNC",
+    "repo": "vn-userscripts",
+    "href": "https://github.com/MarvNC/vn-userscripts",
+    "description": "A collection of JavaScript userscripts that enhance VNDB and related sites with stats, links/prices, score-history graphs, and spoiler controls. It is a focused utility repo with stable but relatively low-frequency updates.",
+    "tags": [
+      "userscript",
+      "vndb",
+      "visual-novel",
+      "browser-enhancement",
+      "javascript"
+    ],
+    "size": "feature"
+  },
+  {
+    "name": "twitter-rss-discord-webhook",
+    "owner": "MarvNC",
+    "repo": "twitter-rss-discord-webhook",
+    "href": "https://github.com/MarvNC/twitter-rss-discord-webhook",
+    "description": "A Node.js automation script that polls Nitter RSS feeds and posts updates to Discord webhooks, with optional DeepL translation and fxtwitter link rewriting for richer embeds.",
+    "tags": [
+      "discord",
+      "webhook",
+      "rss",
+      "nitter",
+      "twitter"
+    ],
+    "size": "feature"
+  },
+  {
+    "name": "yomichan-dict-reader",
+    "owner": "MarvNC",
+    "repo": "yomichan-dict-reader",
+    "href": "https://github.com/MarvNC/yomichan-dict-reader",
+    "description": "A small Node.js library that reads Yomichan-format ZIP dictionaries and exposes lookup helpers for terms, readings, definitions, and kanji metadata. It is published to npm and appears stable but low-activity.",
+    "tags": [
+      "japanese",
+      "dictionary",
+      "yomichan",
+      "nodejs",
+      "npm-package"
+    ],
+    "size": "feature"
+  },
+  {
+    "name": "vndb-highlighter",
+    "owner": "MarvNC",
+    "repo": "vndb-highlighter",
+    "href": "https://github.com/MarvNC/vndb-highlighter",
+    "description": "An archived VNDB userscript that highlights known entries on staff/producer pages and adds cached tooltips for quick context. The README notes it has been superseded by a newer script in `MarvNC/vn-userscripts`.",
+    "tags": [
+      "userscript",
+      "vndb",
+      "tooltip",
+      "list-highlighting",
+      "violentmonkey"
+    ],
+    "size": "feature",
+    "archived": true
+  },
+  {
+    "name": "texthooker-websocket",
+    "owner": "MarvNC",
+    "repo": "texthooker-websocket",
+    "href": "https://github.com/MarvNC/texthooker-websocket",
+    "description": "Archived JavaScript userscript that injects websocket text into `texthooker.html` for Textractor workflows. The README marks it as replaced by `Renji-XD/texthooker-ui`, so it is mainly useful as legacy reference.",
+    "tags": [
+      "userscript",
+      "websocket",
+      "textractor",
+      "texthooker",
+      "visual-novel"
+    ],
+    "size": "feature",
+    "archived": true
+  }
+]
