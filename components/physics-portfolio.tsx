@@ -1,6 +1,7 @@
 "use client";
 
 import type { PointerEvent } from "react";
+import { useState } from "react";
 
 import type { ProjectWithStats } from "@/lib/github";
 
@@ -20,7 +21,8 @@ function PhysicsCard({
   isDragging,
   onStartDrag,
   onHoverEnter,
-  onHoverLeave
+  onHoverLeave,
+  zoom
 }: {
   project: ProjectWithStats;
   onTagClick: (tag: string) => void;
@@ -38,6 +40,7 @@ function PhysicsCard({
   onStartDrag: (event: PointerEvent<HTMLDivElement>) => void;
   onHoverEnter: () => void;
   onHoverLeave: () => void;
+  zoom: number;
 }) {
   return (
     <div
@@ -56,7 +59,7 @@ function PhysicsCard({
         top: body.y,
         width: body.width,
         maxWidth: "min(93vw, 360px)",
-        transform: "translate(-50%, -50%)",
+        transform: `translate(-50%, -50%) scale(${zoom})`,
         opacity: !isSearching || isMatched ? 1 : 0.18,
         zIndex: isHovered ? 70 : project.size === "hero" ? 14 : 9,
         transition: "opacity 150ms ease, z-index 20ms linear",
@@ -76,6 +79,7 @@ function PhysicsCard({
 }
 
 export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfolioProps) {
+  const [zoom, setZoom] = useState(1);
   const {
     containerRef,
     bodyMap,
@@ -96,6 +100,14 @@ export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfol
     <section
       ref={containerRef}
       className="relative h-[100dvh] w-full select-none overflow-hidden touch-none"
+      onWheel={(event) => {
+        event.preventDefault();
+        const direction = event.deltaY > 0 ? -1 : 1;
+        setZoom((current) => {
+          const next = current + direction * 0.06;
+          return Math.min(1.5, Math.max(0.72, Number(next.toFixed(2))));
+        });
+      }}
       onPointerMove={onSurfacePointerMove}
       onPointerUp={onSurfacePointerUp}
       onPointerCancel={onSurfacePointerCancel}
@@ -120,6 +132,7 @@ export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfol
             onStartDrag={(event) => startCardDrag(project.repo, body, event)}
             onHoverEnter={() => setHoveredRepo(project.repo)}
             onHoverLeave={() => setHoveredRepo((current: string | null) => (current === project.repo ? null : current))}
+            zoom={zoom}
           />
         );
       })}
