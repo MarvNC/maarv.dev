@@ -19,6 +19,8 @@ type Body = {
   width: number;
   height: number;
   mass: number;
+  homeX: number;
+  homeY: number;
 };
 
 type Vec2 = { x: number; y: number };
@@ -116,7 +118,9 @@ function buildInitialBodies(projects: ProjectWithStats[], width: number, height:
       vy: (random() - 0.5) * 16,
       width: size.width,
       height: size.height,
-      mass: size.mass
+      mass: size.mass,
+      homeX: x,
+      homeY: y
     });
   }
 
@@ -237,6 +241,10 @@ export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfol
   }, [isSearching, normalizedQuery, projects]);
 
   const matchSet = useMemo(() => new Set(matches.map((project: ProjectWithStats) => project.repo)), [matches]);
+  const heroSet = useMemo(
+    () => new Set(projects.filter((project: ProjectWithStats) => project.size === "hero").map((project: ProjectWithStats) => project.repo)),
+    [projects]
+  );
 
   const magnets = useMemo(() => {
     const cols = Math.max(1, Math.min(4, Math.floor(viewport.width / 290)));
@@ -336,7 +344,7 @@ export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfol
             const minDist = rA + rB;
 
             const multiplier = a.repo === hoveredRepo || b.repo === hoveredRepo ? 0.24 : 1;
-            const repel = Math.min(23000, ((2200 * rA * rB) / (dist * dist)) * multiplier);
+            const repel = Math.min(12000, ((980 * rA * rB) / (dist * dist)) * multiplier);
 
             const fx = nx * repel;
             const fy = ny * repel;
@@ -368,6 +376,7 @@ export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfol
         for (const body of next) {
           const isHovered = body.repo === hoveredRepo;
           const isDragging = drag.repo === body.repo;
+          const isHero = heroSet.has(body.repo);
 
           if (isDragging) {
             const targetX = drag.x - drag.offsetX;
@@ -404,12 +413,25 @@ export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfol
           if (!isSearching) {
             const heroTarget = heroTargets[body.repo];
             if (heroTarget) {
-              body.vx += (heroTarget.x - body.x) * 1.5 * dt;
-              body.vy += (heroTarget.y - body.y) * 1.5 * dt;
+              body.vx += (heroTarget.x - body.x) * 1.15 * dt;
+              body.vy += (heroTarget.y - body.y) * 1.15 * dt;
+            } else {
+              const seed = hashSeed(body.repo);
+              const time = now / 1000;
+              const wanderX = Math.sin(time * 0.34 + seed * 0.0009) * 44;
+              const wanderY = Math.cos(time * 0.28 + seed * 0.0007) * 34;
+              const targetX = body.homeX + wanderX;
+              const targetY = body.homeY + wanderY;
+
+              body.vx += (targetX - body.x) * 0.58 * dt;
+              body.vy += (targetY - body.y) * 0.58 * dt;
+
+              const swirl = Math.sin(time * 0.7 + seed * 0.0004) * 12;
+              body.vx += ((seed % 2 === 0 ? 1 : -1) * swirl * dt) / body.mass;
             }
           }
 
-          const damping = isDragging ? 0.86 : isHovered ? 0.92 : isSearching ? 0.986 : 0.991;
+          const damping = isDragging ? 0.86 : isHovered ? 0.92 : isHero ? 0.988 : isSearching ? 0.985 : 0.989;
           body.vx *= damping;
           body.vy *= damping;
 
@@ -446,7 +468,7 @@ export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfol
 
     frame = window.requestAnimationFrame(step);
     return () => window.cancelAnimationFrame(frame);
-  }, [bodies.length, heroTargets, hoveredRepo, isSearching, magnets, matchSet, viewport.height, viewport.width]);
+  }, [bodies.length, heroSet, heroTargets, hoveredRepo, isSearching, magnets, matchSet, viewport.height, viewport.width]);
 
   return (
     <section
@@ -566,7 +588,7 @@ export function PhysicsPortfolio({ projects, query, onTagClick }: PhysicsPortfol
               cursor: dragRef.current.repo === project.repo ? "grabbing" : "grab"
             }}
           >
-            <ProjectCard project={project} expanded={isHovered} onTagClick={onTagClick} />
+            <ProjectCard project={project} expanded={isHovered || project.size === "hero"} onTagClick={onTagClick} />
           </div>
         );
       })}
