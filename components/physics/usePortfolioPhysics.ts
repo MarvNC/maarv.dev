@@ -161,12 +161,16 @@ export function usePortfolioPhysics({ projects, query, disablePhysics = false }:
             const minDist = (rA + rB) * 1.08;
             const avoidDist = minDist * 1.28;
 
-            const multiplier = a.repo === hoveredRepo || b.repo === hoveredRepo ? 0.08 : 1;
-            const interactionScale = isCompactViewport ? 0.2 : isDenseViewport ? 0.32 : 0.5;
-            const baseRepel = ((420 * rA * rB) / (dist * dist)) * interactionScale;
-            const nearBoost =
-              dist < avoidDist ? 1 + ((avoidDist - dist) / avoidDist) * (isCompactViewport ? 0.7 : isDenseViewport ? 1 : 1.35) : 1;
-            const repel = Math.min(7000, baseRepel * nearBoost * multiplier);
+            const multiplier = a.repo === hoveredRepo || b.repo === hoveredRepo ? 0.02 : 1;
+            const interactionScale = isCompactViewport ? 0.1 : isDenseViewport ? 0.14 : 0.22;
+            const interactionRadius = minDist * (isCompactViewport ? 1.02 : isDenseViewport ? 1.08 : 1.15);
+            const withinInteractionRange = dist < interactionRadius;
+
+            const baseRepel = ((260 * rA * rB) / (dist * dist)) * interactionScale;
+            const nearBoost = withinInteractionRange
+              ? 1 + ((interactionRadius - dist) / interactionRadius) * (isCompactViewport ? 0.45 : isDenseViewport ? 0.6 : 0.85)
+              : 0;
+            const repel = Math.min(2500, baseRepel * nearBoost * multiplier);
 
             const fx = nx * repel;
             const fy = ny * repel;
@@ -177,15 +181,13 @@ export function usePortfolioPhysics({ projects, query, disablePhysics = false }:
 
             if (
               !isSearching &&
+              !isDenseViewport &&
               hasCategoryOverlap(categoryByRepo[a.repo] ?? ["tooling"], categoryByRepo[b.repo] ?? ["tooling"]) &&
               a.repo !== hoveredRepo &&
               b.repo !== hoveredRepo &&
               dist > avoidDist * 1.25
             ) {
-              const attract = Math.min(
-                isCompactViewport ? 10 : isDenseViewport ? 20 : 35,
-                (dist - avoidDist * 1.25) * (isCompactViewport ? 0.025 : isDenseViewport ? 0.04 : 0.06)
-              );
+              const attract = Math.min(24, (dist - avoidDist * 1.25) * 0.03);
               a.vx += (nx * attract * dt) / a.mass;
               a.vy += (ny * attract * dt) / a.mass;
               b.vx -= (nx * attract * dt) / b.mass;
@@ -194,16 +196,16 @@ export function usePortfolioPhysics({ projects, query, disablePhysics = false }:
 
             if (dist < minDist) {
               const overlap = minDist - dist;
-              const push = overlap * 0.32;
+              const push = overlap * 0.24;
               a.x -= nx * push;
               a.y -= ny * push;
               b.x += nx * push;
               b.y += ny * push;
 
-              a.vx -= nx * overlap * 1.1;
-              a.vy -= ny * overlap * 1.1;
-              b.vx += nx * overlap * 1.1;
-              b.vy += ny * overlap * 1.1;
+              a.vx -= nx * overlap * 0.65;
+              a.vy -= ny * overlap * 0.65;
+              b.vx += nx * overlap * 0.65;
+              b.vy += ny * overlap * 0.65;
             }
           }
         }
