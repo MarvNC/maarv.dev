@@ -7,6 +7,5 @@
     "directory": ".open-next/assets"
   },
   "compatibility_date": "2026-02-27",
-  "compatibility_flags": ["nodejs_compat"],
-  "routes": ["maarv.dev/*", "www.maarv.dev/*"]
+  "compatibility_flags": ["nodejs_compat"]
 }
