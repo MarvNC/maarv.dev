@@ -18,150 +18,60 @@ export type ProjectLiveStats = {
   updatedAt: string;
 };
 
-export const projects: Project[] = [
+type RepoSeed = Omit<Project, "name" | "href">;
+
+const seeds: RepoSeed[] = [
+  { owner: "MarvNC", repo: "GeiDuckApp", description: "Desktop app for language-first workflows and rapid lookup tooling.", tags: ["language", "desktop"], size: "hero" },
+  { owner: "MarvNC", repo: "FreeVinesStats", description: "Gameplay stats dashboard with tracking and trend views.", tags: ["dashboard", "gaming"], size: "hero" },
+  { owner: "MarvNC", repo: "rotmg-player-stats", description: "Realm of the Mad God player statistics explorer.", tags: ["gaming", "stats"], size: "hero" },
+
+  { owner: "MarvNC", repo: "cc-cedict-yomitan", description: "CC-CEDICT dictionary packaging for Yomitan.", tags: ["yomitan", "dictionary", "chinese"], size: "feature" },
+  { owner: "MarvNC", repo: "wordshk-yomitan", description: "WordsHK to Yomitan dictionary conversion pipeline.", tags: ["yomitan", "dictionary", "cantonese"], size: "feature" },
+  { owner: "MarvNC", repo: "words-hk-parse", description: "Parser and cleanup pipeline for words.hk lexical datasets.", tags: ["etl", "cantonese"], size: "feature" },
+  { owner: "MarvNC", repo: "pixiv-yomitan", description: "Pixiv-focused dictionary data for Yomitan users.", tags: ["yomitan", "pixiv"], size: "feature" },
+  { owner: "MarvNC", repo: "yomitan-dictionaries", description: "Collection of distributable Yomitan dictionary bundles.", tags: ["yomitan", "release"], size: "feature" },
+  { owner: "MarvNC", repo: "yomichan-dict-builder", description: "Dictionary build tooling for Yomitan and Yomichan formats.", tags: ["yomitan", "build"], size: "feature" },
+  { owner: "MarvNC", repo: "yomichan-dict-reader", description: "Read and inspect Yomichan/Yomitan dictionary archives.", tags: ["yomitan", "parser"], size: "feature" },
+  { owner: "MarvNC", repo: "yomitan-dict-stats", description: "Generate analytics and quality metrics for dictionary packs.", tags: ["yomitan", "analytics"], size: "feature" },
+  { owner: "MarvNC", repo: "wikipedia-yomitan", description: "Wikipedia-derived data transformed for Yomitan usage.", tags: ["yomitan", "wikipedia"], size: "feature" },
+  { owner: "MarvNC", repo: "jpdb-freq-list", description: "JPDB frequency list utilities and transforms.", tags: ["japanese", "frequency"], size: "feature" },
+  { owner: "MarvNC", repo: "kanjidego-yomitan-anki", description: "Kanjidego pipeline for Yomitan and Anki outputs.", tags: ["yomitan", "anki"], size: "feature" },
   {
-    name: "GeiDuckApp",
-    owner: "MarvNC",
-    repo: "GeiDuckApp",
-    href: "https://github.com/MarvNC/GeiDuckApp",
-    description: "Desktop app focused on language tooling workflows and rapid lookup integrations.",
-    tags: ["language", "desktop", "tools"],
-    size: "hero"
-  },
-  {
-    name: "FreeVinesStats",
-    owner: "MarvNC",
-    repo: "FreeVinesStats",
-    href: "https://github.com/MarvNC/FreeVinesStats",
-    description: "Stats tracker and insights dashboard for gameplay progression and build comparisons.",
-    tags: ["dashboard", "gaming", "analytics"],
-    size: "hero"
-  },
-  {
-    name: "rotmg-player-stats",
-    owner: "MarvNC",
-    repo: "rotmg-player-stats",
-    href: "https://github.com/MarvNC/rotmg-player-stats",
-    description: "Player stat explorer with account snapshots, trend views, and quality-of-life tools.",
-    tags: ["gaming", "api", "stats"],
-    size: "hero"
-  },
-  {
-    name: "cc-cedict-yomitan",
-    owner: "MarvNC",
-    repo: "cc-cedict-yomitan",
-    href: "https://github.com/MarvNC/cc-cedict-yomitan",
-    description: "Chinese dictionary conversion and packaging for Yomitan dictionary installs.",
-    tags: ["yomitan", "dictionary", "chinese"],
-    size: "feature"
-  },
-  {
-    name: "wordshk-yomitan",
-    owner: "MarvNC",
-    repo: "wordshk-yomitan",
-    href: "https://github.com/MarvNC/wordshk-yomitan",
-    description: "Cantonese resources transformed into Yomitan-ready dictionary bundles.",
-    tags: ["yomitan", "cantonese", "dictionary"],
-    size: "feature"
-  },
-  {
-    name: "words-hk-parse",
-    owner: "MarvNC",
-    repo: "words-hk-parse",
-    href: "https://github.com/MarvNC/words-hk-parse",
-    description: "Parser pipeline for extracting and normalizing words.hk lexical data.",
-    tags: ["yomitan", "etl", "cantonese"],
-    size: "feature"
-  },
-  {
-    name: "pixiv-yomitan",
-    owner: "MarvNC",
-    repo: "pixiv-yomitan",
-    href: "https://github.com/MarvNC/pixiv-yomitan",
-    description: "Dictionary integration focused on Pixiv terms and creator-specific language.",
-    tags: ["yomitan", "japanese", "pixiv"],
-    size: "feature"
-  },
-  {
-    name: "yomichan-dict-builder",
-    owner: "MarvNC",
-    repo: "yomichan-dict-builder",
-    href: "https://github.com/MarvNC/yomichan-dict-builder",
-    description: "Build system for producing consistent dictionary artifacts for Yomitan/Yomichan.",
-    tags: ["yomitan", "build", "dictionary"],
-    size: "feature"
-  },
-  {
-    name: "yomitan-dictionaries",
-    owner: "MarvNC",
-    repo: "yomitan-dictionaries",
-    href: "https://github.com/MarvNC/yomitan-dictionaries",
-    description: "Collection and release workflow for curated Yomitan dictionaries.",
-    tags: ["yomitan", "open-source", "release"],
-    size: "feature"
-  },
-  {
-    name: "yomitan",
     owner: "yomidevs",
     repo: "yomitan",
-    href: "https://github.com/yomidevs/yomitan",
-    description: "Browser dictionary extension for Japanese learning; I contribute and help maintain.",
+    description: "Browser dictionary extension; I contribute and help maintain the project.",
     tags: ["yomitan", "browser-extension", "maintainer"],
     size: "feature",
     role: "maintainer"
   },
-  {
-    name: "vndb-highlighter",
-    owner: "MarvNC",
-    repo: "vndb-highlighter",
-    href: "https://github.com/MarvNC/vndb-highlighter",
-    description: "Highlighting and annotation enhancements for browsing visual novel databases.",
-    tags: ["userscript", "visual-novel"],
-    size: "cluster"
-  },
-  {
-    name: "vn-userscripts",
-    owner: "MarvNC",
-    repo: "vn-userscripts",
-    href: "https://github.com/MarvNC/vn-userscripts",
-    description: "Small quality-of-life scripts for VN websites and metadata workflows.",
-    tags: ["userscript", "utilities"],
-    size: "cluster"
-  },
-  {
-    name: "mydramalist-native-titles",
-    owner: "MarvNC",
-    repo: "mydramalist-native-titles",
-    href: "https://github.com/MarvNC/mydramalist-native-titles",
-    description: "Inject native titles and language cues into MyDramaList listings.",
-    tags: ["userscript", "kdrama"],
-    size: "cluster"
-  },
-  {
-    name: "better-bookwalker",
-    owner: "MarvNC",
-    repo: "better-bookwalker",
-    href: "https://github.com/MarvNC/better-bookwalker",
-    description: "Interface tweaks and navigation shortcuts for smoother BookWalker reading sessions.",
-    tags: ["userscript", "books"],
-    size: "cluster"
-  },
-  {
-    name: "AB-enhancements",
-    owner: "MarvNC",
-    repo: "AB-enhancements",
-    href: "https://github.com/MarvNC/AB-enhancements",
-    description: "Enhancement scripts and helpers for streamlined AniList/Bangumi style browsing.",
-    tags: ["userscript", "utilities"],
-    size: "cluster"
-  },
-  {
-    name: "twitter-rss-discord-webhook",
-    owner: "MarvNC",
-    repo: "twitter-rss-discord-webhook",
-    href: "https://github.com/MarvNC/twitter-rss-discord-webhook",
-    description: "Bridge service forwarding RSS updates into Discord webhook channels.",
-    tags: ["automation", "discord", "rss"],
-    size: "cluster"
-  }
+
+  { owner: "MarvNC", repo: "lolibrary-links", description: "Adds helper links and metadata shortcuts for lolibrary browsing.", tags: ["userscript", "metadata"], size: "cluster" },
+  { owner: "MarvNC", repo: "day-one-to-md", description: "Export and convert Day One journal entries to Markdown.", tags: ["conversion", "markdown"], size: "cluster" },
+  { owner: "MarvNC", repo: "mydramalist-native-titles", description: "Shows native-language titles on MyDramaList pages.", tags: ["userscript", "kdrama"], size: "cluster" },
+  { owner: "MarvNC", repo: "pixiv-dump", description: "Utilities for collecting and exporting Pixiv data.", tags: ["pixiv", "automation"], size: "cluster" },
+  { owner: "MarvNC", repo: "EReaders-for-Language-Learning", description: "Reference tooling and notes for language learning with e-readers.", tags: ["resources", "learning"], size: "cluster" },
+  { owner: "MarvNC", repo: "ReallySafeSkiing", description: "Small utility project from experimentation and scripting workflows.", tags: ["utility"], size: "cluster" },
+  { owner: "MarvNC", repo: "nyaawords", description: "Text and metadata helpers for Nyaa-oriented workflows.", tags: ["text", "utility"], size: "cluster" },
+  { owner: "MarvNC", repo: "win-to-mac-ahk", description: "AutoHotkey mappings for Windows to Mac-style key behavior.", tags: ["ahk", "productivity"], size: "cluster" },
+  { owner: "MarvNC", repo: "AB-enhancements", description: "Enhancements and UI polish scripts for media tracking sites.", tags: ["userscript", "ui"], size: "cluster" },
+  { owner: "MarvNC", repo: "JP-Resources", description: "Curated Japanese learning resources and indexing helpers.", tags: ["learning", "resources"], size: "cluster" },
+  { owner: "MarvNC", repo: "better-bookwalker", description: "BookWalker user experience improvements and shortcuts.", tags: ["userscript", "books"], size: "cluster" },
+  { owner: "MarvNC", repo: "anki-card", description: "Anki card generation and formatting utilities.", tags: ["anki", "automation"], size: "cluster" },
+  { owner: "MarvNC", repo: "StampNyaa", description: "Small script utility for custom stamp and upload workflows.", tags: ["script", "utility"], size: "cluster" },
+  { owner: "MarvNC", repo: "name-ln", description: "Naming helpers for light novel metadata cleanup.", tags: ["metadata", "light-novel"], size: "cluster" },
+  { owner: "MarvNC", repo: "light-novel-naming-scheme", description: "Normalization rules for light novel naming conventions.", tags: ["metadata", "normalization"], size: "cluster" },
+  { owner: "MarvNC", repo: "canvas-attendance-sheets", description: "Tools for Canvas attendance exports and formatting.", tags: ["education", "automation"], size: "cluster" },
+  { owner: "MarvNC", repo: "discord-websocket-text-inserter", description: "Websocket bridge utilities for text insertion workflows.", tags: ["discord", "websocket"], size: "cluster" },
+  { owner: "MarvNC", repo: "japanese-furigana-normalize", description: "Normalize Japanese text and furigana formatting.", tags: ["japanese", "text"], size: "cluster" },
+  { owner: "MarvNC", repo: "is-cjk-hanzi", description: "Utility package for CJK Hanzi detection checks.", tags: ["library", "cjk"], size: "cluster" },
+  { owner: "MarvNC", repo: "vn-userscripts", description: "Userscripts for visual novel and reading-related sites.", tags: ["userscript", "visual-novel"], size: "cluster" },
+  { owner: "MarvNC", repo: "twitter-rss-discord-webhook", description: "Forward RSS feed updates to Discord webhooks.", tags: ["discord", "rss", "automation"], size: "cluster" },
+  { owner: "MarvNC", repo: "vndb-highlighter", description: "Highlighting and filtering helpers for VNDB pages.", tags: ["userscript", "vndb"], size: "cluster" },
+  { owner: "MarvNC", repo: "texthooker-websocket", description: "Text hooking and websocket transport helpers.", tags: ["websocket", "text"], size: "cluster" }
 ];
+
+export const projects: Project[] = seeds.map((seed) => ({
+  ...seed,
+  name: seed.repo,
+  href: `https://github.com/${seed.owner}/${seed.repo}`
+}));
