@@ -21,13 +21,6 @@ export function CommandPalette({ value, onChange }: CommandPaletteProps) {
     };
 
     const onKeyDown = (event: KeyboardEvent) => {
-      const isPaletteShortcut = (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k";
-      if (isPaletteShortcut || event.key === "/") {
-        event.preventDefault();
-        inputRef.current?.focus();
-        return;
-      }
-
       if (event.key === "Escape" && document.activeElement === inputRef.current) {
         onChange("");
         inputRef.current?.blur();
@@ -67,9 +60,6 @@ export function CommandPalette({ value, onChange }: CommandPaletteProps) {
           onChange={(event) => onChange(event.target.value)}
           className="w-full rounded-full border border-sky-100 bg-white/85 px-6 py-4 text-lg font-bold tracking-wide text-primary shadow-float backdrop-blur-xl outline-none transition focus:border-brand focus:shadow-glow"
         />
-        <kbd className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-sky-50 px-3 py-1 text-xs font-semibold text-secondary">
-          Cmd/Ctrl + K
-        </kbd>
       </div>
     </div>
   );
