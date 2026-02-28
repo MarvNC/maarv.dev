@@ -12,8 +12,6 @@
   --color-brand: 58 176 255;
   --color-primary: 30 41 59;
   --color-secondary: 64 80 108;
-  --cursor-x: 50vw;
-  --cursor-y: 35vh;
 }
 
 * {
@@ -29,7 +27,6 @@ body {
 }
 
 body {
-  position: relative;
   font-family: "Dosis", sans-serif;
   color: rgb(var(--color-primary));
   background-image:
@@ -40,30 +37,8 @@ body {
   background-attachment: fixed;
 }
 
-body::before {
-  content: "";
-  pointer-events: none;
-  position: fixed;
-  inset: 0;
-  z-index: 3;
-  opacity: 0.95;
-  background:
-    radial-gradient(38rem 38rem at var(--cursor-x) var(--cursor-y), rgba(147, 197, 253, 0.3), transparent 64%),
-    radial-gradient(
-      22rem 22rem at calc(var(--cursor-x) - 11rem) calc(var(--cursor-y) + 7rem),
-      rgba(255, 255, 255, 0.22),
-      transparent 72%
-    );
-  mix-blend-mode: soft-light;
-  filter: blur(2px);
-  transition: opacity 300ms ease;
-}
-
 #root {
   min-height: 100dvh;
-  position: relative;
-  z-index: 2;
-  isolation: isolate;
 }
 
 .font-display {

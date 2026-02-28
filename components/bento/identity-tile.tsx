@@ -8,9 +8,9 @@ export function IdentityTile() {
       initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 16, scale: 0.985 }}
       animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-      className="relative mx-auto mb-3 w-full max-w-3xl overflow-hidden rounded-[2rem] border border-sky-100/95 bg-white/92 px-6 py-7 text-center shadow-[0_24px_60px_-28px_rgba(15,23,42,0.42)] ring-1 ring-white/85 backdrop-blur-xl sm:px-8 sm:py-9"
+      className="relative mx-auto mb-3 w-full max-w-3xl overflow-hidden rounded-[2rem] border border-white/95 bg-[linear-gradient(160deg,rgba(255,255,255,0.99),rgba(255,255,255,0.94))] px-6 py-7 text-center shadow-[0_28px_70px_-30px_rgba(15,23,42,0.5)] ring-1 ring-sky-100/80 backdrop-blur-2xl sm:px-8 sm:py-9"
     >
-      <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-brand/12 to-transparent" aria-hidden="true" />
+      <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-brand/7 to-transparent" aria-hidden="true" />
       <img
         src="https://github.com/MarvNC.png?size=400"
         alt="MarvNC GitHub profile"
