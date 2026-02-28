@@ -81,7 +81,7 @@ export function ProjectTile({
   }, [isFeature, project.description]);
 
   const hoverExpansion = isHovered ? (isFeature ? Math.min(220, Math.ceil(descriptionOverflow / 2) + 12) : 12) : 0;
-  const hoverScale = isHovered ? (isFeature ? 1.1 : 1.06) : 1;
+  const hoverScale = isHovered ? 1.05 : 1;
 
   const starScale = Math.max(0, Math.log10((project.stars ?? 0) + 1));
   const starProminence = Math.min(1, starScale / 3.2);
@@ -142,7 +142,12 @@ export function ProjectTile({
           zIndex: isHovered ? 30 : 1
         }}
         transition={
-          prefersReducedMotion ? { duration: 0.01 } : { type: "spring", stiffness: 280, damping: 23, mass: 0.55 }
+          prefersReducedMotion
+            ? { duration: 0.01 }
+            : {
+                duration: 0.5,
+                ease: [0.22, 1, 0.36, 1]
+              }
         }
         onHoverStart={() => setIsHovered(true)}
         onHoverEnd={() => setIsHovered(false)}
