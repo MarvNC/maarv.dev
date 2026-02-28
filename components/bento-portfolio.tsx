@@ -22,10 +22,6 @@ export function BentoPortfolio({ projects, query, onTagClick }: BentoPortfolioPr
       return;
     }
 
-    if (!window.matchMedia("(pointer: fine)").matches) {
-      return;
-    }
-
     const root = document.documentElement;
     const smoothing = prefersReducedMotion ? 0.2 : 0.11;
 
