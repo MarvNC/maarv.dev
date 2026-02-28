@@ -1,5 +1,5 @@
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 import type { ProjectWithStats } from "@/lib/github";
 
@@ -16,6 +16,60 @@ const sizeRank: Record<ProjectWithStats["size"], number> = {
 
 export function BentoPortfolio({ projects, query, onTagClick }: BentoPortfolioProps) {
   const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (typeof window === "undefined" || prefersReducedMotion) {
+      return;
+    }
+
+    if (!window.matchMedia("(pointer: fine)").matches) {
+      return;
+    }
+
+    const root = document.documentElement;
+
+    let currentX = window.innerWidth * 0.5;
+    let currentY = window.innerHeight * 0.35;
+    let targetX = currentX;
+    let targetY = currentY;
+    let frame = 0;
+
+    const writeVars = (x: number, y: number) => {
+      root.style.setProperty("--cursor-x", `${x.toFixed(1)}px`);
+      root.style.setProperty("--cursor-y", `${y.toFixed(1)}px`);
+    };
+
+    const tick = () => {
+      currentX += (targetX - currentX) * 0.11;
+      currentY += (targetY - currentY) * 0.11;
+      writeVars(currentX, currentY);
+      frame = window.requestAnimationFrame(tick);
+    };
+
+    const onPointerMove = (event: PointerEvent) => {
+      targetX = event.clientX;
+      targetY = event.clientY;
+    };
+
+    const recenter = () => {
+      targetX = window.innerWidth * 0.5;
+      targetY = window.innerHeight * 0.35;
+    };
+
+    writeVars(currentX, currentY);
+    frame = window.requestAnimationFrame(tick);
+
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("resize", recenter);
+    window.addEventListener("blur", recenter);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("resize", recenter);
+      window.removeEventListener("blur", recenter);
+    };
+  }, [prefersReducedMotion]);
 
   const categoryByRepo = useMemo(() => {
     const mapped: Record<string, Category[]> = {};
@@ -56,7 +110,6 @@ export function BentoPortfolio({ projects, query, onTagClick }: BentoPortfolioPr
                 categories={categoryByRepo[project.repo] ?? ["tooling"]}
                 primaryCategory={(categoryByRepo[project.repo] ?? ["tooling"])[0]}
                 index={index}
-                isSearching={isSearching}
                 onTagClick={onTagClick}
               />
             ))}

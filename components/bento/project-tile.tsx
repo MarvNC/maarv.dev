@@ -1,12 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
-import {
-  useEffect,
-  useRef,
-  useState,
-  type CSSProperties,
-  type FocusEvent as ReactFocusEvent,
-  type PointerEvent as ReactPointerEvent
-} from "react";
+import { useEffect, useRef, useState, type FocusEvent as ReactFocusEvent } from "react";
 
 import type { ProjectWithStats } from "@/lib/github";
 
@@ -19,7 +12,6 @@ type ProjectTileProps = {
   categories: Category[];
   primaryCategory: Category;
   index: number;
-  isSearching: boolean;
   onTagClick: (tag: string) => void;
 };
 
@@ -29,14 +21,7 @@ const tileSizeClasses = {
   feature: "sm:col-span-1 lg:col-span-3 h-[194px] sm:h-[202px]"
 } as const;
 
-export function ProjectTile({
-  project,
-  categories,
-  primaryCategory,
-  index,
-  isSearching,
-  onTagClick
-}: ProjectTileProps) {
+export function ProjectTile({ project, categories, primaryCategory, index, onTagClick }: ProjectTileProps) {
   const prefersReducedMotion = useReducedMotion();
   const [isHovered, setIsHovered] = useState(false);
   const [descriptionOverflow, setDescriptionOverflow] = useState(0);
@@ -100,30 +85,6 @@ export function ProjectTile({
     starProminence * 0.14
   ).toFixed(3)}))`;
 
-  const tileStyle: CSSProperties = {
-    filter: cardGlow,
-    ["--spot-x" as string]: "50%",
-    ["--spot-y" as string]: "0%"
-  };
-
-  const handlePointerMove = (event: ReactPointerEvent<HTMLElement>) => {
-    if (prefersReducedMotion) {
-      return;
-    }
-
-    const rect = event.currentTarget.getBoundingClientRect();
-    const x = ((event.clientX - rect.left) / rect.width) * 100;
-    const y = ((event.clientY - rect.top) / rect.height) * 100;
-
-    event.currentTarget.style.setProperty("--spot-x", `${x.toFixed(2)}%`);
-    event.currentTarget.style.setProperty("--spot-y", `${y.toFixed(2)}%`);
-  };
-
-  const handlePointerLeave = (event: ReactPointerEvent<HTMLElement>) => {
-    event.currentTarget.style.setProperty("--spot-x", "50%");
-    event.currentTarget.style.setProperty("--spot-y", "0%");
-  };
-
   const handleBlur = (event: ReactFocusEvent<HTMLElement>) => {
     if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
       setIsHovered(false);
@@ -164,25 +125,15 @@ export function ProjectTile({
         }
         onHoverStart={() => setIsHovered(true)}
         onHoverEnd={() => setIsHovered(false)}
-        onPointerMove={handlePointerMove}
-        onPointerLeave={handlePointerLeave}
         onFocusCapture={() => setIsHovered(true)}
         onBlurCapture={handleBlur}
         className={`group absolute inset-x-0 top-0 bottom-0 flex flex-col overflow-hidden rounded-[1.95rem] border bg-surface/95 p-4 shadow-float backdrop-blur-md transition ${categoryTileClasses[primaryCategory]} ${
           isHero ? "p-5" : ""
         }`}
-        style={tileStyle}
+        style={{ filter: cardGlow }}
       >
         <div
           className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-white/75 to-transparent"
-          aria-hidden="true"
-        />
-        <div
-          className="pointer-events-none absolute -inset-px rounded-[inherit] bg-[radial-gradient(circle_at_var(--spot-x)_var(--spot-y),rgba(255,255,255,0.85),rgba(255,255,255,0)_45%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-          aria-hidden="true"
-        />
-        <div
-          className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-brand/20 blur-3xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
           aria-hidden="true"
         />
         <div
