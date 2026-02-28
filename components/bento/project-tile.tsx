@@ -47,9 +47,14 @@ export function ProjectTile({
   const isFeature = project.size === "feature";
   const shownCategories = categories.slice(0, 2);
 
-  const revealDescription = !isFeature || isSearching || isHovered;
+  const revealDescription = !isFeature || isHovered;
 
   useEffect(() => {
+    if (!isFeature) {
+      setDescriptionOverflow(0);
+      return;
+    }
+
     const measureElement = measureRef.current;
     if (!measureElement) {
       return;
@@ -59,7 +64,7 @@ export function ProjectTile({
       const styles = window.getComputedStyle(measureElement);
       const lineHeight = Number.parseFloat(styles.lineHeight) || 21;
       const collapsedHeight = lineHeight * 2;
-      const fullHeight = measureElement.getBoundingClientRect().height;
+      const fullHeight = measureElement.scrollHeight;
       setDescriptionOverflow(Math.max(0, Math.ceil(fullHeight - collapsedHeight)));
     };
 
@@ -67,15 +72,16 @@ export function ProjectTile({
 
     const observer = new ResizeObserver(updateOverflow);
     observer.observe(measureElement);
+    window.addEventListener("resize", updateOverflow);
 
     return () => {
+      window.removeEventListener("resize", updateOverflow);
       observer.disconnect();
     };
-  }, [project.description]);
+  }, [isFeature, project.description]);
 
-  const textExpansion = isFeature ? Math.ceil(descriptionOverflow / 2) : 0;
-  const hoverExpansion = isHovered ? Math.min(130, isFeature ? 16 + textExpansion : isMiddle ? 12 : 10) : 0;
-  const hoverScale = isHovered ? (isFeature ? 1.08 : 1.06) : 1;
+  const hoverExpansion = isHovered ? (isFeature ? Math.min(220, Math.ceil(descriptionOverflow / 2) + 12) : 12) : 0;
+  const hoverScale = isHovered ? (isFeature ? 1.1 : 1.06) : 1;
 
   const starScale = Math.max(0, Math.log10((project.stars ?? 0) + 1));
   const starProminence = Math.min(1, starScale / 3.2);
@@ -129,20 +135,14 @@ export function ProjectTile({
     >
       <motion.article
         initial={false}
-        animate={
-          prefersReducedMotion
-            ? { top: 0, bottom: 0, scale: 1, zIndex: isHovered ? 30 : 1 }
-            : {
-                top: -hoverExpansion,
-                bottom: -hoverExpansion,
-                scale: hoverScale,
-                zIndex: isHovered ? 30 : 1
-              }
-        }
+        animate={{
+          top: -hoverExpansion,
+          bottom: -hoverExpansion,
+          scale: hoverScale,
+          zIndex: isHovered ? 30 : 1
+        }}
         transition={
-          prefersReducedMotion
-            ? { duration: 0.18, ease: [0.22, 1, 0.36, 1] }
-            : { type: "spring", stiffness: 260, damping: 24, mass: 0.52 }
+          prefersReducedMotion ? { duration: 0.01 } : { type: "spring", stiffness: 280, damping: 23, mass: 0.55 }
         }
         onHoverStart={() => setIsHovered(true)}
         onHoverEnd={() => setIsHovered(false)}
