@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Dosis:wght@500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -6,6 +6,12 @@
 
 :root {
   color-scheme: light;
+  --color-canvas: 247 251 255;
+  --color-canvas-soft: 235 244 255;
+  --color-surface: 255 255 255;
+  --color-brand: 58 176 255;
+  --color-primary: 30 41 59;
+  --color-secondary: 64 80 108;
 }
 
 * {
@@ -17,14 +23,55 @@ body {
   margin: 0;
   padding: 0;
   width: 100%;
+  min-height: 100%;
 }
 
 body {
-  font-family: "Dosis", sans-serif;
+  font-family: "Outfit", sans-serif;
+  color: rgb(var(--color-primary));
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(58, 176, 255, 0.18), transparent 40%),
+    radial-gradient(circle at 80% 15%, rgba(147, 197, 253, 0.2), transparent 35%),
+    radial-gradient(circle at 70% 85%, rgba(191, 219, 254, 0.2), transparent 42%),
+    linear-gradient(130deg, #fafcff 0%, #ebf4ff 100%);
   background-attachment: fixed;
+}
+
+#root {
+  min-height: 100dvh;
+}
+
+.font-display {
+  font-family: "Sora", "Outfit", sans-serif;
+}
+
+.clamp-2,
+.clamp-4 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.clamp-2 {
+  -webkit-line-clamp: 2;
+}
+
+.clamp-4 {
+  -webkit-line-clamp: 4;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

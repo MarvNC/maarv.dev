@@ -1,10 +1,10 @@
 # maarv.dev
 
-Interactive portfolio built with Next.js, Bun, Tailwind, and spring-style DOM physics.
+Interactive portfolio built with React, Vite, Tailwind, and Framer Motion bento animations.
 
 ## Stack
 
-- Next.js App Router
+- Vite
 - React + TypeScript
 - Tailwind CSS
 - Bun runtime / package manager
@@ -43,7 +43,7 @@ Optional local environment variables:
 
 ```bash
 GITHUB_TOKEN=your_token_here
-NEXT_PUBLIC_STATS_URL=https://raw.githubusercontent.com/MarvNC/maarv.dev/data/stats.json
+VITE_STATS_URL=https://raw.githubusercontent.com/MarvNC/maarv.dev/data/stats.json
 ```
 
 For GitHub Actions, set `GH_STATS_TOKEN` in repository secrets if the default workflow token cannot access all repos.

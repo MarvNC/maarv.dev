@@ -5,15 +5,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        canvas: "#f7fbff",
-        canvasSoft: "#ebf4ff",
-        surface: "rgba(255, 255, 255, 0.82)",
-        brand: "#3ab0ff",
-        primary: "#1e293b",
-        secondary: "#40506c"
+        canvas: "rgb(var(--color-canvas) / <alpha-value>)",
+        canvasSoft: "rgb(var(--color-canvas-soft) / <alpha-value>)",
+        surface: "rgb(var(--color-surface) / <alpha-value>)",
+        brand: "rgb(var(--color-brand) / <alpha-value>)",
+        primary: "rgb(var(--color-primary) / <alpha-value>)",
+        secondary: "rgb(var(--color-secondary) / <alpha-value>)"
       },
       borderRadius: {
-        bubble: "2rem"
+        bubble: "1.75rem"
       },
       boxShadow: {
         float: "0 20px 40px -15px rgba(58, 176, 255, 0.18)",

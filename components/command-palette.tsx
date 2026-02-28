@@ -50,15 +50,15 @@ export function CommandPalette({ value, onChange }: CommandPaletteProps) {
   }, [onChange, value]);
 
   return (
-    <div className="pointer-events-none fixed left-1/2 top-4 z-40 w-full max-w-3xl -translate-x-1/2 px-4 sm:top-6">
+    <div className="pointer-events-none fixed left-1/2 top-[max(0.75rem,env(safe-area-inset-top))] z-40 w-full max-w-3xl -translate-x-1/2 px-3 sm:top-5 sm:px-4">
       <div className="pointer-events-auto relative">
         <input
           ref={inputRef}
           aria-label="Search projects"
-          placeholder="Type to search..."
+          placeholder="Search projects or tags..."
           value={value}
           onChange={(event) => onChange(event.target.value)}
-          className="w-full rounded-full border border-sky-100 bg-white/85 px-6 py-4 text-lg font-bold tracking-wide text-primary shadow-float backdrop-blur-xl outline-none transition focus:border-brand focus:shadow-glow"
+          className="w-full rounded-2xl border border-white/75 bg-white/80 px-4 py-3 text-base font-bold tracking-wide text-primary shadow-float backdrop-blur-xl outline-none transition placeholder:text-secondary/65 focus:border-brand focus:shadow-glow sm:px-5 sm:py-3.5 sm:text-lg"
         />
       </div>
     </div>
