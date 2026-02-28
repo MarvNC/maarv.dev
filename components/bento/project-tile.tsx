@@ -1,5 +1,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import {
+  useEffect,
+  useRef,
   useState,
   type CSSProperties,
   type FocusEvent as ReactFocusEvent,
@@ -37,6 +39,8 @@ export function ProjectTile({
 }: ProjectTileProps) {
   const prefersReducedMotion = useReducedMotion();
   const [isHovered, setIsHovered] = useState(false);
+  const [descriptionOverflow, setDescriptionOverflow] = useState(0);
+  const measureRef = useRef<HTMLParagraphElement>(null);
 
   const isHero = project.size === "hero";
   const isMiddle = project.size === "middle";
@@ -44,18 +48,34 @@ export function ProjectTile({
   const shownCategories = categories.slice(0, 2);
 
   const revealDescription = !isFeature || isSearching || isHovered;
-  const hoverExpansion = isHovered ? (isFeature ? 34 : isMiddle ? 20 : 16) : 0;
-  const descriptionHeightClass = isHero
-    ? isHovered
-      ? "h-[7.6rem]"
-      : "h-[6.2rem]"
-    : isMiddle
-      ? isHovered
-        ? "h-[6.6rem]"
-        : "h-[5rem]"
-      : revealDescription
-        ? "h-[8.1rem]"
-        : "h-[3.5rem]";
+
+  useEffect(() => {
+    const measureElement = measureRef.current;
+    if (!measureElement) {
+      return;
+    }
+
+    const updateOverflow = () => {
+      const styles = window.getComputedStyle(measureElement);
+      const lineHeight = Number.parseFloat(styles.lineHeight) || 21;
+      const collapsedHeight = lineHeight * 2;
+      const fullHeight = measureElement.getBoundingClientRect().height;
+      setDescriptionOverflow(Math.max(0, Math.ceil(fullHeight - collapsedHeight)));
+    };
+
+    updateOverflow();
+
+    const observer = new ResizeObserver(updateOverflow);
+    observer.observe(measureElement);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [project.description]);
+
+  const textExpansion = isFeature ? Math.ceil(descriptionOverflow / 2) : 0;
+  const hoverExpansion = isHovered ? Math.min(130, isFeature ? 16 + textExpansion : isMiddle ? 12 : 10) : 0;
+  const hoverScale = isHovered ? (isFeature ? 1.08 : 1.06) : 1;
 
   const starScale = Math.max(0, Math.log10((project.stars ?? 0) + 1));
   const starProminence = Math.min(1, starScale / 3.2);
@@ -84,7 +104,6 @@ export function ProjectTile({
   };
 
   const handlePointerLeave = (event: ReactPointerEvent<HTMLElement>) => {
-    setIsHovered(false);
     event.currentTarget.style.setProperty("--spot-x", "50%");
     event.currentTarget.style.setProperty("--spot-y", "0%");
   };
@@ -116,14 +135,14 @@ export function ProjectTile({
             : {
                 top: -hoverExpansion,
                 bottom: -hoverExpansion,
-                scale: isHovered ? 1.012 : 1,
+                scale: hoverScale,
                 zIndex: isHovered ? 30 : 1
               }
         }
         transition={
           prefersReducedMotion
             ? { duration: 0.18, ease: [0.22, 1, 0.36, 1] }
-            : { type: "spring", stiffness: 300, damping: 30, mass: 0.55 }
+            : { type: "spring", stiffness: 260, damping: 24, mass: 0.52 }
         }
         onHoverStart={() => setIsHovered(true)}
         onHoverEnd={() => setIsHovered(false)}
@@ -187,17 +206,20 @@ export function ProjectTile({
             </span>
           </div>
 
-          <div
-            className={`relative mt-3 overflow-hidden transition-[height] duration-200 ease-out ${descriptionHeightClass}`}
-          >
+          <div className="relative mt-3 overflow-hidden">
             <p
-              className={`text-base font-semibold leading-[1.34] text-secondary ${
-                revealDescription ? "no-scrollbar h-full overflow-y-auto pr-1" : "clamp-2"
-              }`}
+              ref={measureRef}
+              aria-hidden="true"
+              className="pointer-events-none invisible absolute inset-x-0 text-base font-semibold leading-[1.34]"
             >
               {project.description}
             </p>
-            {isFeature && !revealDescription && (
+            <p
+              className={`text-base font-semibold leading-[1.34] text-secondary ${revealDescription ? "" : "clamp-2"}`}
+            >
+              {project.description}
+            </p>
+            {!revealDescription && (
               <div
                 className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-surface/95 to-transparent"
                 aria-hidden="true"
