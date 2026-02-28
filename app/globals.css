@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Dosis:wght@500;600;700;800&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -27,7 +27,7 @@ body {
 }
 
 body {
-  font-family: "Outfit", sans-serif;
+  font-family: "Dosis", sans-serif;
   color: rgb(var(--color-primary));
   background-image:
     radial-gradient(circle at 20% 20%, rgba(58, 176, 255, 0.18), transparent 40%),
@@ -42,7 +42,7 @@ body {
 }
 
 .font-display {
-  font-family: "Sora", "Outfit", sans-serif;
+  font-family: "Dosis", sans-serif;
 }
 
 .clamp-2,
@@ -58,6 +58,15 @@ body {
 
 .clamp-4 {
   -webkit-line-clamp: 4;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
 
 a {
