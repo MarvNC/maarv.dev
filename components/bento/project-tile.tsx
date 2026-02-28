@@ -80,8 +80,18 @@ export function ProjectTile({
     };
   }, [isFeature, project.description]);
 
-  const hoverExpansion = isHovered ? (isFeature ? Math.min(220, Math.ceil(descriptionOverflow / 2) + 12) : 12) : 0;
-  const hoverScale = isHovered ? 1.05 : 1;
+  const hoverExpansion = isHovered
+    ? isFeature
+      ? Math.min(180, Math.ceil(descriptionOverflow / 2) + (prefersReducedMotion ? 10 : 14))
+      : isMiddle
+        ? prefersReducedMotion
+          ? 18
+          : 34
+        : prefersReducedMotion
+          ? 14
+          : 24
+    : 0;
+  const hoverScale = isHovered ? (prefersReducedMotion ? 1.02 : 1.05) : 1;
 
   const starScale = Math.max(0, Math.log10((project.stars ?? 0) + 1));
   const starProminence = Math.min(1, starScale / 3.2);
@@ -143,9 +153,12 @@ export function ProjectTile({
         }}
         transition={
           prefersReducedMotion
-            ? { duration: 0.01 }
+            ? {
+                duration: 0.45,
+                ease: [0.22, 1, 0.36, 1]
+              }
             : {
-                duration: 0.5,
+                duration: 0.85,
                 ease: [0.22, 1, 0.36, 1]
               }
         }
