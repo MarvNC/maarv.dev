@@ -44,23 +44,25 @@ body::before {
   content: "";
   pointer-events: none;
   position: fixed;
-  inset: -18vmax;
-  z-index: 0;
-  opacity: 0.85;
+  inset: 0;
+  z-index: 3;
+  opacity: 0.95;
   background:
-    radial-gradient(46vmax 46vmax at var(--cursor-x) var(--cursor-y), rgba(147, 197, 253, 0.24), transparent 62%),
+    radial-gradient(38rem 38rem at var(--cursor-x) var(--cursor-y), rgba(147, 197, 253, 0.3), transparent 64%),
     radial-gradient(
-      34vmax 34vmax at calc(var(--cursor-x) + 12vmax) calc(var(--cursor-y) - 10vmax),
-      rgba(125, 211, 252, 0.18),
-      transparent 66%
+      22rem 22rem at calc(var(--cursor-x) - 11rem) calc(var(--cursor-y) + 7rem),
+      rgba(255, 255, 255, 0.22),
+      transparent 72%
     );
-  filter: blur(8px);
+  mix-blend-mode: soft-light;
+  filter: blur(2px);
+  transition: opacity 300ms ease;
 }
 
 #root {
   min-height: 100dvh;
   position: relative;
-  z-index: 1;
+  z-index: 2;
   isolation: isolate;
 }
 
@@ -98,10 +100,6 @@ a {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body::before {
-    display: none;
-  }
-
   *,
   *::before,
   *::after {

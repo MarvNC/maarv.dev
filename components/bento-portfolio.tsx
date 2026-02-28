@@ -18,7 +18,7 @@ export function BentoPortfolio({ projects, query, onTagClick }: BentoPortfolioPr
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
-    if (typeof window === "undefined" || prefersReducedMotion) {
+    if (typeof window === "undefined") {
       return;
     }
 
@@ -27,6 +27,7 @@ export function BentoPortfolio({ projects, query, onTagClick }: BentoPortfolioPr
     }
 
     const root = document.documentElement;
+    const smoothing = prefersReducedMotion ? 0.2 : 0.11;
 
     let currentX = window.innerWidth * 0.5;
     let currentY = window.innerHeight * 0.35;
@@ -40,15 +41,23 @@ export function BentoPortfolio({ projects, query, onTagClick }: BentoPortfolioPr
     };
 
     const tick = () => {
-      currentX += (targetX - currentX) * 0.11;
-      currentY += (targetY - currentY) * 0.11;
+      currentX += (targetX - currentX) * smoothing;
+      currentY += (targetY - currentY) * smoothing;
       writeVars(currentX, currentY);
       frame = window.requestAnimationFrame(tick);
     };
 
+    const updateTarget = (x: number, y: number) => {
+      targetX = x;
+      targetY = y;
+    };
+
     const onPointerMove = (event: PointerEvent) => {
-      targetX = event.clientX;
-      targetY = event.clientY;
+      updateTarget(event.clientX, event.clientY);
+    };
+
+    const onMouseMove = (event: MouseEvent) => {
+      updateTarget(event.clientX, event.clientY);
     };
 
     const recenter = () => {
@@ -60,12 +69,14 @@ export function BentoPortfolio({ projects, query, onTagClick }: BentoPortfolioPr
     frame = window.requestAnimationFrame(tick);
 
     window.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("mousemove", onMouseMove, { passive: true });
     window.addEventListener("resize", recenter);
     window.addEventListener("blur", recenter);
 
     return () => {
       window.cancelAnimationFrame(frame);
       window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("resize", recenter);
       window.removeEventListener("blur", recenter);
     };
