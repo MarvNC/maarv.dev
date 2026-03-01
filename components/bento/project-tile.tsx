@@ -1,5 +1,11 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { useEffect, useRef, useState, type FocusEvent as ReactFocusEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type FocusEvent as ReactFocusEvent,
+  type MouseEvent as ReactMouseEvent
+} from "react";
 
 import type { ProjectWithStats } from "@/lib/github";
 
@@ -16,14 +22,18 @@ type ProjectTileProps = {
 };
 
 const tileSizeClasses = {
-  hero: "sm:col-span-2 lg:col-span-6 h-[248px] sm:h-[258px]",
-  middle: "sm:col-span-2 lg:col-span-4 h-[220px] sm:h-[230px]",
-  feature: "sm:col-span-1 lg:col-span-3 h-[194px] sm:h-[202px]"
+  hero: "sm:col-span-2 lg:col-span-6 min-h-[248px] lg:h-[258px]",
+  middle: "sm:col-span-2 lg:col-span-4 min-h-[220px] lg:h-[230px]",
+  feature: "sm:col-span-1 lg:col-span-3 min-h-[194px] lg:h-[202px]"
 } as const;
 
 export function ProjectTile({ project, categories, primaryCategory, index, onTagClick }: ProjectTileProps) {
   const prefersReducedMotion = useReducedMotion();
   const [isHovered, setIsHovered] = useState(false);
+  const [isExpandedMobile, setIsExpandedMobile] = useState(false);
+  const [isDesktopLayout, setIsDesktopLayout] = useState(() =>
+    typeof window !== "undefined" ? window.matchMedia("(min-width: 1024px)").matches : false
+  );
   const [descriptionOverflow, setDescriptionOverflow] = useState(0);
   const measureRef = useRef<HTMLParagraphElement>(null);
 
@@ -31,8 +41,40 @@ export function ProjectTile({ project, categories, primaryCategory, index, onTag
   const isMiddle = project.size === "middle";
   const isFeature = project.size === "feature";
   const shownCategories = categories.slice(0, 2);
+  const isActive = isDesktopLayout ? isHovered : isExpandedMobile;
+  const revealDescription = !isFeature || isActive;
+  const descriptionContainerClass = isFeature
+    ? revealDescription
+      ? "max-h-[40rem]"
+      : "max-h-[2.85rem]"
+    : "max-h-[14rem]";
 
-  const revealDescription = !isFeature || isHovered;
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const media = window.matchMedia("(min-width: 1024px)");
+    const updateLayoutMode = () => {
+      setIsDesktopLayout(media.matches);
+    };
+
+    updateLayoutMode();
+
+    if (typeof media.addEventListener === "function") {
+      media.addEventListener("change", updateLayoutMode);
+      return () => media.removeEventListener("change", updateLayoutMode);
+    }
+
+    media.addListener(updateLayoutMode);
+    return () => media.removeListener(updateLayoutMode);
+  }, []);
+
+  useEffect(() => {
+    if (isDesktopLayout) {
+      setIsExpandedMobile(false);
+    }
+  }, [isDesktopLayout]);
 
   useEffect(() => {
     if (!isFeature) {
@@ -65,7 +107,7 @@ export function ProjectTile({ project, categories, primaryCategory, index, onTag
     };
   }, [isFeature, project.description]);
 
-  const hoverExpansion = isHovered
+  const desktopHoverExpansion = isHovered
     ? isFeature
       ? Math.min(180, Math.ceil(descriptionOverflow / 2) + (prefersReducedMotion ? 10 : 14))
       : isMiddle
@@ -76,7 +118,8 @@ export function ProjectTile({ project, categories, primaryCategory, index, onTag
           ? 14
           : 24
     : 0;
-  const hoverScale = isHovered ? (prefersReducedMotion ? 1.02 : 1.05) : 1;
+  const hoverExpansion = isDesktopLayout ? desktopHoverExpansion : 0;
+  const hoverScale = isActive ? 1.02 : 1;
 
   const starScale = Math.max(0, Math.log10((project.stars ?? 0) + 1));
   const starProminence = Math.min(1, starScale / 3.2);
@@ -86,9 +129,22 @@ export function ProjectTile({ project, categories, primaryCategory, index, onTag
   ).toFixed(3)}))`;
 
   const handleBlur = (event: ReactFocusEvent<HTMLElement>) => {
-    if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+    if (isDesktopLayout && !event.currentTarget.contains(event.relatedTarget as Node | null)) {
       setIsHovered(false);
     }
+  };
+
+  const handleCardClick = (event: ReactMouseEvent<HTMLElement>) => {
+    if (isDesktopLayout || !isFeature) {
+      return;
+    }
+
+    const target = event.target as HTMLElement;
+    if (target.closest("a, button")) {
+      return;
+    }
+
+    setIsExpandedMobile((previous) => !previous);
   };
 
   return (
@@ -105,6 +161,7 @@ export function ProjectTile({ project, categories, primaryCategory, index, onTag
       className={`relative overflow-visible ${tileSizeClasses[project.size]}`}
     >
       <motion.article
+        layout={!isDesktopLayout}
         initial={false}
         animate={{
           top: -hoverExpansion,
@@ -115,21 +172,34 @@ export function ProjectTile({ project, categories, primaryCategory, index, onTag
         transition={
           prefersReducedMotion
             ? {
-                duration: 0.45,
+                duration: 0.24,
                 ease: [0.22, 1, 0.36, 1]
               }
             : {
-                duration: 0.85,
+                duration: isDesktopLayout ? 0.85 : 0.5,
                 ease: [0.22, 1, 0.36, 1]
               }
         }
-        onHoverStart={() => setIsHovered(true)}
-        onHoverEnd={() => setIsHovered(false)}
-        onFocusCapture={() => setIsHovered(true)}
+        onHoverStart={() => {
+          if (isDesktopLayout) {
+            setIsHovered(true);
+          }
+        }}
+        onHoverEnd={() => {
+          if (isDesktopLayout) {
+            setIsHovered(false);
+          }
+        }}
+        onFocusCapture={() => {
+          if (isDesktopLayout) {
+            setIsHovered(true);
+          }
+        }}
         onBlurCapture={handleBlur}
-        className={`group absolute inset-x-0 top-0 bottom-0 flex flex-col overflow-hidden rounded-[1.95rem] border bg-surface/95 p-4 shadow-float backdrop-blur-md transition ${categoryTileClasses[primaryCategory]} ${
-          isHero ? "p-5" : ""
-        }`}
+        onClick={handleCardClick}
+        className={`group relative flex flex-col overflow-hidden rounded-[1.95rem] border bg-surface/95 p-4 shadow-float backdrop-blur-md transition lg:absolute lg:inset-x-0 lg:top-0 lg:bottom-0 ${categoryTileClasses[primaryCategory]} ${
+          isFeature ? "touch-manipulation cursor-pointer lg:cursor-default" : ""
+        } ${isHero ? "p-5" : ""}`}
         style={{ filter: cardGlow }}
       >
         <div
@@ -175,7 +245,9 @@ export function ProjectTile({ project, categories, primaryCategory, index, onTag
             </span>
           </div>
 
-          <div className="relative mt-3 overflow-hidden">
+          <div
+            className={`relative mt-3 overflow-hidden transition-[max-height] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${descriptionContainerClass}`}
+          >
             <p
               ref={measureRef}
               aria-hidden="true"
@@ -184,11 +256,11 @@ export function ProjectTile({ project, categories, primaryCategory, index, onTag
               {project.description}
             </p>
             <p
-              className={`text-base font-semibold leading-[1.34] text-secondary ${revealDescription ? "" : "clamp-2"}`}
+              className={`text-base font-semibold leading-[1.34] text-secondary ${isFeature && !revealDescription ? "clamp-2" : ""}`}
             >
               {project.description}
             </p>
-            {!revealDescription && (
+            {isFeature && !revealDescription && (
               <div
                 className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-surface/95 to-transparent"
                 aria-hidden="true"
