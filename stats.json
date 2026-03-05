@@ -1,21 +1,21 @@
 {
-  "generatedAt": "2026-03-04T04:26:04.845Z",
+  "generatedAt": "2026-03-05T04:30:15.881Z",
   "projects": {
     "rotmg-player-stats": {
       "stars": 0,
-      "updatedAt": "2026-03-04T04:06:38Z"
+      "updatedAt": "2026-03-05T04:10:09Z"
     },
     "cc-cedict-yomitan": {
       "stars": 32,
-      "updatedAt": "2026-03-04T02:40:17Z"
+      "updatedAt": "2026-03-05T02:43:01Z"
     },
     "wordshk-yomitan": {
       "stars": 21,
-      "updatedAt": "2026-03-04T02:08:31Z"
+      "updatedAt": "2026-03-05T02:12:13Z"
     },
     "pixiv-yomitan": {
       "stars": 51,
-      "updatedAt": "2026-03-04T01:20:09Z"
+      "updatedAt": "2026-03-05T01:21:29Z"
     },
     "lolibrary-links": {
       "stars": 0,
@@ -58,7 +58,7 @@
       "updatedAt": "2025-08-21T22:02:13Z"
     },
     "yomitan": {
-      "stars": 2345,
+      "stars": 2350,
       "updatedAt": "2026-03-01T18:46:18Z"
     },
     "yomichan-dict-builder": {
