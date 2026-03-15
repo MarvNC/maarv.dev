@@ -1,5 +1,46 @@
 [
   {
+    "name": "DuckGrades",
+    "owner": "MarvNC",
+    "repo": "DuckGrades",
+    "href": "https://github.com/MarvNC/DuckGrades",
+    "description": "UOregon grade-distribution explorer built with React + TypeScript, with Bun scripts that scrape the course catalog and assemble versioned datasets for fast search and trend comparisons.",
+    "tags": [
+      "grades",
+      "university",
+      "analytics-dashboard",
+      "react",
+      "typescript"
+    ],
+    "size": "hero",
+    "website": "https://duckgrades.maarv.dev",
+    "categories": [
+      "dataset",
+      "analytics",
+      "web-app",
+      "learning"
+    ]
+  },
+  {
+    "name": "maarv.dev",
+    "owner": "MarvNC",
+    "repo": "maarv.dev",
+    "href": "https://github.com/MarvNC/maarv.dev",
+    "description": "Personal portfolio site featuring an animated bento project layout, live GitHub stats hydration, and curated project metadata with search and category filters.",
+    "tags": [
+      "portfolio",
+      "react",
+      "typescript",
+      "vite",
+      "framer-motion"
+    ],
+    "size": "feature",
+    "website": "https://maarv.dev",
+    "categories": [
+      "web-app"
+    ]
+  },
+  {
     "name": "rotmg-player-stats",
     "owner": "MarvNC",
     "repo": "rotmg-player-stats",
