@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Dosis:wght@500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Dosis:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -27,7 +27,7 @@ body {
 }
 
 body {
-  font-family: "Dosis", sans-serif;
+  font-family: "Plus Jakarta Sans", "Dosis", sans-serif;
   color: rgb(var(--color-primary));
   background-image:
     radial-gradient(circle at 20% 20%, rgba(58, 176, 255, 0.18), transparent 40%),
@@ -43,6 +43,10 @@ body {
 
 .font-display {
   font-family: "Dosis", sans-serif;
+}
+
+.font-body {
+  font-family: "Plus Jakarta Sans", sans-serif;
 }
 
 .clamp-2,

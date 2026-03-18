@@ -89,7 +89,7 @@ export function ProjectTile({ project, categories, primaryCategory, index, onTag
 
     const updateOverflow = () => {
       const styles = window.getComputedStyle(measureElement);
-      const lineHeight = Number.parseFloat(styles.lineHeight) || 21;
+      const lineHeight = Number.parseFloat(styles.lineHeight) || 26;
       const collapsedHeight = lineHeight * 2;
       const fullHeight = measureElement.scrollHeight;
       setDescriptionOverflow(Math.max(0, Math.ceil(fullHeight - collapsedHeight)));
@@ -213,11 +213,15 @@ export function ProjectTile({ project, categories, primaryCategory, index, onTag
 
         <div className="relative z-10 flex h-full flex-col">
           <div className="flex min-w-0 items-start gap-2">
-            {project.stars > 0 && (
-              <span className="inline-flex shrink-0 items-center whitespace-nowrap rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-extrabold text-amber-800">
-                ★ {project.stars}
+            <div
+              className={`flex shrink-0 transition-opacity duration-500 ${
+                project.stars > 0 ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              <span className="inline-flex items-center whitespace-nowrap rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-extrabold text-amber-800">
+                ★ {project.stars || 0}
               </span>
-            )}
+            </div>
             <h2
               className={`${isHero ? "text-2xl" : isMiddle ? "text-xl" : "text-base"} min-w-0 font-extrabold leading-tight text-primary [overflow-wrap:anywhere]`}
             >
@@ -251,12 +255,12 @@ export function ProjectTile({ project, categories, primaryCategory, index, onTag
             <p
               ref={measureRef}
               aria-hidden="true"
-              className="pointer-events-none invisible absolute inset-x-0 text-base font-semibold leading-[1.34]"
+              className="pointer-events-none invisible absolute inset-x-0 font-body text-base font-medium leading-relaxed"
             >
               {project.description}
             </p>
             <p
-              className={`text-base font-semibold leading-[1.34] text-secondary ${isFeature && !revealDescription ? "clamp-2" : ""}`}
+              className={`font-body text-base font-medium leading-relaxed text-secondary ${isFeature && !revealDescription ? "clamp-2" : ""}`}
             >
               {project.description}
             </p>

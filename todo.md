@@ -1,0 +1,4 @@
+- startup screen (apple style)
+- some sort of about/contact/etc
+- bottom floating bar to sort by stars, creation date, last updated, etc?
+- Add icons got from the original site

@@ -27,3 +27,15 @@ Guidance for coding agents working in this repository.
 - Keep blue, soft, calm visual language unless user requests otherwise.
 - Prefer subtle, elegant animations over aggressive or bouncy effects.
 - Avoid hover-only critical interactions; mobile users must still access content.
+
+## Design Context
+
+**IMPORTANT:** When touching any UI, styling, layout, animation, or design-related code, you MUST read `.impeccable.md` in the project root before making changes. It contains the authoritative design context, brand personality, aesthetic direction, design principles, and design token reference for this project.
+
+Summary of key principles (full details in `.impeccable.md`):
+
+- Brand is **warm, playful, human** — not corporate, not a product page
+- The "wow" comes from craft and detail, not flashy effects
+- Projects are always the primary focus
+- Light mode only; bento grid layout is the established pattern
+- All motion must respect `prefers-reduced-motion`; no physics/spring simulations

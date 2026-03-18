@@ -93,7 +93,7 @@ export function matchesProjectQuery(project: ProjectWithStats, query: string, ca
 }
 
 export function formatUpdatedAt(value: string): string {
-  if (!value) return "unknown";
+  if (!value) return "—";
   const then = new Date(value).getTime();
   const now = Date.now();
   const days = Math.floor((now - then) / (1000 * 60 * 60 * 24));
