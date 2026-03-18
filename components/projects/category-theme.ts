@@ -3,7 +3,7 @@ import type { Category } from "@/components/projects/types";
 export const categoryTileClasses: Record<Category, string> = {
   "web-app": "border-sky-200/90",
   "desktop-app": "border-teal-200/90",
-  game: "border-cyan-200/90",
+  game: "border-violet-200/90",
   dictionary: "border-amber-200/90",
   dataset: "border-orange-200/90",
   userscript: "border-emerald-200/90",
@@ -21,7 +21,7 @@ export const categoryTileClasses: Record<Category, string> = {
 export const categoryBadgeClasses: Record<Category, string> = {
   "web-app": "bg-sky-100 text-sky-700",
   "desktop-app": "bg-teal-100 text-teal-700",
-  game: "bg-cyan-100 text-cyan-700",
+  game: "bg-violet-100 text-violet-700",
   dictionary: "bg-amber-100 text-amber-800",
   dataset: "bg-orange-100 text-orange-700",
   userscript: "bg-emerald-100 text-emerald-700",

@@ -68,7 +68,14 @@ export function BentoPortfolio({ projects, query, onTagClick }: BentoPortfolioPr
             animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
             className="mx-auto mt-6 max-w-lg rounded-3xl border border-white/75 bg-white/70 px-6 py-5 text-center text-sm font-semibold text-secondary shadow-float backdrop-blur-md"
           >
-            No matching projects yet. Try a broader tag or fewer words.
+            <p>No matching projects yet. Try a broader tag or fewer words.</p>
+            <button
+              type="button"
+              onClick={() => onTagClick("")}
+              className="mt-3 inline-flex items-center rounded-full bg-slate-100 px-4 py-1.5 text-xs font-bold text-slate-600 transition hover:bg-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/35"
+            >
+              Clear search
+            </button>
           </motion.div>
         )}
       </div>

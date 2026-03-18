@@ -197,7 +197,7 @@ export function ProjectTile({ project, categories, primaryCategory, index, onTag
         }}
         onBlurCapture={handleBlur}
         onClick={handleCardClick}
-        className={`group relative flex flex-col overflow-hidden rounded-[1.95rem] border bg-surface/95 p-4 shadow-float backdrop-blur-md transition lg:absolute lg:inset-x-0 lg:top-0 lg:bottom-0 ${categoryTileClasses[primaryCategory]} ${
+        className={`group relative flex flex-col overflow-hidden rounded-[2rem] border bg-surface/95 p-4 shadow-float backdrop-blur-md transition lg:absolute lg:inset-x-0 lg:top-0 lg:bottom-0 ${categoryTileClasses[primaryCategory]} ${
           isFeature ? "touch-manipulation cursor-pointer lg:cursor-default" : ""
         } ${isHero ? "p-5" : ""}`}
         style={{ filter: cardGlow }}
@@ -223,7 +223,7 @@ export function ProjectTile({ project, categories, primaryCategory, index, onTag
               </span>
             </div>
             <h2
-              className={`${isHero ? "text-2xl" : isMiddle ? "text-xl" : "text-base"} min-w-0 font-extrabold leading-tight text-primary [overflow-wrap:anywhere]`}
+              className={`${isHero ? "text-2xl" : isMiddle ? "text-xl" : "text-base"} min-w-0 font-display font-extrabold leading-tight text-primary [overflow-wrap:anywhere]`}
             >
               {project.name}
             </h2>
@@ -239,7 +239,7 @@ export function ProjectTile({ project, categories, primaryCategory, index, onTag
                   event.stopPropagation();
                   onTagClick(category);
                 }}
-                className={`min-h-[28px] rounded-full px-2.5 py-0.5 text-[11px] font-extrabold uppercase tracking-wide transition hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 ${categoryBadgeClasses[category]}`}
+                className={`min-h-[28px] cursor-pointer rounded-full px-2.5 py-0.5 text-[11px] font-display font-extrabold uppercase tracking-wide transition-all hover:ring-1 hover:ring-current/30 hover:brightness-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 ${categoryBadgeClasses[category]}`}
               >
                 {category}
               </button>
@@ -274,9 +274,7 @@ export function ProjectTile({ project, categories, primaryCategory, index, onTag
 
           <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-4">
             <div className="flex flex-wrap items-center gap-1.5 text-[11px] font-semibold text-secondary">
-              {project.archived && (
-                <span className="rounded-full bg-slate-200 px-2 py-0.5 text-slate-700">Archived</span>
-              )}
+              {project.archived && <span className="font-display italic text-slate-500">Archived</span>}
               {project.role && (
                 <span className="rounded-full bg-teal-100 px-2 py-0.5 text-teal-700">{project.role}</span>
               )}
@@ -288,9 +286,7 @@ export function ProjectTile({ project, categories, primaryCategory, index, onTag
                   href={project.website}
                   target="_blank"
                   rel="noreferrer"
-                  className={`inline-flex min-h-[34px] items-center rounded-full bg-brand px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-wide text-white transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/35 ${
-                    isHero || isMiddle ? "text-xs" : "text-[10px]"
-                  }`}
+                  className="inline-flex min-h-[34px] items-center rounded-full bg-brand px-3.5 py-1 text-xs font-extrabold uppercase tracking-wide text-white transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/35"
                 >
                   Visit
                 </a>
@@ -299,7 +295,7 @@ export function ProjectTile({ project, categories, primaryCategory, index, onTag
                 href={project.href}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex min-h-[34px] items-center rounded-full bg-brand/10 px-3.5 py-1 text-[10px] font-extrabold uppercase tracking-wide text-brand transition hover:bg-brand hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/35"
+                className="inline-flex min-h-[34px] items-center rounded-full bg-brand/10 px-3.5 py-1 text-xs font-extrabold uppercase tracking-wide text-brand transition hover:bg-brand hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/35"
               >
                 Repo
               </a>
