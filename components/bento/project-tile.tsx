@@ -1,11 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
-import {
-  useEffect,
-  useRef,
-  useState,
-  type FocusEvent as ReactFocusEvent,
-  type MouseEvent as ReactMouseEvent
-} from "react";
+import { useEffect, useRef, useState, type FocusEvent as ReactFocusEvent } from "react";
 
 import type { ProjectWithStats } from "@/lib/github";
 
@@ -30,96 +24,58 @@ const tileSizeClasses = {
 export function ProjectTile({ project, categories, primaryCategory, index, onTagClick }: ProjectTileProps) {
   const prefersReducedMotion = useReducedMotion();
   const [isHovered, setIsHovered] = useState(false);
-  const [isExpandedMobile, setIsExpandedMobile] = useState(false);
   const [isDesktopLayout, setIsDesktopLayout] = useState(() =>
     typeof window !== "undefined" ? window.matchMedia("(min-width: 1024px)").matches : false
   );
   const [descriptionOverflow, setDescriptionOverflow] = useState(0);
   const measureRef = useRef<HTMLParagraphElement>(null);
+  const descContainerRef = useRef<HTMLDivElement>(null);
 
   const isHero = project.size === "hero";
-  const isMiddle = project.size === "middle";
-  const isFeature = project.size === "feature";
   const shownCategories = categories.slice(0, 2);
-  const isActive = isDesktopLayout ? isHovered : isExpandedMobile;
-  const revealDescription = !isFeature || isActive;
-  const descriptionContainerClass = isFeature
-    ? revealDescription
-      ? "max-h-[40rem]"
-      : "max-h-[2.85rem]"
-    : "max-h-[14rem]";
 
   useEffect(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-
+    if (typeof window === "undefined") return;
     const media = window.matchMedia("(min-width: 1024px)");
-    const updateLayoutMode = () => {
-      setIsDesktopLayout(media.matches);
-    };
-
-    updateLayoutMode();
-
+    const update = () => setIsDesktopLayout(media.matches);
+    update();
     if (media.addEventListener) {
-      media.addEventListener("change", updateLayoutMode);
-      return () => media.removeEventListener("change", updateLayoutMode);
+      media.addEventListener("change", update);
+      return () => media.removeEventListener("change", update);
     } else {
-      media.addListener(updateLayoutMode);
-      return () => media.removeListener(updateLayoutMode);
+      media.addListener(update);
+      return () => media.removeListener(update);
     }
   }, []);
 
+  // Measure how many px of description text overflow the collapsed container.
+  // Only observe the text element (not the container) to avoid feedback loops
+  // where expansion changes clientHeight and re-triggers the calculation.
   useEffect(() => {
-    if (isDesktopLayout) {
-      setIsExpandedMobile(false);
-    }
-  }, [isDesktopLayout]);
+    const measureEl = measureRef.current;
+    const containerEl = descContainerRef.current;
+    if (!measureEl || !containerEl) return;
 
-  useEffect(() => {
-    if (!isFeature) {
-      setDescriptionOverflow(0);
-      return;
-    }
-
-    const measureElement = measureRef.current;
-    if (!measureElement) {
-      return;
-    }
-
-    const updateOverflow = () => {
-      const styles = window.getComputedStyle(measureElement);
-      const lineHeight = Number.parseFloat(styles.lineHeight) || 26;
-      const collapsedHeight = lineHeight * 2;
-      const fullHeight = measureElement.scrollHeight;
-      setDescriptionOverflow(Math.max(0, Math.ceil(fullHeight - collapsedHeight)));
+    const update = () => {
+      setDescriptionOverflow(Math.max(0, Math.ceil(measureEl.scrollHeight - containerEl.clientHeight)));
     };
 
-    updateOverflow();
-
-    const observer = new ResizeObserver(updateOverflow);
-    observer.observe(measureElement);
-    window.addEventListener("resize", updateOverflow);
-
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(measureEl);
+    window.addEventListener("resize", update);
     return () => {
-      window.removeEventListener("resize", updateOverflow);
-      observer.disconnect();
+      window.removeEventListener("resize", update);
+      ro.disconnect();
     };
-  }, [isFeature, project.description]);
+  }, [project.description]);
 
-  const desktopHoverExpansion = isHovered
-    ? isFeature
+  // Expand the card on hover just enough to reveal the overflowing text.
+  const hoverExpansion =
+    isDesktopLayout && isHovered
       ? Math.min(180, Math.ceil(descriptionOverflow / 2) + (prefersReducedMotion ? 10 : 14))
-      : isMiddle
-        ? prefersReducedMotion
-          ? 18
-          : 34
-        : prefersReducedMotion
-          ? 14
-          : 24
-    : 0;
-  const hoverExpansion = isDesktopLayout ? desktopHoverExpansion : 0;
-  const hoverScale = isActive ? 1.02 : 1;
+      : 0;
+  const hoverScale = isDesktopLayout && isHovered ? 1.02 : 1;
 
   const starScale = Math.max(0, Math.log10((project.stars ?? 0) + 1));
   const starProminence = Math.min(1, starScale / 3.2);
@@ -132,19 +88,6 @@ export function ProjectTile({ project, categories, primaryCategory, index, onTag
     if (isDesktopLayout && !event.currentTarget.contains(event.relatedTarget as Node | null)) {
       setIsHovered(false);
     }
-  };
-
-  const handleCardClick = (event: ReactMouseEvent<HTMLElement>) => {
-    if (isDesktopLayout || !isFeature) {
-      return;
-    }
-
-    const target = event.target as HTMLElement;
-    if (target.closest("a, button")) {
-      return;
-    }
-
-    setIsExpandedMobile((previous) => !previous);
   };
 
   return (
@@ -171,64 +114,51 @@ export function ProjectTile({ project, categories, primaryCategory, index, onTag
         }}
         transition={
           prefersReducedMotion
-            ? {
-                duration: 0.24,
-                ease: [0.22, 1, 0.36, 1]
-              }
-            : {
-                duration: isDesktopLayout ? 0.85 : 0.5,
-                ease: [0.22, 1, 0.36, 1]
-              }
+            ? { duration: 0.24, ease: [0.22, 1, 0.36, 1] }
+            : { duration: isDesktopLayout ? 0.85 : 0.5, ease: [0.22, 1, 0.36, 1] }
         }
         onHoverStart={() => {
-          if (isDesktopLayout) {
-            setIsHovered(true);
-          }
+          if (isDesktopLayout) setIsHovered(true);
         }}
         onHoverEnd={() => {
-          if (isDesktopLayout) {
-            setIsHovered(false);
-          }
+          if (isDesktopLayout) setIsHovered(false);
         }}
         onFocusCapture={() => {
-          if (isDesktopLayout) {
-            setIsHovered(true);
-          }
+          if (isDesktopLayout) setIsHovered(true);
         }}
         onBlurCapture={handleBlur}
-        onClick={handleCardClick}
-        className={`group relative flex flex-col overflow-hidden rounded-[2rem] border bg-surface/95 p-4 shadow-float backdrop-blur-md transition lg:absolute lg:inset-x-0 lg:top-0 lg:bottom-0 ${categoryTileClasses[primaryCategory]} ${
-          isFeature ? "touch-manipulation cursor-pointer lg:cursor-default" : ""
-        } ${isHero ? "p-5" : ""}`}
+        className={`group relative flex flex-col overflow-hidden rounded-[2rem] border bg-surface/95 p-4 shadow-float backdrop-blur-md transition lg:absolute lg:inset-x-0 lg:top-0 lg:bottom-0 ${categoryTileClasses[primaryCategory]}`}
         style={starProminence > 0 ? { boxShadow: cardGlow } : undefined}
       >
+        {/* Top sheen */}
         <div
           className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-white/75 to-transparent"
           aria-hidden="true"
         />
+        {/* Hover ring */}
         <div
           className="pointer-events-none absolute inset-0 rounded-[inherit] ring-1 ring-transparent transition-all duration-300 group-hover:ring-brand/40 group-hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]"
           aria-hidden="true"
         />
 
         <div className="relative z-10 flex h-full flex-col">
+          {/* Stars + title */}
           <div className="flex min-w-0 items-start gap-2">
             <div
-              className={`flex shrink-0 transition-opacity duration-500 ${
-                project.stars > 0 ? "opacity-100" : "opacity-0"
-              }`}
+              className={`flex shrink-0 transition-opacity duration-500 ${project.stars > 0 ? "opacity-100" : "opacity-0"}`}
             >
               <span className="inline-flex items-center whitespace-nowrap rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-extrabold text-amber-800">
                 ★ {project.stars || 0}
               </span>
             </div>
             <h2
-              className={`${isHero ? "text-2xl" : isMiddle ? "text-xl" : "text-base"} min-w-0 font-display font-extrabold leading-tight text-primary [overflow-wrap:anywhere]`}
+              className={`${isHero ? "text-2xl" : "text-xl"} min-w-0 font-display font-extrabold leading-tight text-primary [overflow-wrap:anywhere]`}
             >
               {project.name}
             </h2>
           </div>
 
+          {/* Category badges + date */}
           <div className="mt-2 flex min-w-0 flex-wrap items-center gap-1.5 text-xs font-semibold text-secondary">
             {shownCategories.map((category: Category) => (
               <button
@@ -249,9 +179,12 @@ export function ProjectTile({ project, categories, primaryCategory, index, onTag
             </span>
           </div>
 
+          {/* Description — fills remaining space; gradient at the bottom handles visual separation from buttons */}
           <div
-            className={`relative mt-3 overflow-hidden transition-[max-height] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${descriptionContainerClass}`}
+            ref={descContainerRef}
+            className="relative mt-3 overflow-hidden max-h-[14rem] lg:max-h-none lg:flex-1 lg:min-h-0"
           >
+            {/* Invisible twin for measuring full text height without layout interference */}
             <p
               ref={measureRef}
               aria-hidden="true"
@@ -259,51 +192,35 @@ export function ProjectTile({ project, categories, primaryCategory, index, onTag
             >
               {project.description}
             </p>
-            <p
-              className={`font-body text-base font-medium leading-relaxed text-secondary ${isFeature && !revealDescription ? "clamp-2" : ""}`}
-            >
-              {project.description}
-            </p>
-            {isFeature && !revealDescription && (
-              <div
-                className="pointer-events-none absolute inset-x-0 bottom-0 flex h-8 flex-col justify-end bg-gradient-to-t from-surface/95 to-transparent pb-0.5"
-                aria-hidden="true"
-              >
-                {descriptionOverflow > 0 && (
-                  <div className="flex w-full justify-center text-[10px] text-secondary/50">▾</div>
-                )}
-              </div>
-            )}
+            <p className="font-body text-base font-medium leading-relaxed text-secondary">{project.description}</p>
+            {/* Gradient fade — always present so buttons never sit directly on text */}
+            <div
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-surface/95 to-transparent"
+              aria-hidden="true"
+            />
           </div>
 
-          <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-4">
-            <div className="flex flex-wrap items-center gap-1.5 text-[11px] font-semibold text-secondary">
-              {project.archived && <span className="font-body text-slate-400">Archived</span>}
-              {project.role && (
-                <span className="rounded-full bg-teal-100 px-2 py-0.5 text-teal-700">{project.role}</span>
-              )}
-            </div>
-
-            <div className="flex flex-wrap items-center gap-1.5">
-              {project.website && (
-                <a
-                  href={project.website}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex min-h-[34px] items-center rounded-full bg-brand px-3.5 py-1 text-xs font-extrabold uppercase tracking-wide text-white transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/35"
-                >
-                  Visit
-                </a>
-              )}
+          {/* Buttons — sit at the bottom-right of the card's padding box on desktop */}
+          <div className="mt-auto flex items-center justify-end gap-1.5 pt-2 lg:absolute lg:bottom-0 lg:right-0 lg:z-10 lg:mt-0 lg:pt-0">
+            {project.archived && <span className="mr-1 font-body text-[11px] text-slate-400">Archived</span>}
+            {project.website && (
               <a
-                href={project.href}
+                href={project.website}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex min-h-[34px] items-center rounded-full bg-brand/10 px-3.5 py-1 text-xs font-extrabold uppercase tracking-wide text-brand transition hover:bg-brand hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/35"
+                className="inline-flex min-h-[34px] items-center rounded-full bg-brand px-3.5 py-1 text-xs font-extrabold uppercase tracking-wide text-white transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/35"
               >
-                Repo
+                Visit
               </a>
-            </div>
+            )}
+            <a
+              href={project.href}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex min-h-[34px] items-center rounded-full bg-surface px-3.5 py-1 text-xs font-extrabold uppercase tracking-wide text-brand ring-1 ring-brand/40 transition hover:bg-brand hover:text-white hover:ring-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/35"
+            >
+              Repo
+            </a>
           </div>
         </div>
       </motion.article>
