@@ -64,7 +64,7 @@ export function CommandPalette({ value, onChange }: CommandPaletteProps) {
           placeholder="Filter by name, tech, or tag…"
           value={value}
           onChange={(event) => onChange(event.target.value)}
-          className="w-full rounded-2xl border border-white/75 bg-white/80 py-3 pl-4 pr-16 text-base font-bold tracking-wide text-primary shadow-float backdrop-blur-xl outline-none transition placeholder:text-secondary/65 focus:border-brand focus:shadow-glow sm:py-3.5 sm:pl-5 sm:pr-20 sm:text-lg"
+          className="w-full rounded-2xl border border-white/75 bg-white/80 py-3 pl-4 pr-16 text-base font-medium tracking-wide text-primary shadow-float backdrop-blur-xl outline-none transition placeholder:text-secondary/65 focus:border-brand focus:shadow-glow sm:py-3.5 sm:pl-5 sm:pr-20 sm:text-lg"
         />
         <div className="absolute right-3 flex items-center gap-1.5 sm:right-4">
           {value.length > 0 && (

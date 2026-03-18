@@ -61,13 +61,13 @@ export function ProjectTile({ project, categories, primaryCategory, index, onTag
 
     updateLayoutMode();
 
-    if (typeof media.addEventListener === "function") {
+    if (media.addEventListener) {
       media.addEventListener("change", updateLayoutMode);
       return () => media.removeEventListener("change", updateLayoutMode);
+    } else {
+      media.addListener(updateLayoutMode);
+      return () => media.removeListener(updateLayoutMode);
     }
-
-    media.addListener(updateLayoutMode);
-    return () => media.removeListener(updateLayoutMode);
   }, []);
 
   useEffect(() => {
@@ -123,10 +123,10 @@ export function ProjectTile({ project, categories, primaryCategory, index, onTag
 
   const starScale = Math.max(0, Math.log10((project.stars ?? 0) + 1));
   const starProminence = Math.min(1, starScale / 3.2);
-  const cardGlow = `drop-shadow(0 0 ${Math.round(6 + starProminence * 8)}px rgba(245,158,11,${(
-    0.07 +
-    starProminence * 0.14
-  ).toFixed(3)}))`;
+  const cardGlow =
+    starProminence > 0
+      ? `var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow), 0 0 ${14 * starProminence}px rgba(245,158,11,${(0.21 * starProminence).toFixed(3)})`
+      : undefined;
 
   const handleBlur = (event: ReactFocusEvent<HTMLElement>) => {
     if (isDesktopLayout && !event.currentTarget.contains(event.relatedTarget as Node | null)) {
@@ -200,7 +200,7 @@ export function ProjectTile({ project, categories, primaryCategory, index, onTag
         className={`group relative flex flex-col overflow-hidden rounded-[2rem] border bg-surface/95 p-4 shadow-float backdrop-blur-md transition lg:absolute lg:inset-x-0 lg:top-0 lg:bottom-0 ${categoryTileClasses[primaryCategory]} ${
           isFeature ? "touch-manipulation cursor-pointer lg:cursor-default" : ""
         } ${isHero ? "p-5" : ""}`}
-        style={{ filter: cardGlow }}
+        style={starProminence > 0 ? { boxShadow: cardGlow } : undefined}
       >
         <div
           className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-white/75 to-transparent"
@@ -239,7 +239,7 @@ export function ProjectTile({ project, categories, primaryCategory, index, onTag
                   event.stopPropagation();
                   onTagClick(category);
                 }}
-                className={`min-h-[28px] cursor-pointer rounded-full px-2.5 py-0.5 text-[11px] font-display font-extrabold uppercase tracking-wide transition-all hover:ring-1 hover:ring-current/30 hover:brightness-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 ${categoryBadgeClasses[category]}`}
+                className={`min-h-[28px] cursor-pointer rounded-full px-2.5 py-0.5 text-[11px] font-body font-extrabold uppercase tracking-wide transition-all hover:ring-1 hover:ring-current/30 hover:brightness-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 ${categoryBadgeClasses[category]}`}
               >
                 {category}
               </button>
@@ -266,15 +266,19 @@ export function ProjectTile({ project, categories, primaryCategory, index, onTag
             </p>
             {isFeature && !revealDescription && (
               <div
-                className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-surface/95 to-transparent"
+                className="pointer-events-none absolute inset-x-0 bottom-0 flex h-8 flex-col justify-end bg-gradient-to-t from-surface/95 to-transparent pb-0.5"
                 aria-hidden="true"
-              />
+              >
+                {descriptionOverflow > 0 && (
+                  <div className="flex w-full justify-center text-[10px] text-secondary/50">▾</div>
+                )}
+              </div>
             )}
           </div>
 
           <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-4">
             <div className="flex flex-wrap items-center gap-1.5 text-[11px] font-semibold text-secondary">
-              {project.archived && <span className="font-display italic text-slate-500">Archived</span>}
+              {project.archived && <span className="font-body text-slate-400">Archived</span>}
               {project.role && (
                 <span className="rounded-full bg-teal-100 px-2 py-0.5 text-teal-700">{project.role}</span>
               )}
