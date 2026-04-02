@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-01T05:18:15.203Z",
+  "generatedAt": "2026-04-02T04:58:09.865Z",
   "projects": {
     "DuckGrades": {
       "stars": 0,
@@ -7,23 +7,23 @@
     },
     "maarv.dev": {
       "stars": 0,
-      "updatedAt": "2026-03-31T05:04:12Z"
+      "updatedAt": "2026-04-01T05:18:16Z"
     },
     "rotmg-player-stats": {
       "stars": 0,
-      "updatedAt": "2026-04-01T05:08:12Z"
+      "updatedAt": "2026-04-02T04:38:47Z"
     },
     "cc-cedict-yomitan": {
       "stars": 33,
-      "updatedAt": "2026-04-01T03:30:16Z"
+      "updatedAt": "2026-04-02T02:55:01Z"
     },
     "wordshk-yomitan": {
       "stars": 21,
-      "updatedAt": "2026-04-01T02:46:58Z"
+      "updatedAt": "2026-04-02T02:32:01Z"
     },
     "pixiv-yomitan": {
       "stars": 55,
-      "updatedAt": "2026-04-01T01:52:50Z"
+      "updatedAt": "2026-04-02T01:28:34Z"
     },
     "lolibrary-links": {
       "stars": 0,
@@ -62,7 +62,7 @@
       "updatedAt": "2025-11-12T09:24:38Z"
     },
     "yomitan-dictionaries": {
-      "stars": 750,
+      "stars": 751,
       "updatedAt": "2026-03-18T05:31:23Z"
     },
     "yomitan": {
@@ -120,6 +120,38 @@
     "wikipedia-yomitan": {
       "stars": 44,
       "updatedAt": "2024-07-12T18:11:07Z"
+    },
+    "japanese-furigana-normalize": {
+      "stars": 6,
+      "updatedAt": "2024-07-07T04:30:49Z"
+    },
+    "yomitan-dict-stats": {
+      "stars": 22,
+      "updatedAt": "2024-05-12T01:44:44Z"
+    },
+    "is-cjk-hanzi": {
+      "stars": 3,
+      "updatedAt": "2024-02-11T04:49:43Z"
+    },
+    "vn-userscripts": {
+      "stars": 14,
+      "updatedAt": "2024-01-02T21:28:49Z"
+    },
+    "twitter-rss-discord-webhook": {
+      "stars": 10,
+      "updatedAt": "2023-11-11T21:08:10Z"
+    },
+    "yomichan-dict-reader": {
+      "stars": 2,
+      "updatedAt": "2023-03-07T18:41:55Z"
+    },
+    "vndb-highlighter": {
+      "stars": 2,
+      "updatedAt": "2023-02-28T20:11:32Z"
+    },
+    "texthooker-websocket": {
+      "stars": 6,
+      "updatedAt": "2023-01-15T07:43:26Z"
     }
   }
 }
