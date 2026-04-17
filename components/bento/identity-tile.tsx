@@ -22,10 +22,6 @@ export function IdentityTile() {
           <h1 className="mt-1.5 font-display text-3xl font-black tracking-tight text-primary sm:text-4xl">
             I like making stuff.
           </h1>
-          <p className="mt-3 max-w-lg font-body text-base font-medium leading-relaxed text-secondary/90">
-            Building open-source tools for language learning, gaming, and productivity. Passionate about well-crafted
-            interfaces and resilient systems.
-          </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-sm font-medium text-secondary sm:justify-start">
             <a
               href="https://github.com/MarvNC"
@@ -34,13 +30,6 @@ export function IdentityTile() {
               className="rounded transition-colors hover:text-primary hover:underline hover:underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/35"
             >
               ↗ GitHub
-            </a>
-            <span className="text-secondary/30">·</span>
-            <a
-              href="mailto:contact@maarv.dev"
-              className="rounded transition-colors hover:text-primary hover:underline hover:underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/35"
-            >
-              ✉ Email
             </a>
           </div>
         </div>
