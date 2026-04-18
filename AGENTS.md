@@ -8,6 +8,11 @@ Guidance for coding agents working in this repository.
 - Install dependencies with `bun install`.
 - Run commands with `bun run <script>`.
 
+## Commits
+
+Use commitlint format for commits.
+Commit only your changes; other agents may also be making changes simultaneously.
+
 ## Common Commands
 
 - `bun run dev` - start local dev server
@@ -26,6 +31,7 @@ Guidance for coding agents working in this repository.
 - Keep blue, soft, calm visual language unless user requests otherwise.
 - Prefer subtle, elegant animations over aggressive or bouncy effects.
 - Avoid hover-only critical interactions; mobile users must still access content.
+- Check [impeccable.md](.impeccable.md) for mnore
 
 ## Design Context
 
