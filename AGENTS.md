@@ -18,7 +18,6 @@ Guidance for coding agents working in this repository.
 ## Product Direction
 
 - This site is a personal portfolio with an animated bento layout.
-- Do not reintroduce physics-based card movement.
 - Keep projects as the main focus; personal callout should stay minimal.
 - Preserve mobile friendliness and reduced-motion accessibility.
 
