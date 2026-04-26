@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-25T05:06:10.976Z",
+  "generatedAt": "2026-04-26T05:32:34.762Z",
   "projects": {
     "DuckGrades": {
       "stars": 0,
@@ -7,23 +7,23 @@
     },
     "maarv.dev": {
       "stars": 0,
-      "updatedAt": "2026-04-24T05:28:21Z"
+      "updatedAt": "2026-04-25T05:06:11Z"
     },
     "rotmg-player-stats": {
       "stars": 0,
-      "updatedAt": "2026-04-25T05:00:26Z"
+      "updatedAt": "2026-04-26T03:57:42Z"
     },
     "cc-cedict-yomitan": {
       "stars": 33,
-      "updatedAt": "2026-04-25T03:19:41Z"
+      "updatedAt": "2026-04-26T03:41:52Z"
     },
     "wordshk-yomitan": {
       "stars": 21,
-      "updatedAt": "2026-04-25T02:37:05Z"
+      "updatedAt": "2026-04-26T02:54:11Z"
     },
     "pixiv-yomitan": {
       "stars": 56,
-      "updatedAt": "2026-04-25T01:47:42Z"
+      "updatedAt": "2026-04-26T01:59:12Z"
     },
     "lolibrary-links": {
       "stars": 0,
@@ -62,12 +62,12 @@
       "updatedAt": "2025-11-12T09:24:38Z"
     },
     "yomitan-dictionaries": {
-      "stars": 781,
+      "stars": 782,
       "updatedAt": "2026-03-18T05:31:23Z"
     },
     "yomitan": {
-      "stars": 2469,
-      "updatedAt": "2026-04-24T02:40:38Z"
+      "stars": 2472,
+      "updatedAt": "2026-04-25T18:59:04Z"
     },
     "yomichan-dict-builder": {
       "stars": 45,
