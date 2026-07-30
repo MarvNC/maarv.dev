@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T04:01:38.473Z",
+  "generatedAt": "2026-07-30T04:00:17.469Z",
   "projects": {
     "DuckGrades": {
       "stars": 1,
@@ -7,23 +7,23 @@
     },
     "maarv.dev": {
       "stars": 0,
-      "updatedAt": "2026-07-28T04:01:02Z"
+      "updatedAt": "2026-07-29T04:01:39Z"
     },
     "rotmg-player-stats": {
       "stars": 0,
-      "updatedAt": "2026-07-29T03:47:18Z"
+      "updatedAt": "2026-07-30T03:43:20Z"
     },
     "cc-cedict-yomitan": {
       "stars": 38,
-      "updatedAt": "2026-07-29T00:46:15Z"
+      "updatedAt": "2026-07-30T00:44:34Z"
     },
     "wordshk-yomitan": {
       "stars": 22,
-      "updatedAt": "2026-07-29T00:37:33Z"
+      "updatedAt": "2026-07-30T00:37:34Z"
     },
     "pixiv-yomitan": {
       "stars": 65,
-      "updatedAt": "2026-07-29T00:25:38Z"
+      "updatedAt": "2026-07-30T00:26:37Z"
     },
     "lolibrary-links": {
       "stars": 0,
@@ -50,7 +50,7 @@
       "updatedAt": "2026-01-10T01:26:00Z"
     },
     "ReallySafeSkiing": {
-      "stars": 0,
+      "stars": 1,
       "updatedAt": "2025-12-10T10:37:57Z"
     },
     "words-hk-parse": {
@@ -62,12 +62,12 @@
       "updatedAt": "2025-11-12T09:24:38Z"
     },
     "yomitan-dictionaries": {
-      "stars": 873,
+      "stars": 874,
       "updatedAt": "2026-03-18T05:31:23Z"
     },
     "yomitan": {
-      "stars": 2718,
-      "updatedAt": "2026-07-22T00:33:58Z"
+      "stars": 2719,
+      "updatedAt": "2026-07-29T20:48:30Z"
     },
     "yomichan-dict-builder": {
       "stars": 49,
