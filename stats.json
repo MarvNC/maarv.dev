@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-07T03:57:01.757Z",
+  "generatedAt": "2026-08-08T03:29:51.007Z",
   "projects": {
     "DuckGrades": {
       "stars": 1,
@@ -7,23 +7,23 @@
     },
     "maarv.dev": {
       "stars": 0,
-      "updatedAt": "2026-08-06T04:01:28Z"
+      "updatedAt": "2026-08-07T03:57:02Z"
     },
     "rotmg-player-stats": {
       "stars": 0,
-      "updatedAt": "2026-08-07T03:38:19Z"
+      "updatedAt": "2026-08-08T02:44:14Z"
     },
     "cc-cedict-yomitan": {
       "stars": 39,
-      "updatedAt": "2026-08-07T01:23:28Z"
+      "updatedAt": "2026-08-08T00:27:04Z"
     },
     "wordshk-yomitan": {
       "stars": 22,
-      "updatedAt": "2026-08-07T01:18:53Z"
+      "updatedAt": "2026-08-08T00:22:01Z"
     },
     "pixiv-yomitan": {
       "stars": 65,
-      "updatedAt": "2026-08-07T01:13:10Z"
+      "updatedAt": "2026-08-08T00:15:08Z"
     },
     "lolibrary-links": {
       "stars": 0,
@@ -148,10 +148,6 @@
     "vndb-highlighter": {
       "stars": 2,
       "updatedAt": "2023-02-28T20:11:32Z"
-    },
-    "texthooker-websocket": {
-      "stars": 6,
-      "updatedAt": "2023-01-15T07:43:26Z"
     }
   }
 }
