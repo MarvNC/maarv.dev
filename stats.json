@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-31T03:08:03.453Z",
+  "generatedAt": "2026-09-01T03:07:57.174Z",
   "projects": {
     "DuckGrades": {
       "stars": 1,
@@ -7,23 +7,23 @@
     },
     "maarv.dev": {
       "stars": 0,
-      "updatedAt": "2026-08-30T03:06:56Z"
+      "updatedAt": "2026-08-31T03:08:04Z"
     },
     "rotmg-player-stats": {
       "stars": 0,
-      "updatedAt": "2026-08-31T02:49:40Z"
+      "updatedAt": "2026-09-01T02:49:42Z"
     },
     "cc-cedict-yomitan": {
       "stars": 40,
-      "updatedAt": "2026-08-31T00:55:23Z"
+      "updatedAt": "2026-09-01T01:00:22Z"
     },
     "wordshk-yomitan": {
       "stars": 22,
-      "updatedAt": "2026-08-31T00:40:51Z"
+      "updatedAt": "2026-09-01T00:43:43Z"
     },
     "pixiv-yomitan": {
       "stars": 69,
-      "updatedAt": "2026-08-31T00:17:49Z"
+      "updatedAt": "2026-09-01T00:19:22Z"
     },
     "lolibrary-links": {
       "stars": 0,
@@ -66,7 +66,7 @@
       "updatedAt": "2026-03-18T05:31:23Z"
     },
     "yomitan": {
-      "stars": 2791,
+      "stars": 2794,
       "updatedAt": "2026-08-25T02:02:55Z"
     },
     "yomichan-dict-builder": {
