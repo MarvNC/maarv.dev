@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-06T03:08:04.999Z",
+  "generatedAt": "2026-10-07T03:10:36.941Z",
   "projects": {
     "DuckGrades": {
       "stars": 1,
@@ -7,23 +7,23 @@
     },
     "maarv.dev": {
       "stars": 0,
-      "updatedAt": "2026-10-05T03:13:27Z"
+      "updatedAt": "2026-10-06T03:08:06Z"
     },
     "rotmg-player-stats": {
       "stars": 0,
-      "updatedAt": "2026-10-06T02:43:42Z"
+      "updatedAt": "2026-10-07T02:56:17Z"
     },
     "cc-cedict-yomitan": {
       "stars": 43,
-      "updatedAt": "2026-10-06T00:53:12Z"
+      "updatedAt": "2026-10-07T00:56:05Z"
     },
     "wordshk-yomitan": {
       "stars": 22,
-      "updatedAt": "2026-10-06T00:39:47Z"
+      "updatedAt": "2026-10-07T00:40:53Z"
     },
     "pixiv-yomitan": {
       "stars": 73,
-      "updatedAt": "2026-10-06T00:18:01Z"
+      "updatedAt": "2026-10-07T00:17:44Z"
     },
     "lolibrary-links": {
       "stars": 0,
@@ -43,7 +43,7 @@
     },
     "pixiv-dump": {
       "stars": 14,
-      "updatedAt": "2026-10-06T01:20:55Z"
+      "updatedAt": "2026-10-07T02:49:57Z"
     },
     "EReaders-for-Language-Learning": {
       "stars": 2,
@@ -52,106 +52,6 @@
     "ReallySafeSkiing": {
       "stars": 1,
       "updatedAt": "2025-12-10T10:37:57Z"
-    },
-    "words-hk-parse": {
-      "stars": 0,
-      "updatedAt": "2026-05-14T05:54:37Z"
-    },
-    "win-to-mac-ahk": {
-      "stars": 0,
-      "updatedAt": "2025-11-12T09:24:38Z"
-    },
-    "yomitan-dictionaries": {
-      "stars": 930,
-      "updatedAt": "2026-03-18T05:31:23Z"
-    },
-    "yomitan": {
-      "stars": 2867,
-      "updatedAt": "2026-09-25T15:56:56Z"
-    },
-    "yomichan-dict-builder": {
-      "stars": 51,
-      "updatedAt": "2026-05-08T18:03:32Z"
-    },
-    "AB-enhancements": {
-      "stars": 0,
-      "updatedAt": "2025-06-23T21:31:15Z"
-    },
-    "JP-Resources": {
-      "stars": 140,
-      "updatedAt": "2025-06-01T09:31:22Z"
-    },
-    "better-bookwalker": {
-      "stars": 6,
-      "updatedAt": "2026-09-18T20:39:06Z"
-    },
-    "anki-card": {
-      "stars": 3,
-      "updatedAt": "2025-05-18T05:25:55Z"
-    },
-    "StampNyaa": {
-      "stars": 90,
-      "updatedAt": "2025-03-23T05:30:14Z"
-    },
-    "kanjidego-yomitan-anki": {
-      "stars": 22,
-      "updatedAt": "2025-02-23T04:22:54Z"
-    },
-    "name-ln": {
-      "stars": 1,
-      "updatedAt": "2024-10-17T08:17:30Z"
-    },
-    "light-novel-naming-scheme": {
-      "stars": 0,
-      "updatedAt": "2024-10-16T19:57:46Z"
-    },
-    "canvas-attendance-sheets": {
-      "stars": 0,
-      "updatedAt": "2024-10-03T23:40:43Z"
-    },
-    "discord-websocket-text-inserter": {
-      "stars": 0,
-      "updatedAt": "2024-08-20T03:14:46Z"
-    },
-    "jpdb-freq-list": {
-      "stars": 42,
-      "updatedAt": "2024-07-25T04:06:41Z"
-    },
-    "wikipedia-yomitan": {
-      "stars": 51,
-      "updatedAt": "2024-07-12T18:11:07Z"
-    },
-    "japanese-furigana-normalize": {
-      "stars": 8,
-      "updatedAt": "2024-07-07T04:30:49Z"
-    },
-    "yomitan-dict-stats": {
-      "stars": 25,
-      "updatedAt": "2024-05-12T01:44:44Z"
-    },
-    "is-cjk-hanzi": {
-      "stars": 3,
-      "updatedAt": "2024-02-11T04:49:43Z"
-    },
-    "vn-userscripts": {
-      "stars": 17,
-      "updatedAt": "2024-01-02T21:28:49Z"
-    },
-    "twitter-rss-discord-webhook": {
-      "stars": 10,
-      "updatedAt": "2023-11-11T21:08:10Z"
-    },
-    "yomichan-dict-reader": {
-      "stars": 2,
-      "updatedAt": "2023-03-07T18:41:55Z"
-    },
-    "vndb-highlighter": {
-      "stars": 2,
-      "updatedAt": "2023-02-28T20:11:32Z"
-    },
-    "texthooker-websocket": {
-      "stars": 6,
-      "updatedAt": "2023-01-15T07:43:26Z"
     }
   }
 }
