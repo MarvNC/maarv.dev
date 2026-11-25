@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-24T03:04:52.637Z",
+  "generatedAt": "2026-11-25T03:04:47.963Z",
   "projects": {
     "DuckGrades": {
       "stars": 1,
@@ -7,23 +7,23 @@
     },
     "maarv.dev": {
       "stars": 0,
-      "updatedAt": "2026-11-23T03:05:04Z"
+      "updatedAt": "2026-11-24T03:04:54Z"
     },
     "rotmg-player-stats": {
       "stars": 0,
-      "updatedAt": "2026-11-24T02:42:18Z"
+      "updatedAt": "2026-11-25T02:42:44Z"
     },
     "cc-cedict-yomitan": {
       "stars": 45,
-      "updatedAt": "2026-11-24T00:28:10Z"
+      "updatedAt": "2026-11-25T00:31:15Z"
     },
     "wordshk-yomitan": {
       "stars": 20,
-      "updatedAt": "2026-11-24T00:21:57Z"
+      "updatedAt": "2026-11-25T00:23:19Z"
     },
     "pixiv-yomitan": {
-      "stars": 74,
-      "updatedAt": "2026-11-24T00:12:04Z"
+      "stars": 75,
+      "updatedAt": "2026-11-25T00:12:11Z"
     },
     "lolibrary-links": {
       "stars": 0,
@@ -43,7 +43,7 @@
     },
     "pixiv-dump": {
       "stars": 16,
-      "updatedAt": "2026-11-23T03:48:32Z"
+      "updatedAt": "2026-11-25T02:51:42Z"
     },
     "EReaders-for-Language-Learning": {
       "stars": 2,
